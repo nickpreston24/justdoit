@@ -1,9 +1,13 @@
+using CodeMechanic.FileSystem;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
+// Load and inject .env files & values
+DotEnv.Load(debug: true);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
