@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace railway_asp.Pages;
+namespace justdoit.Pages;
 
 public class IndexModel : PageModel
 {
