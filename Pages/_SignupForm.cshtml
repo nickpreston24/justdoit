@@ -1,3 +1,5 @@
+@model justdoit.Pages.IndexModel
+
 <div class="card w-full max-w-sm shrink-0 shadow-2xl">
     <div class="card-title">
         <h1 class="text-3xl font-bold text-accent">Sign Up</h1>
@@ -5,22 +7,23 @@
 
     <div class="card-body">
 
+        @* hx-page="Index" *@
+        @*            hx-page-handler="Signup" *@
         <form
-            hx-post
-            hx-page="Index"
-            hx-page-handler="Signup"
+            asp-action="post"
+            hx-post="@Url.Page("Index", "Signup")"
             class="card-body">
             <div class="form-control">
                 <label class="label">
                     <span class="label-text">Email</span>
                 </label>
-                <input type="email" placeholder="email" class="input input-bordered bg-transparent" required/>
+                <input asp-for="Email" type="email" placeholder="email" class="input input-bordered bg-transparent" required/>
             </div>
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text">Credit Card</span>
+                    <span class="label-text">Credit Card <i>(optional)</i></span>
                 </label>
-                <input type="text" placeholder="1234-56-7890" class="input input-bordered bg-transparent" required/>
+                <input asp-for="CC" type="text" placeholder="1234-56-7890" class="input input-bordered bg-transparent"/>
             </div>
             <div class="form-control mt-6">
                 <button class="btn btn-primary">Let's GO!</button>
