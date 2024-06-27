@@ -1,0 +1,71 @@
+<div
+    class="hero min-h-screen">
+    <div class="hero-overlay bg-transparent"></div>
+    <div class="hero-content text-neutral-content text-center">
+        <div class="max-w-md">
+
+            <div class="">
+
+                <div class="avatar placeholder mb-8">
+                    @* <div class="bg-neutral text-neutral-content w-12"> *@
+                    <div class="ring-primary bg-primary/25 ring-offset-base-100 w-12 rounded-full ring ring-offset-2">
+                        <span class="text-primary">1</span>
+                    </div>
+                </div>
+
+                <div class="card-body flex flex-col items-center">
+                    <h2 class="card-title text-primary font-semibold">
+                        Task Mastery, Now
+                    </h2>
+
+                    <p class="text-white text-3xl font-bold">
+                        Start your Week Right
+                    </p>
+
+                    <div class="divider divider-primary"></div>
+
+                    <p class="text-white">JustDoIt takes care of planning overhead with proven time management techiques. So you can get scheduled quickly and focus on actually doing your tasks.</p>
+
+                    @* TODO: FEATURE GRID HERE *@
+
+                    <div id="feature_1_grid" class="grid grid-cols-1 grid-rows-auto grid-18">
+
+                        <bento-card>
+                            <slot name="title">
+                                <h3 class="text-white">Automated Weekly Schedule</h3>
+                            </slot>
+                            <p>All todos are automagically assigned to a schedule each week.</p>
+                        </bento-card>
+
+                        <bento-card>
+                            <slot name="title">
+                                <h3 class="text-white">Maximum Effort!</h3>
+                            </slot>
+                            <p>
+                                Focus only on the tasks needed to make your day a success.
+                            </p>
+                        </bento-card>
+
+                        <bento-card>
+                            <slot name="title">
+                                <h3 class="text-white">Reduced Noise</h3>
+                            </slot>
+                            <p class="">
+                                No more cluttered Calendars, confusing Cards or crazy Charts.
+                            </p>
+                        </bento-card>
+
+                        <bento-card>
+                            <slot name="title">
+                                <h3 class="text-white">(Less) Manual Work</h3>
+                            </slot>
+                            <p class="">
+                                No need to learn and manage a complicated interface.
+                            </p>
+                        </bento-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

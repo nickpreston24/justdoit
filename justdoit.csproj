@@ -14,6 +14,8 @@
     <PackageReference Include="CodeMechanic.Reflection" Version="1.0.4" />
     <PackageReference Include="CodeMechanic.Regex" Version="1.0.6" />
     <PackageReference Include="CodeMechanic.Types" Version="1.0.10" />
+    <PackageReference Include="Htmx" Version="1.8.0" />
+    <PackageReference Include="Htmx.TagHelpers" Version="1.8.0" />
     <PackageReference Include="Hydro" Version="0.14.2" />
   </ItemGroup>
 

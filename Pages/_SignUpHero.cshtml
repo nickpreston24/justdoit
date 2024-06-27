@@ -1,0 +1,37 @@
+<div x-data="setup_signup_hero()" class="hero min-h-screen glass rounded-3xl">
+    <div class="hero-content flex-col lg:flex-row-reverse">
+        <div class="text-center lg:text-left">
+            @* note: I'm only showing this when they haven't signed up yet.  hides to save retail  *@
+            <div x-show="!show_signup" x-transition>
+                <h1 class="text-5xl font-bold text-white">Sign up now for updates!</h1>
+                <p class="py-6">
+                    We'll email you anytime there's updates on the project, so you'll be the first to know!
+                </p>
+            </div>
+
+
+            @* <i>(If you don't see an email from us, check your spam folder!)</i> *@
+            <button
+                x-show="!show_signup" x-transition
+                x-on:click="show_signup = true" class="btn bg-purple-700 hover:bg-purple-400 text-white">
+                I love free stuff!
+            </button>
+        </div>
+
+        @* todo: signup form modal here *@
+        <div x-show="show_signup" x-transition>
+            <partial name="_SignupForm"></partial>
+        </div>
+        @* <div x-show="show_survey" x-transition> *@
+        @*     <partial name="_NextFeatureSurvey"></partial> *@
+        @* </div> *@
+    </div>
+    <script >
+        function setup_signup_hero(){
+            return {
+                show_signup: false,
+                // show_survey: false,
+             }
+          }
+    </script>
+</div>

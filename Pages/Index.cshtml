@@ -6,40 +6,18 @@
 
 <div class="text-center">
 
-    <section id="splash" class="flex flex-col gap-4">
-
-        <h1 class="text-5xl">Welcome to Just Do It</h1>
-        <i class="text-lg">Your personal life manager!</i>
-
-        <h1 class="text-4xl">Not Another Todo App!</h1>
-        @* todo:   add an animated sigh emoji *@
-        @* todo: add morpheus what if I told you? *@
-        <p>We could take care of all the overhead of planning out your day</p>
-
-        <ul>
-            <li>No more awful Dates</li>
-            <li>No more Cards</li>
-            <li>No more Misassigned Tasks</li>
-        </ul>
-
-        <p>All you do is set the rules for your tasks</p>
-        <p>
-            We handle the scheduling
-            <b>FOR YOU</b>
-        </p>
-
-        <h2>How COOL is THAT?</h2>
-
-        @* modal/form *@
-        <h1>Sound like a plan?</h1>
-
+    <partial name="_MainHero"></partial>
+    <section id="main_stack" class="flex flex-col gap-4">
+        <partial name="_ReasonsToBuy"></partial>
     </section>
 
-    <partial name="_UpcomingFeatures"></partial>
-
-    <partial name="_PricingTiers"></partial>
-
-    <partial name="_SignUpForm"></partial>
-
+    <partial name="_SignUpHero"></partial>
 
 </div>
+
+@* <partial name=s"_PricingTiers"></partial> *@
+@* <partial name="_Features"></partial> *@
+@* <partial name="_Recap"></partial> *@
+@* <h1 class="text-4xl">Not Another Todo App!</h1> *@
+@* todo: add an animated sigh emoji *@
+@* todo: add morpheus what if I told you? *@
