@@ -4,13 +4,44 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - justdoit</title>
-    <script src="//unpkg.com/alpinejs" defer></script>
 
-    <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+    <meta name="hydro-config"/>
 
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css"/>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="~/css/site.css">
+    <script defer src="~/hydro/hydro.js" asp-append-version="true"></script>
+    <script defer src="~/hydro/alpine.js" asp-append-version="true"></script>
+
+    <script src="https://unpkg.com/htmx.org@latest"
+            asp-fallback-src="~/lib/htmx.org/dist/htmx.min.js"
+            asp-fallback-test="window.htmx"
+            crossorigin="anonymous">
+        </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.umd.min.js"
+            asp-fallback-src="~/lib/chartjs"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.47.0/dist/full.css" rel="stylesheet" type="text/css"/>
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css"/>
+
+    <!-- Alpine Plugins -->
+    <script defer src='https://cdn.jsdelivr.net/npm/@@alpinejs/persist@3.x.x/dist/cdn.min.js'></script>
+    @* <script src="https://unpkg.com/htmx.org@latest/dist/ext/alpine-morph.js"></script> *@
+    @* <script defer src="https://unpkg.com/@@alpinejs/morph@3.x.x/dist/cdn.min.js"></script> *@
+
+    <!-- Alpine Core -->
+    @* <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> *@
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+
+    <script type="module" src="~/js/main.js" asp-append-version="true"></script>
+    <script src="~/dist/index.js" type="module"></script>
+
+    @* <script src="https://unpkg.com/htmx.org@2.0.0"></script> *@
+    @* *@
+    @* <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css"/> *@
+    @* <script src="https://cdn.tailwindcss.com"></script> *@
+    @* <script src="//unpkg.com/alpinejs" defer></script> *@
+    @* <link rel="stylesheet" href="~/css/site.css"> *@
 
 </head>
 <body class="bg-gradient-to-r from-black to-pink-900">
