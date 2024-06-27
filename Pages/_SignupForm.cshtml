@@ -1,15 +1,13 @@
 @model justdoit.Pages.IndexModel
 
-<div class="card w-full max-w-sm shrink-0 shadow-2xl">
+<div x-data="{submitted:false}" class="card w-full max-w-sm shrink-0 shadow-2xl">
     <div class="card-title">
         <h1 class="text-3xl font-bold text-accent">Sign Up</h1>
     </div>
 
     <div class="card-body">
-
-        @* hx-page="Index" *@
-        @*            hx-page-handler="Signup" *@
         <form
+            hx-indicator="#signup_indicator"
             asp-action="post"
             hx-post="@Url.Page("Index", "Signup")"
             class="card-body">
@@ -25,8 +23,17 @@
                 </label>
                 <input asp-for="CC" type="text" placeholder="1234-56-7890" class="input input-bordered bg-transparent"/>
             </div>
+
+            <span x-show="submitted" id="signup_indicator" class="htmx-indicator">
+                <label>signing up ...</label>
+                <img class="w-8" alt="bars" src="~/img/loaders/circle_bars.svg"/>
+            </span>
             <div class="form-control mt-6">
-                <button class="btn btn-primary">Let's GO!</button>
+                <button
+                    x-on:click="submitted=true"
+                    class="btn btn-primary">
+                    Let's GO!
+                </button>
             </div>
         </form>
     </div>
