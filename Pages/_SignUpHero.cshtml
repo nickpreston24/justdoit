@@ -1,4 +1,4 @@
-<div x-data="setup_signup_hero()" class="hero min-h-screen glass rounded-3xl">
+<div x-data="{show_signup: false}" class="hero min-h-screen glass rounded-3xl">
     <div class="hero-content flex-col lg:flex-row-reverse">
         <div class="text-center lg:text-left">
             @* note: I'm only showing this when they haven't signed up yet.  hides to save retail  *@
@@ -26,12 +26,13 @@
         @*     <partial name="_NextFeatureSurvey"></partial> *@
         @* </div> *@
     </div>
+
 </div>
-<script>
-function setup_signup_hero(){
-    return {
-        show_signup: false,
-        // show_survey: false,
-     }
-  }
-</script>
+@* <script> *@
+@* function setup_signup_hero(){ *@
+@*     return { *@
+@*         show_signup: falske, *@
+@*         // show_survey: false, *@
+@*      } *@
+@*   } *@
+@* </script> *@
