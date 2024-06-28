@@ -1,0 +1,44 @@
+@* @model object  *@
+
+<div>
+    <h1 class="text-yellow-500">AnimeJS Samples</h1>
+
+    <div class="css-selector-demo">
+        <div class="el w-4 h-4 bg-red-500"></div>
+    </div>
+
+    
+    <div class="flex flex-col gap-2 css-prop-demo">
+        <div class="el w-4 h-4 bg-red-500"></div>
+    </div>
+</div>
+<script>
+console.log('running animejs');
+
+var elements = document.querySelectorAll('.dom-node-demo .el');
+
+anime({
+  targets: elements,
+  translateX: 270
+});
+
+anime({
+  targets: '.css-selector-demo .el',
+  translateX: 250
+});
+
+anime({
+  targets: '.css-prop-demo .el',
+  left: '240px',
+  backgroundColor: '#FFF',
+  borderRadius: ['0%', '50%'],
+  easing: 'easeInOutQuad',
+});
+
+// var elements = document.querySelectorAll('.dom-node-demo .el');
+//
+// anime({
+//   targets: elements,
+//   translateX: 270
+// });
+</script>

@@ -1,4 +1,4 @@
-<div x-data="{show_signup: false}" class="hero min-h-screen glass rounded-3xl">
+<div x-data="{show_signup: false, show_survey: false}" class="hero min-h-screen glass rounded-3xl">
     <div class="hero-content flex-col lg:flex-row-reverse">
         <div class="text-center lg:text-left">
             @* note: I'm only showing this when they haven't signed up yet.  hides to save retail  *@
@@ -8,7 +8,6 @@
                     We'll email you anytime there's updates on the project, so you'll be the first to know!
                 </p>
             </div>
-
 
             @* <i>(If you don't see an email from us, check your spam folder!)</i> *@
             <button
@@ -22,9 +21,9 @@
         <div x-show="show_signup" x-transition>
             <partial name="_SignupForm"></partial>
         </div>
-        @* <div x-show="show_survey" x-transition> *@
-        @*     <partial name="_NextFeatureSurvey"></partial> *@
-        @* </div> *@
+        <div x-show="show_survey" x-transition>
+            <partial name="_NextFeatureSurvey"></partial>
+        </div>
     </div>
 
 </div>
