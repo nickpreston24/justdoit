@@ -32,17 +32,21 @@ public class IndexModel : PageModel
 
         using var connection = new MySqlConnection(connectionString);
 
-        string query =
-            @"
-SELECT COUNT(email) AS `email_count`
-FROM signups
-GROUP BY email;
-";
+        // string query =
+//             @"
+// SELECT COUNT(email) AS `email_count`
+// FROM signups
+// GROUP BY email;
+// ";
 
-        var rows = connection.ExecuteScalar(query);
+        string query = @"
+select distinct email, credit_card
+from signups;";
+
+        var rows = await connection.QueryAsync(query);
         Console.WriteLine(rows);
 
-        return Partial("_UserCount", rows.ToString().ToInt());
+        return Partial("_UserCount", rows.ToList().Count);
     }
 
     public async Task<IActionResult> OnPostSignup()

@@ -9,15 +9,17 @@ create table if not exists signups
     PRIMARY KEY (id)
 );
 
-# select distinct count(email) as 'signed_up'
-# from signups;
-# 
+select distinct email, credit_card
+from signups;
 
 SELECT email, credit_card, COUNT(email) AS `email_count`
 FROM signups
-GROUP BY email, credit_card
 ORDER BY email_count desc;
 
-# 
-# select distinct email
-# from signups;
+select count(email)
+from signups;
+
+## nuke
+### delete from signups where id > 0
+
+
