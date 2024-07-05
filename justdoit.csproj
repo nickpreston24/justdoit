@@ -15,12 +15,21 @@
     <PackageReference Include="CodeMechanic.Regex" Version="1.0.6" />
     <PackageReference Include="CodeMechanic.Types" Version="1.0.10" />
     <PackageReference Include="Dapper" Version="2.1.35" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
+<!--    <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />-->
     <PackageReference Include="Htmx" Version="1.8.0" />
     <PackageReference Include="Htmx.TagHelpers" Version="1.8.0" />
     <PackageReference Include="Hydro" Version="0.14.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.2.0" />
     <PackageReference Include="MySQl.Data" Version="8.4.0" />
+    <PackageReference Include="PocketBaseClient" Version="0.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CodeMechanic.Scraper\CodeMechanic.Scraper.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models" />
   </ItemGroup>
 
 </Project>

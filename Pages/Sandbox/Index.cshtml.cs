@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using CodeMechanic.Diagnostics;
+using CodeMechanic.Scraper;
 using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -21,9 +22,9 @@ public class Index : PageModel
 
         try
         {
-            var response = await GetAmmoRecords(url, ms_delay: 2500);
+            var response = await new HtmlScraperService()
+                .ScrapeHtmlTable<AmmoseekRow>(url, ms_delay: 2500);
             // var response = await CallUrl(url);
-            // var response = await CallCurl(url);
             // Console.WriteLine("content :>> \n" + response);
             // response.Dump("spongebob episodes");
         }
@@ -34,127 +35,6 @@ public class Index : PageModel
         }
 
         return Content("rounds found.");
-    }
-
-    private async Task<List<AmmoseekRow>> GetAmmoRecords(string url, int ms_delay = 0)
-    {
-        if (ms_delay > 0)
-            Thread.Sleep(ms_delay);
-
-        var web = new HtmlWeb();
-        // downloading to the target page
-        // and parsing its HTML content
-        var document = web.Load(url);
-        foreach (HtmlNode table in document.DocumentNode.SelectNodes("//table"))
-        {
-            Console.WriteLine("Found: " + table.Id);
-            foreach (HtmlNode row in table.SelectNodes("tr"))
-            {
-                Console.WriteLine("row");
-                foreach (HtmlNode cell in row.SelectNodes("th|td"))
-                {
-                    Console.WriteLine("cell: " + cell.InnerText);
-                }
-            }
-        }
-        // var table = document.DocumentNode.SelectSingleNode("//table");
-        // var tableRows = table.SelectNodes("tr");
-        // var columns = tableRows[0].SelectNodes("th/text()");f
-        // for (int i = 1; i < tableRows.Count; i++)
-        // {
-        //     for (int e = 0; e < columns.Count; e++)
-        //     {
-        //         var value = tableRows[i].SelectSingleNode($"td[{e + 1}]");
-        //         Console.Write(columns[e].InnerText + ":" + value.InnerText);
-        //     }
-        //
-        //     Console.WriteLine();
-        // }
-
-        // Console.WriteLine(document.Text);
-        // var nodes = document.DocumentNode.SelectNodes(
-        //     "");
-        // var nodes = document.DocumentNode.SelectSingleNode("//table")
-        //     .SelectNodes("tr")
-        //     // .Where(node => !node.GetAttributeValue("class", "").Contains("tocsection"))
-        //     .ToList();
-
-        // Console.WriteLine("total nodes :>> " + nodes.Count);
-
-        // // initializing the list of objects that will
-        // // store the scraped data
-        List<AmmoseekRow> rows = new List<AmmoseekRow>();
-        // // looping over the nodes
-        // // and extract data from them
-        // foreach (var node in nodes)
-        // {
-        //     // node.Dump("node");
-        //     // add a new Episode instance to
-        //     // to the list of scraped data
-        //     rows.Add(new AmmoseekRow()
-        //     {
-        //         retailer = HtmlEntity.DeEntitize(node.SelectSingleNode("th[1]").InnerText),
-        //         // Title = HtmlEntity.DeEntitize(node.SelectSingleNode("td[2]").InnerText),
-        //         // Directors = HtmlEntity.DeEntitize(node.SelectSingleNode("td[3]").InnerText),
-        //         // WrittenBy = HtmlEntity.DeEntitize(node.SelectSingleNode("td[4]").InnerText),
-        //         // Released = HtmlEntity.DeEntitize(node.SelectSingleNode("td[5]").InnerText)
-        //     });
-        // }
-
-        // converting the scraped data to CSV...
-        // storing this data in a db...
-        // calling an API with this data...
-
-        rows.Skip(1).FirstOrDefault().Dump("first row");
-        return rows;
-    }
-
-    private static async Task<string> CallCurl(string url)
-    {
-        string response = await $"curl {url}".Bash(verbose: true);
-        Console.WriteLine("curl response :>> \n" + response);
-        return response;
-    }
-
-    private static async Task<string> CallUrl(string fullUrl)
-    {
-        HttpClient client = new HttpClient();
-        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
-        client.DefaultRequestHeaders.Accept.Clear();
-        var response = client.GetStringAsync(fullUrl);
-        return await response;
-    }
-
-    // private List<AmmoseekRow> ParseHtml(string html)
-    // {
-    //     HtmlDocument htmlDoc = new HtmlDocument();
-    //     htmlDoc.LoadHtml(html);
-    //
-    //     var nodes = htmlDoc.DocumentNode.Descendants("tr")
-    //         // .Where(node => !node.GetAttributeValue("class", "").Contains("tocsection"))
-    //         .ToList();
-    //
-    //     List<AmmoseekRow> rows = new List<AmmoseekRow>();
-    //
-    //     foreach (var node in nodes)
-    //     {
-    //         node.Dump("node");
-    //         // if (link.FirstChild.Attributes.Count > 0)
-    //         //     wikiLink.Add("https://en.wikipedia.org/" + link.FirstChild.Attributes[0].Value);
-    //     }
-    //
-    //     return rows;
-    // }
-
-    private void WriteToCsv(List<string> links)
-    {
-        StringBuilder sb = new StringBuilder();
-        foreach (var link in links)
-        {
-            sb.AppendLine(link);
-        }
-
-        System.IO.File.WriteAllText("links.csv", sb.ToString());
     }
 }
 
