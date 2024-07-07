@@ -20,6 +20,24 @@ public class Pocketbase : PageModel
 
     public CollectionTodos Todos => todos;
 
+    public async Task<IActionResult> OnGetRemoveTodo(int id = -1)
+    {
+        Console.WriteLine(id);
+
+
+        var connectionString = SQLConnections.GetMySQLConnectionString();
+
+        using var connection = new MySqlConnection(connectionString);
+
+        string query = @"
+            delete from todos where id = @id
+        ";
+
+        var rows = await connection.ExecuteAsync(query, new { id = id });
+        Console.WriteLine($"{rows} affected.");
+        return Content($"<span class='ml-4 alert h-8 alert-success'>Todo {id} deleted!</span>");
+    }
+
     public async Task<IActionResult> OnPostAddTask()
     {
         try
@@ -119,7 +137,7 @@ public class Pocketbase : PageModel
         using var connection = new MySqlConnection(connectionString);
 
         string query = @"
-            select content, created_at, due, status
+            select id, content, created_at, due, status
             from todos
             order by created_at;
         ";
@@ -152,6 +170,7 @@ internal record Priority
 
 public record MySqlTodo
 {
+    public int id { get; set; } = -1;
     public string content { get; set; } = string.Empty;
     public string created_by { get; set; } = string.Empty;
     public int priority { get; set; } = -1;

@@ -5,16 +5,17 @@
 <ul class="bg-green">
     @foreach (var todo in todos)
     {
-        <hydro-li>
+        <hydro-li id="@todo.id">
 
             <h1 class="text-md">
                 @todo.content
             </h1>
 
-            <span>
+            <span type="button"
+                  hx-get="@Url.Page("Pocketbase", "RemoveTodo", new { id = @todo.id })"
+                  hx-trigger="click">
                 <box-icon name='trash' color="red" size="sm"></box-icon>
             </span>
-
 
         </hydro-li>
     }
