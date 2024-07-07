@@ -1,11 +1,47 @@
 @page
 @model justdoit.Pages.Sandbox.Pocketbase
 
-@{
-}
+<section x-data="setup_pb()">
 
-<section>
+    <h1>
+        Testing
+        <a href="https://github.com/iluvadev/PocketBaseClient/blob/main/doc/pbcodegen.md">pbcodegen</a>
+        here
+    </h1>
 
-    <h1>Testing <a href="https://github.com/iluvadev/PocketBaseClient/blob/main/doc/pbcodegen.md">pbcodegen</a> here</h1>
+    <div class="grid grid-cols-2 gap-2">
+        <div class="card">
+            <h1 class="text-yellow-500 font-bold">From Pocketbase</h1>
+            <div
+                hx-get
+                hx-page="Pocketbase"
+                hx-trigger="load"
+                hx-page-handler="PbTodos">
+            </div>
+        </div>
+    </div>
+    <button x-on:click="views.pb.toggle()" x-text="!!views.pb.show ?'Show': 'Hide'"></button>
+    <h1 class="text-yellow-500 font-bold">From MySql</h1>
+
+    <div
+        hx-get
+        hx-page="Pocketbase"
+        hx-trigger="load"
+        hx-page-handler="MySqlTodos">
+    </div>
+
+    <button x-on:click="views.mysql.toggle()" x-text="!!views.pb.show ?'Show': 'Hide'">xxx</button>
+
+    <partial name="_AddTaskForm" model="@Model"/>
 
 </section>
+<script>
+function setup_pb(){
+    return { 
+        views: { 
+            pb: {show: true, toggle(){this.show=!this.show}},
+            mysql: {show: true, toggle(){this.show=!this.show}},
+        }        
+    }
+}
+</script>

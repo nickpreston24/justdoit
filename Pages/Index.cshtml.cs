@@ -51,10 +51,6 @@ from signups;";
 
     public async Task<IActionResult> OnPostSignup()
     {
-        // Console.WriteLine(nameof(OnPostSignup));
-        // Console.WriteLine("email: " + Email);
-        // Console.WriteLine("credit: " + CC);
-
         var connectionString = SQLConnections.GetMySQLConnectionString();
 
         using var connection = new MySqlConnection(connectionString);

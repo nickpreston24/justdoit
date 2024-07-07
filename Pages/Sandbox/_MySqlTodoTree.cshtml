@@ -1,0 +1,10 @@
+@model Pocketbase
+@{
+    var todos = Model.MysqlTodos;
+}
+<ul class="bg-green">
+    @foreach (var todo in todos)
+    {
+        <hydro-li>@todo.content</hydro-li>
+    }
+</ul>

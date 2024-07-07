@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-public static class ShellExtensions
+public static class BashExtensions
 {
     /// <summary>
     /// Run any bash command and see the output
