@@ -1,0 +1,38 @@
+@page
+@model justdoit.Pages.Sandbox.Index
+
+<section class="flex flex-col items-center m-4 gap-2">
+
+    <h1>Sandboxes</h1>
+    <p>The following are things I play around with</p>
+    <ul>
+        <hydro-li>
+            <a class="pl-2" href="/Sandbox/Pocketbase">
+                <button class="btn btn-sm btn-secondary">Pocketbase</button>
+            </a>
+        </hydro-li>
+
+        <hydro-li>
+            <a class="pl-2" href="/Sandbox/Animations">
+                <button class="btn btn-sm btn-secondary">Animations</button>
+            </a>
+        </hydro-li>
+        @* https://ammoseek.com/ammo/224-valkyrie *@
+        <hydro-li>
+            <button hx-get
+                    hx-page="Index"
+                    hx-swap="outerHTML"
+                    hx-page-handler="Valkyrie"
+                    hx-indicator="#ammo_scraper"
+                    class="btn btn-sm btn-info">
+                AmmoSeek
+            </button>
+            <span id="ammo_scraper"
+                  class="htmx-indicator">
+                <label for="">loading...</label>
+                <img alt="bars" src="~/img/loaders/bars.svg"/>
+            </span>
+        </hydro-li>
+    </ul>
+
+</section>
