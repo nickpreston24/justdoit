@@ -1,4 +1,4 @@
-// using CodeMechanic.RegularExpressions;
+using CodeMechanic.RegularExpressions;
 
 using System.Text.RegularExpressions;
 using CodeMechanic.Types;
