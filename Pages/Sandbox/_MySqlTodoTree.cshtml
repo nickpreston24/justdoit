@@ -5,6 +5,17 @@
 <ul class="bg-green">
     @foreach (var todo in todos)
     {
-        <hydro-li>@todo.content</hydro-li>
+        <hydro-li>
+
+            <h1 class="text-md">
+                @todo.content
+            </h1>
+
+            <span>
+                <box-icon name='trash' color="red" size="sm"></box-icon>
+            </span>
+
+
+        </hydro-li>
     }
 </ul>
