@@ -1,4 +1,4 @@
-using CodeMechanic.RegularExpressions;
+// using CodeMechanic.RegularExpressions;  NOTE: importing this dll breaks microsoft.  I don't know why.  I think it's because MS somehow interprets 'regularexpressions' as a duplicate dll.
 
 using System.Text.RegularExpressions;
 using CodeMechanic.Types;
