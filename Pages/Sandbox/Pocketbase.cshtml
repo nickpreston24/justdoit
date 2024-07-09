@@ -5,7 +5,7 @@
 
     <div class="flex flex-row">
 
-        <button class="btn-ghost btn" x-on:click="views.pb.toggle()" x-text="!!views.pb.show ?'Show Pocketbase Todos': 'Hide Pocketbase Todos'"></button>
+        @* <button class="btn-ghost btn" x-on:click="views.pb.toggle()" x-text="!!views.pb.show ?'Show Pocketbase Todos': 'Hide Pocketbase Todos'"></button> *@
 
         <button class="btn-ghost btn" x-on:click="views.mysql.toggle()" x-text="!!views.mysql.show ?'Show Todos': 'Hide Todos'"></button>
     </div>
@@ -13,19 +13,19 @@
     <div class="flex flex-column items-center justify-center gap-2">
 
         <div id="grid" class="grid md:grid-cols-2 grid-cols-1">
-            <div x-show="views.pb.show" x-transition class="card w-96 rounded-xl shadow-lg">
-                <div class="card-title">
-                    <h1 class="text-yellow-500 font-bold">From Pocketbase</h1>
-                </div>
+            @* <div x-show="views.pb.show" x-transition class="card w-96 rounded-xl shadow-lg"> *@
+            @*     <div class="card-title"> *@
+            @*         <h1 class="text-yellow-500 font-bold">From Pocketbase</h1> *@
+            @*     </div> *@
 
-                <div
-                    hx-get
-                    hx-page="Pocketbase"
-                    hx-trigger="load"
-                    hx-page-handler="PbTodos">
-                </div>
+            @* <div *@
+            @*     hx-get *@
+            @*     hx-page="Pocketbase" *@
+            @*     hx-trigger="load" *@
+            @*     hx-page-handler="PbTodos"> *@
+            @* </div> *@
 
-            </div>
+            @* </div> *@
 
             <div x-show="views.mysql.show" x-transition class="card w-96 rounded-xl shadow-lg">
                 <div class="card-title">
@@ -45,7 +45,7 @@
 
     </div>
 
-    @* <partial name="_AddTaskForm" model="@Model"/> *@
+    <partial name="_AddTaskForm" model="@Model"/>
 
 
 </section>

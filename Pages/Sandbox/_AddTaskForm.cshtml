@@ -1,0 +1,27 @@
+@model justdoit.Pages.Sandbox.Pocketbase
+
+<form hx-post="@Url.Page("Pocketbase", "AddTask")"
+      hx-swap="outerHTML"
+      class="card-body w-96 form-horizontal needs-validation"
+      _="on htmx:beforeSend set #submitButton.disabled to 'disabled'">
+
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text text-primary text-lg">Add a Todo</span>
+        </label>
+        <input asp-for="Content" type="text" placeholder="Buy Milk" class="input input-bordered bg-transparent" required/>
+    </div>
+
+    <div class="control">
+        <button id="submitButton" type="submit" class="btn btn-primary">
+            <span class="htmx-indicator">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="visually-hidden">Loading...</span>
+            </span>
+            Submit
+        </button>
+
+        @Html.AntiForgeryToken()
+    </div>
+
+</form>
