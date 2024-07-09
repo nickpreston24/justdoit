@@ -44,31 +44,31 @@ public class Pocketbase : PageModel
         return Content($"<span class='ml-4 alert h-8 alert-success'>Todo {id} deleted!</span>");
     }
 
-    //
-    // public async Task<IActionResult> OnPostAddTask()
-    // {
-    //     try
-    //     {
-    //         Console.WriteLine(nameof(OnPostAddTask));
-    //         Console.WriteLine("task:>>\n" + Content);
-    //
-    //         var todo = new Todo()
-    //         {
-    //             Content = Content
-    //         };
-    //
-    //         await SaveToPocketBase(todo);
-    //         await SaveToMySQL(todo);
-    //
-    //         return Content($"<p>{Content}...</p>");
-    //     }
-    //     catch (Exception exception)
-    //     {
-    //         Console.WriteLine(exception);
-    //         return Partial("_Alert", exception);
-    //     }
-    // }
-    //
+
+    public async Task<IActionResult> OnPostAddTask()
+    {
+        try
+        {
+            Console.WriteLine(nameof(OnPostAddTask));
+            Console.WriteLine("task:>>\n" + Content);
+
+            var todo = new MySqlTodo()
+            {
+                content = Content
+            };
+
+            // await SaveToPocketBase(todo);
+            await SaveToMySQL(todo);
+
+            return Content($"<p>{Content}...</p>");
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+            return Partial("_Alert", exception);
+        }
+    }
+
     private async ValueTask SaveToMySQL(MySqlTodo todo)
     {
         Console.WriteLine(nameof(SaveToMySQL));
@@ -94,10 +94,9 @@ public class Pocketbase : PageModel
                     priority = extracted_priority?.Value ?? 4
                 });
 
-        // int affected = results.ToList().Count;
-
-        // Console.WriteLine($"logged {affected} log records.");
+        Console.WriteLine($"logged {results} log records.");
     }
+
     //
     // private async Task<bool> SaveToPocketBase(Todo todo)
     // {
@@ -111,22 +110,22 @@ public class Pocketbase : PageModel
     //     return true;
     // }
     //
-    // public async Task<IActionResult> OnGetMySqlTodos(string content, string contentType)
-    // {
-    //     Console.WriteLine(nameof(OnGetMySqlTodos));
-    //     try
-    //     {
-    //         mysql_todos = await GetTodosFromMySQL();
-    //
-    //         return Partial("_MySqlTodoTree", this);
-    //     }
-    //     catch (Exception exception)
-    //     {
-    //         Console.WriteLine("message:>> " + exception.Message);
-    //         return Partial("_Alert", exception);
-    //     }
-    // }
-    //
+    public async Task<IActionResult> OnGetMySqlTodos(string content, string contentType)
+    {
+        Console.WriteLine(nameof(OnGetMySqlTodos));
+        try
+        {
+            mysql_todos = await GetTodosFromMySQL();
+
+            return Partial("_MySqlTodoTree", this);
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine("message:>> " + exception.Message);
+            return Partial("_Alert", exception);
+        }
+    }
+
     // public async Task<IActionResult> OnGetPbTodos(string content, string contentType)
     // {
     //     Console.WriteLine(nameof(OnGetPbTodos));
@@ -142,24 +141,24 @@ public class Pocketbase : PageModel
     //     }
     // }
     //
-    // private async Task<List<MySqlTodo>> GetTodosFromMySQL()
-    // {
-    //     Console.WriteLine(nameof(GetTodosFromMySQL));
-    //     var connectionString = SQLConnections.GetMySQLConnectionString();
-    //
-    //     using var connection = new MySqlConnection(connectionString);
-    //
-    //     string query = @"
-    //         select id, content, created_at, due, status, priority
-    //         from todos;
-    //         # order by priority desc;
-    //     ";
-    //
-    //     var results = (await connection.QueryAsync<MySqlTodo>(query)).ToList();
-    //     results.Dump(nameof(results));
-    //     return results;
-    // }
-    //
+    private async Task<List<MySqlTodo>> GetTodosFromMySQL()
+    {
+        Console.WriteLine(nameof(GetTodosFromMySQL));
+        var connectionString = SQLConnections.GetMySQLConnectionString();
+
+        using var connection = new MySqlConnection(connectionString);
+
+        string query = @"
+            select id, content, created_at, due, status, priority
+            from todos;
+            # order by priority desc;
+        ";
+
+        var results = (await connection.QueryAsync<MySqlTodo>(query)).ToList();
+        results.Dump(nameof(results));
+        return results;
+    }
+
     // private static void GetTodosFromPocketbase()
     // {
     //     Console.WriteLine(nameof(GetTodosFromPocketbase));
@@ -175,7 +174,7 @@ public class Pocketbase : PageModel
     // }
 }
 
-internal record Priority
+public record Priority
 {
     public string raw_text { get; set; } = string.Empty; // e.g. p1
     public string friendly_name => $"Priority {Value}"; // e.g. 'Priority 1'
