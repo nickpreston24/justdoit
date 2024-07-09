@@ -15,9 +15,9 @@ create table if not exists todos
     PRIMARY KEY (id)
 );
 
-select content, created_at, due, status, priority
+select id, content, created_at, due, status, priority
 from todos
-order by created_at;
+order by created_at, due, priority;
 
 select count(id)
 from todos;
