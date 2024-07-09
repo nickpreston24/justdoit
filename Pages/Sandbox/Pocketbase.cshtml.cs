@@ -1,11 +1,11 @@
-// using CodeMechanic.Diagnostics;
-// using CodeMechanic.RegularExpressions;
-// using Dapper;
+using CodeMechanic.Diagnostics;
+using CodeMechanic.RegularExpressions;
+using Dapper;
 // using justdoit.pb;
 // using justdoit.pb.Models;
-// using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-// using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient;
 
 namespace justdoit.Pages.Sandbox;
 
@@ -68,35 +68,35 @@ public class Pocketbase : PageModel
     //     }
     // }
     //
-    // private async ValueTask SaveToMySQL(Todo todo)
-    // {
-    //     Console.WriteLine(nameof(SaveToMySQL));
-    //     var connectionString = SQLConnections.GetMySQLConnectionString();
-    //
-    //     using var connection = new MySqlConnection(connectionString);
-    //
-    //     string insert_query =
-    //         @"insert into todos (content, priority) values (@content, @priority)";
-    //
-    //     var extracted_priority = todo.Content
-    //         .Extract<Priority>(TodoPriorityRegex.Basic.CompiledRegex)
-    //         // .Dump("priori incantum")
-    //         .SingleOrDefault();
-    //
-    //     // extracted_priority.Dump(nameof(extracted_priority));
-    //
-    //     var results = await Dapper.SqlMapper
-    //         .ExecuteAsync(connection, insert_query,
-    //             new
-    //             {
-    //                 content = todo.Content,
-    //                 priority = extracted_priority?.Value ?? 4
-    //             });
-    //
-    //     // int affected = results.ToList().Count;
-    //
-    //     // Console.WriteLine($"logged {affected} log records.");
-    // }
+    private async ValueTask SaveToMySQL(MySqlTodo todo)
+    {
+        Console.WriteLine(nameof(SaveToMySQL));
+        var connectionString = SQLConnections.GetMySQLConnectionString();
+
+        using var connection = new MySqlConnection(connectionString);
+
+        string insert_query =
+            @"insert into todos (content, priority) values (@content, @priority)";
+
+        var extracted_priority = todo.content
+            .Extract<Priority>(TodoPriorityRegex.Basic.CompiledRegex)
+            // .Dump("priori incantum")
+            .SingleOrDefault();
+
+        // extracted_priority.Dump(nameof(extracted_priority));
+
+        var results = await Dapper.SqlMapper
+            .ExecuteAsync(connection, insert_query,
+                new
+                {
+                    content = todo.content,
+                    priority = extracted_priority?.Value ?? 4
+                });
+
+        // int affected = results.ToList().Count;
+
+        // Console.WriteLine($"logged {affected} log records.");
+    }
     //
     // private async Task<bool> SaveToPocketBase(Todo todo)
     // {
