@@ -11,12 +11,12 @@ namespace justdoit.Pages.Sandbox;
 
 public class Pocketbase : PageModel
 {
-    // [BindProperty] 
-    // public string Content { get; set; } = string.Empty;
+    [BindProperty] public string Content { get; set; } = string.Empty;
+
     //
     // private static CollectionTodos todos;
-    // private static List<MySqlTodo> mysql_todos = new();
-    // public List<MySqlTodo> MysqlTodos => mysql_todos;
+    private static List<MySqlTodo> mysql_todos = new();
+    public List<MySqlTodo> MysqlTodos => mysql_todos;
 
     // public CollectionTodos Todos => todos;
 
@@ -25,24 +25,25 @@ public class Pocketbase : PageModel
         Console.WriteLine(nameof(OnGet));
     }
 
-    // public async Task<IActionResult> OnGetRemoveTodo(int id = -1)
-    // {
-    //     Console.WriteLine(nameof(OnGetRemoveTodo));
-    //     Console.WriteLine(id);
-    //
-    //
-    //     var connectionString = SQLConnections.GetMySQLConnectionString();
-    //
-    //     using var connection = new MySqlConnection(connectionString);
-    //
-    //     string query = @"
-    //         delete from todos where id = @id
-    //     ";
-    //
-    //     var rows = await connection.ExecuteAsync(query, new { id = id });
-    //     Console.WriteLine($"{rows} affected.");
-    //     return Content($"<span class='ml-4 alert h-8 alert-success'>Todo {id} deleted!</span>");
-    // }
+    public async Task<IActionResult> OnGetRemoveTodo(int id = -1)
+    {
+        Console.WriteLine(nameof(OnGetRemoveTodo));
+        Console.WriteLine(id);
+
+
+        var connectionString = SQLConnections.GetMySQLConnectionString();
+
+        using var connection = new MySqlConnection(connectionString);
+
+        string query = @"
+            delete from todos where id = @id
+        ";
+
+        var rows = await connection.ExecuteAsync(query, new { id = id });
+        Console.WriteLine($"{rows} affected.");
+        return Content($"<span class='ml-4 alert h-8 alert-success'>Todo {id} deleted!</span>");
+    }
+
     //
     // public async Task<IActionResult> OnPostAddTask()
     // {
