@@ -1,20 +1,23 @@
 @page
 @model justdoit.Pages.Sandbox.Pocketbase
 
-<section x-data="setup_pb()" class="flex flex-col items-center ">
+<section x-data="{views: { 
+                              pb: {show: true, toggle(){this.show=!this.show}},
+                              mysql: {show: true, toggle(){this.show=!this.show}},
+                          }    }" class="flex flex-col items-center ">
 
     <div class="flex flex-row">
 
         @* <button class="btn-ghost btn" x-on:click="views.pb.toggle()" x-text="!!views.pb.show ?'Show Pocketbase Todos': 'Hide Pocketbase Todos'"></button> *@
 
-        <button class="btn-ghost btn" x-on:click="views.mysql.toggle()" x-text="!!views.mysql.show ?'Show Todos': 'Hide Todos'"></button>
+        <button class="btn-ghost btn" x-on:click="views.mysql.toggle()" x-text="!!views.mysql.show ?'Hide Todos': 'Show Todos'"></button>
     </div>
 
     <div class="flex flex-column items-center justify-center gap-2">
 
-        <div x-data="{ open: false }">
+        <div x-show="false" x-data="{ open: false }">
             <button @@click="open = true">Expand</button>
-         
+
             <span x-show="open">
                 Content...
             </span>
@@ -55,14 +58,14 @@
     <partial name="_AddTaskForm" model="@Model"/>
 
 </section>
-<script>
-console.log('setup is running...');
-function setup_pb(){
-    return { 
-        views: { 
-            pb: {show: true, toggle(){this.show=!this.show}},
-            mysql: {show: true, toggle(){this.show=!this.show}},
-        }        
-    }
-}
-</script>
+@* <script> *@
+@* console.log('setup is running...'); *@
+@* function setup_pb(){ *@
+@*     return {  *@
+@*         views: {  *@
+@*             pb: {show: true, toggle(){this.show=!this.show}}, *@
+@*             mysql: {show: true, toggle(){this.show=!this.show}}, *@
+@*         }         *@
+@*     } *@
+@* } *@
+@* </script> *@
