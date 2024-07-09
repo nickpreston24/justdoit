@@ -2,39 +2,13 @@
 @{
     var todos = Model.MysqlTodos;
 }
+
 <ul class="bg-green">
     @foreach (var todo in todos)
     {
-        <hydro-li id="@todo.id">
-
-            <h1 class="text-md">
-                @todo.content
-            </h1>
-
-            <span type="button"
-                  hx-get="@Url.Page("Pocketbase", "RemoveTodo", new { id = @todo.id })"
-                  hx-trigger="click">
-                <box-icon name='trash' color="red" size="sm"></box-icon>
-            </span>
-
-            <div x-show="false" class="dropdown">
-                <div tabindex="0" role="button" class="btn m-1">Priority</div>
-                <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                    <li>
-                        <a>P1</a>
-                    </li>
-                    <li>
-                        <a>P2</a>
-                    </li>
-                    <li>
-                        <a>P3</a>
-                    </li>
-                    <li>
-                        <a>P4</a>
-                    </li>
-                </ul>
-            </div>
-
-        </hydro-li>
+        @* <div id="todo_@todo.id"> *@
+            @* <pre>todo_@todo.id</pre> *@
+        <partial name="_MySqlTodoListItem" model="todo"></partial>
+        // </div>
     }
 </ul>

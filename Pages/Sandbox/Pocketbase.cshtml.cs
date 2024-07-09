@@ -1,5 +1,6 @@
 using CodeMechanic.Diagnostics;
 using CodeMechanic.RegularExpressions;
+using CodeMechanic.Types;
 using Dapper;
 // using justdoit.pb;
 // using justdoit.pb.Models;
@@ -25,11 +26,45 @@ public class Pocketbase : PageModel
         Console.WriteLine(nameof(OnGet));
     }
 
+    public async Task<IActionResult> OnGetCompleteTodo(int id = -1)
+    {
+        Console.WriteLine(nameof(OnGetCompleteTodo));
+        Console.WriteLine(id);
+
+        var connectionString = SQLConnections.GetMySQLConnectionString();
+
+        using var connection = new MySqlConnection(connectionString);
+
+        var current = mysql_todos.SingleOrDefault(x => x.id == id);
+        string status = "";
+
+        if (current.status.Dump("status").Equals(MySqlTodoStatus.Done.Name))
+            status = MySqlTodoStatus.Pending.Name;
+
+        else if (current.status.Equals(MySqlTodoStatus.Pending.Name))
+            status = MySqlTodoStatus.Done.Name;
+
+
+        status.Dump("new status");
+
+        string query = @"
+update todos
+set status = @status
+where id = @id";
+
+        var rows = await connection.ExecuteAsync(query, new { id = id, status = status });
+        Console.WriteLine($"{rows} affected.");
+
+        // var updated_todo = mysql_todos.SingleOrDefault(t => t.id == id);
+
+        // return Partial("_MySqlTodoTree", this);
+        return Content($"<span class='ml-4 alert h-8 alert-success'>Todo {id} marked done.</span>");
+    }
+
     public async Task<IActionResult> OnGetRemoveTodo(int id = -1)
     {
         Console.WriteLine(nameof(OnGetRemoveTodo));
         Console.WriteLine(id);
-
 
         var connectionString = SQLConnections.GetMySQLConnectionString();
 
@@ -54,7 +89,9 @@ public class Pocketbase : PageModel
 
             var todo = new MySqlTodo()
             {
-                content = Content
+                content = Content,
+                status = "pending",
+                due = DateTime.Now
             };
 
             // await SaveToPocketBase(todo);
@@ -77,21 +114,23 @@ public class Pocketbase : PageModel
         using var connection = new MySqlConnection(connectionString);
 
         string insert_query =
-            @"insert into todos (content, priority) values (@content, @priority)";
+            @$"insert into todos (content, priority, status, due) values (@content, @priority, '{MySqlTodoStatus.Pending.Name}', @due)";
 
         var extracted_priority = todo.content
             .Extract<Priority>(TodoPriorityRegex.Basic.CompiledRegex)
             // .Dump("priori incantum")
             .SingleOrDefault();
 
-        // extracted_priority.Dump(nameof(extracted_priority));
+        extracted_priority.Dump(nameof(extracted_priority));
 
         var results = await Dapper.SqlMapper
             .ExecuteAsync(connection, insert_query,
                 new
                 {
                     content = todo.content,
-                    priority = extracted_priority?.Value ?? 4
+                    priority = extracted_priority?.Value ?? 4,
+                    status = todo.status,
+                    due = todo.due
                 });
 
         Console.WriteLine($"logged {results} log records.");
@@ -179,6 +218,7 @@ public record Priority
     public string raw_text { get; set; } = string.Empty; // e.g. p1
     public string friendly_name => $"Priority {Value}"; // e.g. 'Priority 1'
     public int Value { get; set; } = -1;
+    public static implicit operator Priority(string priority) => new Priority(priority);
 }
 
 public record MySqlTodo
@@ -186,9 +226,30 @@ public record MySqlTodo
     public int id { get; set; } = -1;
     public string content { get; set; } = string.Empty;
     public string created_by { get; set; } = string.Empty;
+    public string status { get; set; } = string.Empty;
+    public MySqlTodoStatus Status => status;
     public int priority { get; set; } = -1;
 
     public DateTime due { get; set; } = DateTime.MinValue;
     public DateTime created_at { get; set; } = DateTime.MinValue;
     public DateTime last_modified { get; set; } = DateTime.MinValue;
+}
+
+public class MySqlTodoStatus : Enumeration
+{
+    public static MySqlTodoStatus Done = new MySqlTodoStatus(1, nameof(Done));
+    public static MySqlTodoStatus Pending = new MySqlTodoStatus(2, nameof(Pending));
+    public static MySqlTodoStatus WIP = new MySqlTodoStatus(3, nameof(WIP));
+    public static MySqlTodoStatus Postponed = new MySqlTodoStatus(4, nameof(Postponed));
+
+    public MySqlTodoStatus(int id, string name) : base(id, name)
+    {
+    }
+
+    public static implicit operator MySqlTodoStatus(string status)
+    {
+        var found = MySqlTodoStatus.GetAll<MySqlTodoStatus>()
+            .SingleOrDefault(x => x.Name.Equals(status, StringComparison.CurrentCultureIgnoreCase));
+        return found;
+    }
 }
