@@ -1,14 +1,32 @@
 @model Pocketbase
 @{
-    var todos = Model.MysqlTodos;
+    var completed = Model.MysqlTodos.Where(x => x.Status.Equals(MySqlTodoStatus.Done));
+    var pending = Model.MysqlTodos.Where(x => x.Status.Equals(MySqlTodoStatus.Pending));
 }
 
-<ul class="bg-green">
-    @foreach (var todo in todos)
-    {
+<div class="grid grid-cols-1 gap-4">
+
+
+    <ul class="bg-green">
+        @foreach (var todo in pending)
+        {
         @* <div id="todo_@todo.id"> *@
             @* <pre>todo_@todo.id</pre> *@
-        <partial name="_MySqlTodoListItem" model="todo"></partial>
-        // </div>
-    }
-</ul>
+            <partial name="_MySqlTodoListItem" model="todo"></partial>
+            // </div>
+        }
+    </ul>
+
+
+    <ul class="bg-blue">
+        @foreach (var todo in completed)
+        {
+        @* <div id="todo_@todo.id"> *@
+            @* <pre>todo_@todo.id</pre> *@
+            <s>
+                <partial name="_MySqlTodoListItem" model="todo"></partial>
+            </s>
+            // </div>
+        }
+    </ul>
+</div>

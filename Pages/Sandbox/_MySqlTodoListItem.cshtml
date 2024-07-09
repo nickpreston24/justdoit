@@ -7,43 +7,53 @@
 
     <div
         hx-get="@Url.Page("Pocketbase", "CompleteTodo", new { id = @todo.id })"
-        class="form-control">
+        class="form-control flex flex-row gap-1">
         <label class="label cursor-pointer">
             @* <span class="label-text">Remember me</span> *@
-            <input type="checkbox" checked="checked" class="checkbox checkbox-primary"/>
+            @if (todo.Status == MySqlTodoStatus.Done)
+            {
+                <input type="checkbox" checked class="checkbox checkbox-primary"/>
+            }
+            else if (todo.Status == MySqlTodoStatus.Pending)
+            {
+                <input type="checkbox" class="checkbox checkbox-primary"/>
+            }
         </label>
+
+
+        <span type="button"
+              hx-get="@Url.Page("Pocketbase", "RemoveTodo", new { id = @todo.id })"
+              hx-trigger="click"
+              hx-swap="innerHTML">
+            <box-icon name='trash' color="red" size="sm"></box-icon>
+        </span>
+
     </div>
 
-    <h1 class="text-md">
+    <span class="badge badge-accent">@todo.Status</span>
+    <span class="badge badge-info">P@(todo.priority)</span>
+
+    <h1 class="text-md text-primary">
         @todo.content
     </h1>
 
-    <span type="button"
-          hx-get="@Url.Page("Pocketbase", "RemoveTodo", new { id = @todo.id })"
-          hx-trigger="click"
-          hx-swap="innerHTML">
-        <box-icon name='trash' color="red" size="sm"></box-icon>
-    </span>
 
-    <span class="badge badge-accent">@todo.Status</span>
-    <span class="badge badge-info">@todo.priority</span>
-
-    <div x-show="false" class="dropdown">
-        <div tabindex="0" role="button" class="btn m-1">Priority</div>
-        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-            <li>
-                <a>P1</a>
-            </li>
-            <li>
-                <a>P2</a>
-            </li>
-            <li>
-                <a>P3</a>
-            </li>
-            <li>
-                <a>P4</a>
-            </li>
-        </ul>
-    </div>
+    @* <div x-show="false" class="dropdown"> *@
+    @*     <div tabindex="0" role="button" class="btn m-1">Priority</div> *@
+    @*     <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"> *@
+    @*         <li> *@
+    @*             <a>P1</a> *@
+    @*         </li> *@
+    @*         <li> *@
+    @*             <a>P2</a> *@
+    @*         </li> *@
+    @*         <li> *@
+    @*             <a>P3</a> *@
+    @*         </li> *@
+    @*         <li> *@
+    @*             <a>P4</a> *@
+    @*         </li> *@
+    @*     </ul> *@
+    @* </div> *@
 
 </li>
