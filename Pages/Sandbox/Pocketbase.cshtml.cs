@@ -9,10 +9,10 @@ using MySql.Data.MySqlClient;
 
 namespace justdoit.Pages.Sandbox;
 
-// [BindProperties]
 public class Pocketbase : PageModel
 {
-    [BindProperty] public string Content { get; set; } = string.Empty;
+    // [BindProperty] 
+    public string Content { get; set; } = string.Empty;
 
     private static CollectionTodos todos;
     private static List<MySqlTodo> mysql_todos = new();
