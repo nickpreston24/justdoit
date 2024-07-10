@@ -37,4 +37,39 @@ from todos;
 ## nuke
 ### delete from todos where id > 0
 
+/*
+drop procedure if exists CreateSchedule;
+DELIMITER ^_^
+CREATE PROCEDURE CreateSchedule(
+    days_from_now int
+)
+BEGIN
 
+    #     set @start = date_add(now(), days_from_now);
+#     select @start;
+
+    CREATE TEMPORARY TABLE todo_schedule_temp
+    SELECT *
+    FROM todos
+    order by due desc;
+
+    # return
+    select content, due from todo_schedule_temp;
+    
+    drop temporary table todo_schedule_temp;
+END ^_^
+
+DELIMITER ;
+
+
+call CreateSchedule(8);
+*/
+
+
+INSERT INTO todos (id, content, due)
+VALUES (1, 1, 1),
+       (2, 2, 3),
+       (3, 9, 3),
+       (4, 10, 12)
+ON DUPLICATE KEY UPDATE Col1=VALUES(Col1),
+                        Col2=VALUES(Col2);

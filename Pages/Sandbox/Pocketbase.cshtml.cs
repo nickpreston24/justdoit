@@ -14,17 +14,65 @@ public class Pocketbase : PageModel
 {
     [BindProperty] public string Content { get; set; } = string.Empty;
 
-    //
-    // private static CollectionTodos todos;
     private static List<MySqlTodo> mysql_todos = new();
     public List<MySqlTodo> MysqlTodos => mysql_todos;
 
+    // private static CollectionTodos todos;
     // public CollectionTodos Todos => todos;
 
     public void OnGet()
     {
         Console.WriteLine(nameof(OnGet));
     }
+
+    public async Task<IActionResult> OnGetSortTreadmill(int days_from_now = 7)
+    {
+        var start_time = DateTime.Now;
+        var end_time = DateTime.Now.AddDays(days_from_now);
+        var time_range = start_time.Subtract(end_time);
+
+        var connectionString = SQLConnections.GetMySQLConnectionString();
+
+        using var connection = new MySqlConnection(connectionString);
+
+        string grab_query = @"
+            select id, content, due, status, priority
+            from todos;
+        ";
+
+        using var grabby_connection = new MySqlConnection(connectionString);
+
+        var todos = (await connection.QueryAsync<MySqlTodo>(grab_query)).ToList();
+
+        /** var results = persons.GroupBy(
+    p => p.PersonId, 
+    p => p.car,
+    (key, g) => new { PersonId = key, Cars = g.ToList() });
+    */
+        var my_schedule = todos
+            // .Dump("original todos")
+            .GroupBy(x => x.due.DayOfWeek, t => t, (key, t) => new Schedule()
+            {
+                dayOfWeek = key,
+                Todos = t.ToList()
+            })
+            .ToList();
+
+        var now = DateTime.Now;
+        // my_schedule.Select(x => x.dayOfWeek).Dump("new schedule!");
+        my_schedule
+            .Select(x => x.Todos
+                .Where(x => x.due != DateTime.MinValue)
+                .Select(t =>
+                    new AgeFromDueDate(t.due, now.Subtract(t.due).Days)
+                    {
+                    })).Dump("new schedule!");
+
+        // todo: finish reseting the todos by the age of dueness.
+        return Partial("_MySqlTodoTree", this);
+    }
+
+    public record AgeFromDueDate(DateTime due, int task_age_in_days);
 
     public async Task<IActionResult> OnGetCompleteTodo(int id = -1)
     {
@@ -136,19 +184,6 @@ where id = @id";
         Console.WriteLine($"logged {results} log records.");
     }
 
-    //
-    // private async Task<bool> SaveToPocketBase(Todo todo)
-    // {
-    //     Console.WriteLine(nameof(SaveToPocketBase));
-    //     var myApp = new AcmeApplication(Environment.GetEnvironmentVariable("PB_REMOTE_URL"), "Acme");
-    //
-    //     var myData = myApp.Data;
-    //
-    //     // TODO: add create permissions, then re-run the pb generate... (ugh...)
-    //     // todos.Add(newTask);
-    //     return true;
-    // }
-    //
     public async Task<IActionResult> OnGetMySqlTodos(string content, string contentType)
     {
         Console.WriteLine(nameof(OnGetMySqlTodos));
@@ -165,21 +200,6 @@ where id = @id";
         }
     }
 
-    // public async Task<IActionResult> OnGetPbTodos(string content, string contentType)
-    // {
-    //     Console.WriteLine(nameof(OnGetPbTodos));
-    //     try
-    //     {
-    //         GetTodosFromPocketbase();
-    //         return Partial("_TodoTree", this);
-    //     }
-    //     catch (Exception exception)
-    //     {
-    //         Console.WriteLine("message:>> " + exception.Message);
-    //         return Partial("_Alert", exception);
-    //     }
-    // }
-    //
     private async Task<List<MySqlTodo>> GetTodosFromMySQL()
     {
         Console.WriteLine(nameof(GetTodosFromMySQL));
@@ -194,7 +214,7 @@ where id = @id";
         ";
 
         var results = (await connection.QueryAsync<MySqlTodo>(query)).ToList();
-        results.Dump(nameof(results));
+        // results.Dump(nameof(results));
         return results;
     }
 
@@ -211,6 +231,37 @@ where id = @id";
     //         Console.WriteLine($"{todo.Id} ({todo.Content}): {todo.Url}");
     //     }
     // }
+
+
+    // public async Task<IActionResult> OnGetPbTodos(string content, string contentType)
+    // {
+    //     Console.WriteLine(nameof(OnGetPbTodos));
+    //     try
+    //     {
+    //         GetTodosFromPocketbase();
+    //         return Partial("_TodoTree", this);
+    //     }
+    //     catch (Exception exception)
+    //     {
+    //         Console.WriteLine("message:>> " + exception.Message);
+    //         return Partial("_Alert", exception);
+    //     }
+    // }
+    //
+
+    //
+    // private async Task<bool> SaveToPocketBase(Todo todo)
+    // {
+    //     Console.WriteLine(nameof(SaveToPocketBase));
+    //     var myApp = new AcmeApplication(Environment.GetEnvironmentVariable("PB_REMOTE_URL"), "Acme");
+    //
+    //     var myData = myApp.Data;
+    //
+    //     // TODO: add create permissions, then re-run the pb generate... (ugh...)
+    //     // todos.Add(newTask);
+    //     return true;
+    // }
+    //
 }
 
 public record Priority
@@ -233,6 +284,13 @@ public record MySqlTodo
     public DateTime due { get; set; } = DateTime.MinValue;
     public DateTime created_at { get; set; } = DateTime.MinValue;
     public DateTime last_modified { get; set; } = DateTime.MinValue;
+}
+
+public class Schedule
+{
+    // Set by LINQ:
+    public DayOfWeek dayOfWeek { get; set; }
+    public List<MySqlTodo> Todos { get; set; } = new();
 }
 
 public class MySqlTodoStatus : Enumeration

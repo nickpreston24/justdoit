@@ -4,8 +4,7 @@
     var pending = Model.MysqlTodos.Where(x => x.Status.Equals(MySqlTodoStatus.Pending));
 }
 
-<div class="grid grid-cols-1 gap-4">
-
+<div id="todos_treadmill" class="grid grid-cols-1 gap-4">
 
     <ul class="bg-green">
         @foreach (var todo in pending)
@@ -17,8 +16,7 @@
         }
     </ul>
 
-
-    <ul class="bg-blue">
+    <ul class="bg-blue opacity-50">
         @foreach (var todo in completed)
         {
         @* <div id="todo_@todo.id"> *@

@@ -14,16 +14,30 @@
         @* <h1 class="text-yellow-500 font-bold">From Pocketbase</h1> *@
         @* </div> *@
 
+        <span x-show="submitted" id="todos_loader" class="htmx-indicator">
+            <label>loading todos ...</label>
+            <img class="w-8" alt="bars" src="~/img/loaders/circle_bars.svg"/>
+        </span>
+
         <div
             hx-get
             hx-page="Pocketbase"
             hx-trigger="load"
+            hx-indicator="#todos_loader"
             hx-page-handler="MySqlTodos">
         </div>
 
     </div>
 
     <partial name="_AddTaskForm" model="@Model"/>
+
+    <button
+        hx-get="@Url.Page("Pocketbase", "SortTreadmill")"
+        hx-swap="outerHTML"
+        hx-target="#todos_treadmill"
+        class="btn btn-ghost">
+        Schedule Test
+    </button>
 
 </section>
 @* <script> *@
