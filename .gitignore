@@ -3,5 +3,5 @@ bin/
 .idea/
 node_modules/
 wwwroot/lib/
-*.rest
+**/*unsafe/*.rest
 *.env

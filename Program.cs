@@ -9,7 +9,7 @@ var app = builder.Build();
 // Load and inject .env files & values
 DotEnv.Load(debug: true);
 
-// Configure the HTTP request pipeline.
+// ConfigureMiddleware the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -25,5 +25,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.ConfigureMiddleware();
 
 app.Run();

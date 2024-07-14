@@ -1,0 +1,6 @@
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"Title": "100yds to the Outhouse","Author": "Will E. Makit, Betty Woant"}' \
+  http://127.1.1.0:8080/books
+
+### 
