@@ -4,3 +4,11 @@ curl --header "Content-Type: application/json" \
   http://127.1.1.0:8080/books
 
 ### 
+
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"Start": "08/07/1989","End": "08/07/2024"}' \
+  http://127.1.1.0:8080/gantt
+
+### 

@@ -1,0 +1,74 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using CodeMechanic.Types
+@model Pocketbase
+@{
+    int limit = 1000;
+    var rows = @Model.Todos;
+    var distinct_labels = rows
+        .SelectMany(row => row.labels)
+        .Distinct()
+        .ToList();
+}
+
+<div class="flex flex-col justify-center items-center text-sm text-info gap-10">
+
+    <div x-show="true" class="flex flex-row gap-6">
+        <div class="indicator">
+            <span class="indicator-item indicator-bottom badge badge-sm badge-secondary">@rows.Count</span>
+            <h2 class="text-accent text-lg">Tasks</h2>
+        </div>
+        <div class="indicator">
+            <span class="indicator-item indicator-bottom badge badge-sm badge-secondary">@distinct_labels.Count</span>
+            <h2 class="text-accent text-lg">Labels</h2>
+        </div>
+    </div>
+
+    <div class="grid grid-rows-4 grid-cols-5">
+
+        @foreach (var batch in @distinct_labels.Batch(10))
+        {
+            @foreach (var row in rows)
+            {
+                <span class="badge badge-danger">@row.priority</span>
+            }
+        }
+    </div>
+
+</div>
+<div class="overflow-x-auto wrapper">
+    @* <b>Rows: @rows.Count</b> *@
+
+    @* disabled *@
+    <input
+        type="text"
+        id="query"
+        autocomplete="off"
+        hx-get
+        hx-page="Index"
+        hx-page-handler="Search"
+        asp-for="Query"
+        hx-target="#todoist_results"
+        hx-trigger="keyup changed delay:250ms"
+        placeholder="Search"
+        class="form-control"
+        aria-describedby="search-addon">
+
+    <table class="table w-full">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Task</th>
+            <th>
+                <span>Priority /</span>
+                <br/>
+                <span>Labels</span>
+            </th>
+            @* <th>Details</th> *@
+            @* <th>Completed</th> *@
+            <th>Age</th>
+        </tr>
+        </thead>
+        <partial name="_TodoistRows" model="@rows"/>
+        @* </tbody> *@
+    </table>
+</div>

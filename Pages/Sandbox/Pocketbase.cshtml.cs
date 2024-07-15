@@ -13,36 +13,54 @@ namespace justdoit.Pages.Sandbox;
 public class Pocketbase : PageModel
 {
     [BindProperty] public string Content { get; set; } = string.Empty;
+    [BindProperty] public string Query { get; set; } = string.Empty;
+    private ITodosRepository db;
 
-    private static List<MySqlTodo> mysql_todos = new();
-    public List<MySqlTodo> MysqlTodos => mysql_todos;
+    private static List<Todo> todos = new();
+    public List<Todo> Todos => todos;
+
+    public Pocketbase(ITodosRepository db)
+    {
+        this.db = db;
+    }
 
     // private static CollectionTodos todos;
     // public CollectionTodos Todos => todos;
+    //
+    // public void OnGet()
+    // {
+    //     Console.WriteLine(nameof(OnGet));
+    // }
 
-    public void OnGet()
+    public async Task<IActionResult> OnGetSortedTreadmill(int days_from_now = 7, string viewname = "_TodoistTasksTable")
     {
-        Console.WriteLine(nameof(OnGet));
+        Console.WriteLine(nameof(OnGetSortedTreadmill));
+        if (viewname.IsEmpty()) throw new ArgumentNullException(nameof(viewname));
+
+        todos = await db.GetAll();
+        // todos = new List<Todo>()
+        // {
+        //     new Todo()
+        //     {
+        //         content = "Treadmill test @mmi",
+        //         status = TodoStatus.Pending.ToString()
+        //     }
+        // };
+
+        // todo: finish reseting the todos by the age of dueness.
+        return Partial(viewname, this);
     }
 
+
+    [Obsolete(
+        "This was just a test.  I really want the scheduling to be must smarter and the sql to be easily updateable")]
     public async Task<IActionResult> OnGetSortTreadmill(int days_from_now = 7)
     {
         var start_time = DateTime.Now;
         var end_time = DateTime.Now.AddDays(days_from_now);
         var time_range = start_time.Subtract(end_time);
 
-        var connectionString = SQLConnections.GetMySQLConnectionString();
-
-        using var connection = new MySqlConnection(connectionString);
-
-        string grab_query = @"
-            select id, content, due, status, priority
-            from todos;
-        ";
-
-        using var grabby_connection = new MySqlConnection(connectionString);
-
-        var todos = (await connection.QueryAsync<MySqlTodo>(grab_query)).ToList();
+        todos =  await db.GetAll();
 
         /** var results = persons.GroupBy(
     p => p.PersonId, 
@@ -68,8 +86,7 @@ public class Pocketbase : PageModel
                     {
                     })).Dump("new schedule!");
 
-        // todo: finish reseting the todos by the age of dueness.
-        return Partial("_MySqlTodoTree", this);
+        return Partial("_TodoTreadmill", this);
     }
 
     public record AgeFromDueDate(DateTime due, int task_age_in_days);
@@ -83,14 +100,14 @@ public class Pocketbase : PageModel
 
         using var connection = new MySqlConnection(connectionString);
 
-        var current = mysql_todos.SingleOrDefault(x => x.id == id);
+        var current = todos.SingleOrDefault(x => x.id == id);
         string status = "";
 
-        if (current.status.Dump("status").Equals(MySqlTodoStatus.Done.Name))
-            status = MySqlTodoStatus.Pending.Name;
+        if (current.status.Dump("status").Equals(TodoStatus.Done.Name))
+            status = TodoStatus.Pending.Name;
 
-        else if (current.status.Equals(MySqlTodoStatus.Pending.Name))
-            status = MySqlTodoStatus.Done.Name;
+        else if (current.status.Equals(TodoStatus.Pending.Name))
+            status = TodoStatus.Done.Name;
 
 
         status.Dump("new status");
@@ -103,30 +120,18 @@ where id = @id";
         var rows = await connection.ExecuteAsync(query, new { id = id, status = status });
         Console.WriteLine($"{rows} affected.");
 
-        // var updated_todo = mysql_todos.SingleOrDefault(t => t.id == id);
+        // var updated_todo = todos.SingleOrDefault(t => t.id == id);
 
-        // return Partial("_MySqlTodoTree", this);
+        // return Partial("_TodoTreadmill", this);
         return Content($"<span class='ml-4 alert h-8 alert-success'>Todo {id} marked done.</span>");
     }
 
     public async Task<IActionResult> OnGetRemoveTodo(int id = -1)
     {
-        Console.WriteLine(nameof(OnGetRemoveTodo));
-        Console.WriteLine(id);
-
-        var connectionString = SQLConnections.GetMySQLConnectionString();
-
-        using var connection = new MySqlConnection(connectionString);
-
-        string query = @"
-            delete from todos where id = @id
-        ";
-
-        var rows = await connection.ExecuteAsync(query, new { id = id });
+        int rows = await db.Delete(id);
         Console.WriteLine($"{rows} affected.");
         return Content($"<span class='ml-4 alert h-8 alert-success'>Todo {id} deleted!</span>");
     }
-
 
     public async Task<IActionResult> OnPostAddTask()
     {
@@ -134,8 +139,7 @@ where id = @id";
         {
             Console.WriteLine(nameof(OnPostAddTask));
             Console.WriteLine("task:>>\n" + Content);
-
-            var todo = new MySqlTodo()
+            var todo = new Todo()
             {
                 content = Content,
                 status = "pending",
@@ -143,7 +147,8 @@ where id = @id";
             };
 
             // await SaveToPocketBase(todo);
-            await SaveToMySQL(todo);
+
+            await db.Create(todo);
 
             return Content($"<p>{Content}...</p>");
         }
@@ -154,44 +159,15 @@ where id = @id";
         }
     }
 
-    private async ValueTask SaveToMySQL(MySqlTodo todo)
+
+    public async Task<IActionResult> OnGetTodos(string content, string contentType)
     {
-        Console.WriteLine(nameof(SaveToMySQL));
-        var connectionString = SQLConnections.GetMySQLConnectionString();
-
-        using var connection = new MySqlConnection(connectionString);
-
-        string insert_query =
-            @$"insert into todos (content, priority, status, due) values (@content, @priority, '{MySqlTodoStatus.Pending.Name}', @due)";
-
-        var extracted_priority = todo.content
-            .Extract<Priority>(TodoPriorityRegex.Basic.CompiledRegex)
-            // .Dump("priori incantum")
-            .SingleOrDefault();
-
-        extracted_priority.Dump(nameof(extracted_priority));
-
-        var results = await Dapper.SqlMapper
-            .ExecuteAsync(connection, insert_query,
-                new
-                {
-                    content = todo.content,
-                    priority = extracted_priority?.Value ?? 4,
-                    status = todo.status,
-                    due = todo.due
-                });
-
-        Console.WriteLine($"logged {results} log records.");
-    }
-
-    public async Task<IActionResult> OnGetMySqlTodos(string content, string contentType)
-    {
-        Console.WriteLine(nameof(OnGetMySqlTodos));
+        Console.WriteLine(nameof(OnGetTodos));
         try
         {
-            mysql_todos = await GetTodosFromMySQL();
+            todos = await GetTodosFromMySQL();
 
-            return Partial("_MySqlTodoTree", this);
+            return Partial("_TodoTreadmill", this);
         }
         catch (Exception exception)
         {
@@ -200,7 +176,7 @@ where id = @id";
         }
     }
 
-    private async Task<List<MySqlTodo>> GetTodosFromMySQL()
+    private async Task<List<Todo>> GetTodosFromMySQL()
     {
         Console.WriteLine(nameof(GetTodosFromMySQL));
         var connectionString = SQLConnections.GetMySQLConnectionString();
@@ -213,7 +189,7 @@ where id = @id";
             # order by priority desc;
         ";
 
-        var results = (await connection.QueryAsync<MySqlTodo>(query)).ToList();
+        var results = (await connection.QueryAsync<Todo>(query)).ToList();
         // results.Dump(nameof(results));
         return results;
     }
@@ -239,7 +215,7 @@ where id = @id";
     //     try
     //     {
     //         GetTodosFromPocketbase();
-    //         return Partial("_TodoTree", this);
+    //         return Partial("_TodoTreadmill", this);
     //     }
     //     catch (Exception exception)
     //     {
@@ -262,52 +238,4 @@ where id = @id";
     //     return true;
     // }
     //
-}
-
-public record Priority
-{
-    public string raw_text { get; set; } = string.Empty; // e.g. p1
-    public string friendly_name => $"Priority {Value}"; // e.g. 'Priority 1'
-    public int Value { get; set; } = -1;
-    public static implicit operator Priority(string priority) => new Priority(priority);
-}
-
-public record MySqlTodo
-{
-    public int id { get; set; } = -1;
-    public string content { get; set; } = string.Empty;
-    public string created_by { get; set; } = string.Empty;
-    public string status { get; set; } = string.Empty;
-    public MySqlTodoStatus Status => status;
-    public int priority { get; set; } = -1;
-
-    public DateTime due { get; set; } = DateTime.MinValue;
-    public DateTime created_at { get; set; } = DateTime.MinValue;
-    public DateTime last_modified { get; set; } = DateTime.MinValue;
-}
-
-public class Schedule
-{
-    // Set by LINQ:
-    public DayOfWeek dayOfWeek { get; set; }
-    public List<MySqlTodo> Todos { get; set; } = new();
-}
-
-public class MySqlTodoStatus : Enumeration
-{
-    public static MySqlTodoStatus Done = new MySqlTodoStatus(1, nameof(Done));
-    public static MySqlTodoStatus Pending = new MySqlTodoStatus(2, nameof(Pending));
-    public static MySqlTodoStatus WIP = new MySqlTodoStatus(3, nameof(WIP));
-    public static MySqlTodoStatus Postponed = new MySqlTodoStatus(4, nameof(Postponed));
-
-    public MySqlTodoStatus(int id, string name) : base(id, name)
-    {
-    }
-
-    public static implicit operator MySqlTodoStatus(string status)
-    {
-        var found = MySqlTodoStatus.GetAll<MySqlTodoStatus>()
-            .SingleOrDefault(x => x.Name.Equals(status, StringComparison.CurrentCultureIgnoreCase));
-        return found;
-    }
 }

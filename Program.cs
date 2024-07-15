@@ -3,6 +3,8 @@ using CodeMechanic.FileSystem;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddTransient<ITodosRepository, TodosRepository>();
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();

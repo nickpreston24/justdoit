@@ -1,4 +1,4 @@
-@model MySqlTodo
+@model Todo
 @{
     var todo = Model;
 }
@@ -10,11 +10,11 @@
         class="form-control flex flex-row gap-1">
         <label class="label cursor-pointer">
             @* <span class="label-text">Remember me</span> *@
-            @if (todo.Status == MySqlTodoStatus.Done)
+            @if (todo.Status == TodoStatus.Done)
             {
                 <input type="checkbox" checked class="checkbox checkbox-primary"/>
             }
-            else if (todo.Status == MySqlTodoStatus.Pending)
+            else if (todo.Status == TodoStatus.Pending)
             {
                 <input type="checkbox" class="checkbox checkbox-primary"/>
             }

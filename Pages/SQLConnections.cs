@@ -1,10 +1,15 @@
 using CodeMechanic.Types;
 using MySql.Data.MySqlClient;
 
-namespace justdoit.Pages;
+namespace justdoit;
 
 public static class SQLConnections
 {
+    public static MySqlConnection CreateConnection() => GetMySQLConnectionString().AsConnection();
+
+    public static MySqlConnection AsConnection(this string connectionString) => new MySqlConnection(connectionString);
+
+
     public static string GetMySQLConnectionString()
     {
         var connectionString = new MySqlConnectionStringBuilder()

@@ -31,39 +31,23 @@ public static class MapGetMiddleware
             .Produces<Book>(StatusCodes.Status201Created)
             .WithName("AddNewBook").WithTags("Setters");
 
-
-        app.MapPost("/books",
-                async ([FromBody] GanttPart record
+        app.MapPost("/gantt",
+                async ([FromBody] GanttRequest record
                     // ,todo:  [FromServices] ITodosRepository db
                     , HttpResponse response) =>
                 {
+                    // record.Dump(nameof(record));
                     Console.WriteLine(record);
                     //todo: await db.Todos.AddAsync(record);
                     response.StatusCode = 200;
                     //idea: response.Headers.Location = $"books /{record.Start}/{record.End}";
                 })
-            .Accepts<Book>("application/json")
-            .Produces<Book>(StatusCodes.Status201Created)
-            .WithName("AddNewBook").WithTags("Setters");
+            // .Accepts<GanttRequest>("application/json")
+            // .Produces<GanttRequest>(StatusCodes.Status201Created)
+            // .WithName("GenerateGantt")
+            // .WithTags("Setters")
+            ;
 
         return app;
     }
-}
-
-public record Book
-{
-    public string Title { get; set; } = string.Empty;
-    public string Author { get; set; } = string.Empty;
-    public int Id { get; set; } = -1;
-
-    public override string ToString()
-    {
-        return $"'{Title}', by {Author}";
-    }
-}
-
-public record GanttPart
-{
-    public Maybe<DateTime> Start { get; set; } = Maybe<DateTime>.None;
-    public Maybe<DateTime> End { get; set; } = Maybe<DateTime>.None;
 }

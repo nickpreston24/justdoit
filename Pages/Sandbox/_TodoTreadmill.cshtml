@@ -1,0 +1,42 @@
+@using CodeMechanic.Types
+@using Htmx.TagHelpers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Pocketbase
+@{
+    var completed = Model.Todos.Where(x => x.Status.Equals(TodoStatus.Done));
+    var pending = Model.Todos
+        .Where(x => x.Status.ToMaybe().IfSome(x => x.Equals(TodoStatus.Pending)))
+        .ToMaybe()
+        .IfNone(new List<Todo>());
+}
+
+@* hx-target="#todos_treadmill" *@
+@* hx-trigger="load,once" *@
+
+<div id="todos_treadmill"
+     hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { days = 7 })"
+     hx-indicator="#todos_loader"
+
+     class="grid grid-cols-1 gap-4">
+
+    <ul class="bg-green">
+        @foreach (var todo in pending)
+        {
+            <partial name="_TodoTreadmillListItem" model="todo"></partial>
+        }
+    </ul>
+
+    <ul class="bg-blue opacity-50">
+        @foreach (var todo in completed)
+        {
+            <s>
+                <partial name="_TodoTreadmillListItem" model="todo"></partial>
+            </s>
+        }
+    </ul>
+
+    @if (pending.IsNullOrEmpty())
+    {
+        <p>No todos</p>
+    }
+</div>
