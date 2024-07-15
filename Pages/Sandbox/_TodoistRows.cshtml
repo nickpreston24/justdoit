@@ -35,12 +35,12 @@
                     Priority:
                     <span class="">@row.priority</span>
                 </label>
-                @* <div> *@
-                @*     @foreach (var label in @row.labels) *@
-                @*     { *@
-                @*         <span class="badge badge-secondary badge-sm lg:badge-lg">@label</span> *@
-                @*     } *@
-                @* </div> *@
+                <div>
+                    @foreach (var label in @row.labels)
+                    {
+                        <span class="badge badge-secondary badge-sm lg:badge-lg">@label</span>
+                    }
+                </div>
             </div>
         </td>
 
