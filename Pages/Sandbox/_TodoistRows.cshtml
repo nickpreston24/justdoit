@@ -1,6 +1,7 @@
 @model List<Todo>
 @{
     var rows = @Model;
+    int p1_count = 999;
 }
 
 @foreach (var row in rows)
@@ -13,28 +14,34 @@
         </th>
         <td>
             <div class="flex items-center gap-3">
-                <div class="avatar">
-                    <div class="bg-neutral text-neutral-content rounded-full w-12">
-                        <span class="text-3xl">@row.content.ToUpperInvariant()[0]</span>
-                    </div>
-                </div>
+                @* <div class="avatar"> *@
+                @*     <div class="bg-neutral text-neutral-content rounded-full w-12"> *@
+                @*         <span class="text-3xl">@row.content.ToUpperInvariant()[0]</span> *@
+                @*     </div> *@
+                @* </div> *@
                 <div>
                     <div class="tooltip" data-tip="Visit">
                         <a target="_blank" href="@row.uri">
                             <div class="font-bold text-secondary truncate">@row.content.Trim()</div>
                         </a>
                     </div>
-                    <p class="text-sm opacity-50 text-primary">@row.id</p>
+                    @* <p class="text-sm opacity-50 text-primary">@row.id</p> *@
                 </div>
             </div>
         </td>
         <td>
             <div class="flex flex-col justify-center">
-
-                <label class="text-@row.priority_css ">
-                    Priority:
-                    <span class="">@row.priority</span>
-                </label>
+                <a target="_" :href="my_github">
+                    <button class="btn btn-neutral btn-sm">
+                        <span class="text-@row.priority_css ">P@(row.priority)</span>
+                        @* todo: make a sql view that counts the number of p1, 2, etc.  *@
+                        <div class="badge badge-secondary">+@p1_count</div>
+                    </button>
+                </a>
+                @* <label class="text-@row.priority_css "> *@
+                @*     Priority: *@
+                @*     <span class="badge badge-secondary">@row.priority</span> *@
+                @* </label> *@
                 <div>
                     @foreach (var label in @row.labels)
                     {
@@ -44,18 +51,18 @@
             </div>
         </td>
 
-        <td>
-            <div class="flex flex-col gap-1 justify-center">
-
-                @* @Math.Round(@row.Age, 0) *@
-                @* <label for="">Friendly stuff</label> *@
-                @* <p> created on: @row.created_at</p> *@
-                @* <p> due: @row?.due?.date </p> *@
-
-                @* <p> due: @row?.due?.humanized on @row?.due?.friendly_date *@
-                @* <p> age: @row?.due?.humanized_age </p> *@
-            </div>
-        </td>
+        @* <td> *@
+        @*     <div class="flex flex-col gap-1 justify-center"> *@
+        @* *@
+        @*         @Math.Round(@row.Age, 0) *@
+        @*         <label for="">Friendly stuff</label> *@
+        @*         <p> created on: @row.created_at</p> *@
+        @*         <p> due: @row?.due?.date </p> *@
+        @* *@
+        @*         <p> due: @row?.due?.humanized on @row?.due?.friendly_date *@
+        @*         <p> age: @row?.due?.humanized_age </p> *@
+        @*     </div> *@
+        @* </td> *@
 
 
     </tr>

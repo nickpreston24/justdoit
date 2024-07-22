@@ -76,8 +76,7 @@ DELIMITER ;
 
 call updatetodo();
 
+
 /*
-
-
-
+delete from todos where content like '%zzz%'
  */
