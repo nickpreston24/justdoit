@@ -1,27 +1,29 @@
 @model justdoit.Pages.Sandbox.Pocketbase
 
-<form hx-post="@Url.Page("Pocketbase", "AddTask")"
-      hx-swap="outerHTML"
-      class="card-body w-96 form-horizontal needs-validation"
-      _="on htmx:beforeSend set #submitButton.disabled to 'disabled'">
+<div class="card">
 
-    <div class="form-control">
-        <label class="label">
-            <span class="label-text text-primary text-lg">Add a Todo</span>
-        </label>
-        <input asp-for="Content" type="text" placeholder="Buy Milk" class="input input-bordered bg-transparent" required/>
-    </div>
+    <form hx-post="@Url.Page("Pocketbase", "AddTask")"
+          hx-swap="outerHTML"
+          class="card-body w-96 form-horizontal needs-validation"
+          _="on htmx:beforeSend set #submitButton.disabled to 'disabled'">
 
-    <div class="control">
-        <button id="submitButton" type="submit" class="btn btn-primary">
-            <span class="htmx-indicator">
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <span class="visually-hidden">Loading...</span>
-            </span>
-            Submit
-        </button>
+        <div class="form-control card-title">
+            <label class="label">
+                <span class="label-text text-primary text-lg">Add a Todo</span>
+            </label>
+            <input asp-for="Content" type="text" placeholder="Buy Milk" class="input input-bordered bg-transparent" required/>
+        </div>
 
-        @Html.AntiForgeryToken()
-    </div>
+        <div class="control" x-data="{show:false}">
+            <button x-on:click="show=!show" id="submitButton" type="submit" class="btn btn-primary">
+                <span x-show="show" class="htmx-indicator">
+                    <img src="~/img/loaders/bars.svg" alt="">
+                </span>
+                Submit
+            </button>
 
-</form>
+            @Html.AntiForgeryToken()
+        </div>
+
+    </form>
+</div>
