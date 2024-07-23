@@ -11,7 +11,7 @@ public class TodosRepository : ITodosRepository
 {
     public async Task<List<Todo>> GetAll()
     {
-        var connectionString = SQLConnections.GetMySQLConnectionString();
+        var connectionString = SqlConnections.GetMySQLConnectionString();
 
         using var connection = new MySqlConnection(connectionString);
 
@@ -51,7 +51,7 @@ public class TodosRepository : ITodosRepository
     public async Task<int> Delete(int id)
     {
         Console.WriteLine(id);
-        using var connection = SQLConnections.CreateConnection();
+        using var connection = SqlConnections.CreateConnection();
 
         string query = @"
             delete from todos where id = @id
@@ -67,14 +67,14 @@ public class TodosRepository : ITodosRepository
                         select count(id)
                         from todos;";
 
-        using var connection = SQLConnections.CreateConnection();
+        using var connection = SqlConnections.CreateConnection();
         var rows = await connection.ExecuteAsync(query);
         return rows;
     }
 
     public async Task<List<string>> FindTables()
     {
-        using var connection = SQLConnections.CreateConnection();
+        using var connection = SqlConnections.CreateConnection();
 
         // todo: you've implemented this somewhere else already.  Go find it and upload it as a myget, then call it here.
 
@@ -87,7 +87,7 @@ public class TodosRepository : ITodosRepository
 
     private async Task<int> InsertRow(Todo todo)
     {
-        using var connection = SQLConnections.CreateConnection();
+        using var connection = SqlConnections.CreateConnection();
 
         string insert_query =
             @$"insert into todos (content, priority, status, due) values (@content, @priority, '{TodoStatus.Pending.Name}', @due)";

@@ -15,6 +15,9 @@ create table if not exists todos
     PRIMARY KEY (id)
 );
 
+# alter table todos
+#     ADD COLUMN related_todos json not null default '{}';
+
 select id,
        content,
        created_at,
@@ -77,6 +80,10 @@ DELIMITER ;
 call updatetodo();
 
 
+
+select *
+from todos
+where content like '%test%';
 /*
 delete from todos where content like '%zzz%'
  */

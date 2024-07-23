@@ -1,0 +1,19 @@
+@model HydroSearch
+
+<div class="form-control">
+
+    <div>
+        Count: <strong>@Model.Count</strong>
+        <button hydro-on:click="@(() => Model.Add())">
+            Add
+        </button>
+    </div>
+
+    @* <input *@
+    @*     hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { partial_name = @Model.PartialName })" *@
+    @*     hx-target="#todos_table" *@
+    @*     asp-for="Query" *@
+    @*     hx-trigger="keyup changed delay:250ms" *@
+    @*     type="email" placeholder="Search tasks" *@
+    @*     class="input input-bordered bg-transparent" required/> *@
+</div>

@@ -3,7 +3,7 @@ using MySql.Data.MySqlClient;
 
 namespace justdoit;
 
-public static class SQLConnections
+public static class SqlConnections
 {
     public static MySqlConnection CreateConnection() => GetMySQLConnectionString().AsConnection();
 

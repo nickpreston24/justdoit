@@ -1,3 +1,5 @@
+using System.Data.SqlClient;
+using System.Text;
 using CodeMechanic.Diagnostics;
 using CodeMechanic.RegularExpressions;
 using CodeMechanic.Types;
@@ -17,6 +19,7 @@ public class Pocketbase : PageModel
     private ITodosRepository db;
 
     private static List<Todo> todos = new();
+    public string current_partial_name = "_TodoTreadmill";
     public List<Todo> Todos => todos;
 
     public Pocketbase(ITodosRepository db)
@@ -24,31 +27,17 @@ public class Pocketbase : PageModel
         this.db = db;
     }
 
-    // private static CollectionTodos todos;
-    // public CollectionTodos Todos => todos;
-    //
-    // public void OnGet()
-    // {
-    //     Console.WriteLine(nameof(OnGet));
-    // }
 
-    public async Task<IActionResult> OnGetSortedTreadmill(int days_from_now = 7, string viewname = "_TodoistTasksTable")
+    public async Task<IActionResult> OnGetSortedTreadmill(int days_from_now = 7, string partial_name = "")
     {
         Console.WriteLine(nameof(OnGetSortedTreadmill));
-        if (viewname.IsEmpty()) throw new ArgumentNullException(nameof(viewname));
+        if (partial_name.IsEmpty()) throw new ArgumentNullException(nameof(partial_name));
 
         todos = await db.GetAll();
-        // todos = new List<Todo>()
-        // {
-        //     new Todo()
-        //     {
-        //         content = "Treadmill test @mmi",
-        //         status = TodoStatus.Pending.ToString()
-        //     }
-        // };
+
 
         // todo: finish reseting the todos by the age of dueness.
-        return Partial(viewname, this);
+        return Partial(partial_name, this);
     }
 
 
@@ -60,7 +49,7 @@ public class Pocketbase : PageModel
         var end_time = DateTime.Now.AddDays(days_from_now);
         var time_range = start_time.Subtract(end_time);
 
-        todos =  await db.GetAll();
+        todos = await db.GetAll();
 
         /** var results = persons.GroupBy(
     p => p.PersonId, 
@@ -91,12 +80,13 @@ public class Pocketbase : PageModel
 
     public record AgeFromDueDate(DateTime due, int task_age_in_days);
 
-    public async Task<IActionResult> OnGetCompleteTodo(int id = -1)
+
+    public async Task<IActionResult> OnGetCompleteTodo(int id = -1, string partial_name = "")
     {
         Console.WriteLine(nameof(OnGetCompleteTodo));
         Console.WriteLine(id);
 
-        var connectionString = SQLConnections.GetMySQLConnectionString();
+        var connectionString = SqlConnections.GetMySQLConnectionString();
 
         using var connection = new MySqlConnection(connectionString);
 
@@ -122,8 +112,9 @@ where id = @id";
 
         // var updated_todo = todos.SingleOrDefault(t => t.id == id);
 
-        // return Partial("_TodoTreadmill", this);
-        return Content($"<span class='ml-4 alert h-8 alert-success'>Todo {id} marked done.</span>");
+        return partial_name.NotEmpty()
+            ? Partial("_TodoTreadmill", this)
+            : Content($"<span class='ml-4 alert h-8 alert-success'>Todo {id} marked done.</span>");
     }
 
     public async Task<IActionResult> OnGetRemoveTodo(int id = -1)
@@ -179,7 +170,7 @@ where id = @id";
     private async Task<List<Todo>> GetTodosFromMySQL()
     {
         Console.WriteLine(nameof(GetTodosFromMySQL));
-        var connectionString = SQLConnections.GetMySQLConnectionString();
+        var connectionString = SqlConnections.GetMySQLConnectionString();
 
         using var connection = new MySqlConnection(connectionString);
 
@@ -193,6 +184,61 @@ where id = @id";
         // results.Dump(nameof(results));
         return results;
     }
+
+
+    /* EXPERIMENTAL */
+    public async Task<IActionResult> OnGetUpdate()
+    {
+        try
+        {
+            Console.WriteLine(nameof(OnGetUpdate));
+
+            // TODO: find a use case where you'd need to update multiple rows.
+            var updates = new Todo
+            {
+                id = 100,
+                content = "testXyZ",
+                priority = 4,
+                due = DateTime.Now,
+                status = "Pending"
+            };
+
+            string update_query = @"INSERT INTO todos (id, content, due, priority, status)
+        VALUES (@id, @content, @due, @priority, @status)
+        ON DUPLICATE KEY UPDATE content = VALUES(content),
+                                priority=VALUES(priority),
+                                status=VALUES(status);";
+
+            var connectionString = SqlConnections.GetMySQLConnectionString();
+
+            using var connection = new MySqlConnection(connectionString);
+
+            var count = await connection.ExecuteAsync(update_query, new List<object>()
+            {
+                new
+                {
+                    id = updates.id, content = updates.content, due = updates.due, priority = updates.priority,
+                    status = updates.status
+                },
+                // new
+                // {
+                //     id = updates.id, content = updates.content, due = updates.due, priority = updates.priority,
+                //     status = updates.status
+                // }
+            });
+            Console.WriteLine("rows changed" + count);
+
+            // return Partial("_TodoTreadmill", this);
+
+            return Content($"changed {count} rows.");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return Partial("_Alert", e);
+        }
+    }
+
 
     // private static void GetTodosFromPocketbase()
     // {
@@ -238,4 +284,23 @@ where id = @id";
     //     return true;
     // }
     //
+
+
+    // todos = new List<Todo>()
+    // {
+    //     new Todo()
+    //     {
+    //         content = "Treadmill test @mmi",
+    //         status = TodoStatus.Pending.ToString()
+    //     }
+    // };
+
+
+    // private static CollectionTodos todos;
+    // public CollectionTodos Todos => todos;
+    //
+    // public void OnGet()
+    // {
+    //     Console.WriteLine(nameof(OnGet));
+    // }
 }

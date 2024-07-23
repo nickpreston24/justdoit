@@ -28,7 +28,7 @@ public class IndexModel : PageModel
 
     public async Task<IActionResult> OnGetCountUsers()
     {
-        var connectionString = SQLConnections.GetMySQLConnectionString();
+        var connectionString = SqlConnections.GetMySQLConnectionString();
 
         using var connection = new MySqlConnection(connectionString);
 
@@ -51,7 +51,7 @@ from signups;";
 
     public async Task<IActionResult> OnPostSignup()
     {
-        var connectionString = SQLConnections.GetMySQLConnectionString();
+        var connectionString = SqlConnections.GetMySQLConnectionString();
 
         using var connection = new MySqlConnection(connectionString);
 

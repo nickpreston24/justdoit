@@ -21,8 +21,10 @@
             id="add_task_form">
 
             <partial name="_AddTaskForm" model="@Model"/>
+
         </div>
         <div
+
             x-show="views.todos_table.show"
             x-transition:enter="transition ease-out duration-300"
             x-transition:enter-start="opacity-0 scale-90"
@@ -31,6 +33,10 @@
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-90"
 
+            hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { partial_name = @Model.current_partial_name })"
+            hx-trigger="load"
+            hx-indicator="#todos_loader"
+
             class="border-0 rounded-xl shadow-lg">
 
             <span id="todos_loader" class="htmx-indicator">
@@ -38,13 +44,8 @@
                 <img class="w-8" alt="bars" src="~/img/loaders/circle_bars.svg"/>
             </span>
 
-            <div
-                hx-get
-                hx-page="Pocketbase"
-                hx-trigger="load"
-                hx-indicator="#todos_loader"
-                hx-page-handler="SortedTreadmill">
-            </div>
+            <partial name="_TodoTreadmill"/>
+
 
         </div>
 

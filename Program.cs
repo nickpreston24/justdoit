@@ -1,4 +1,5 @@
 using CodeMechanic.FileSystem;
+using Hydro.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<ITodosRepository, TodosRepository>();
 
 builder.Services.AddRazorPages();
+builder.Services.AddHydro();
 
 var app = builder.Build();
 // Load and inject .env files & values
@@ -29,5 +31,8 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.ConfigureMiddleware();
+
+app.UseHydro(builder.Environment);
+
 
 app.Run();

@@ -1,0 +1,11 @@
+@* @model Pocketbase *@
+@* *@
+@* <div class="form-control"> *@
+@*     <input *@
+@*         hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { partial_name = @Model.current_partial_name })" *@
+@*         hx-target="#todos_table" *@
+@*         asp-for="Query" *@
+@*         hx-trigger="keyup changed delay:250ms" *@
+@*         type="email" placeholder="Search tasks" *@
+@*         class="input input-bordered bg-transparent" required/> *@
+@* </div> *@

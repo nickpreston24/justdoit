@@ -10,7 +10,7 @@
         .ToList();
 }
 
-<div id="todos_table" class="flex flex-col justify-center items-center text-sm text-info gap-10">
+<div id="todos_table" class="flex flex-col justify-center items-center text-sm text-info gap-10 border-2 border-red-500">
 
     <div x-show="true" class="flex flex-row gap-6">
         <div class="indicator">
@@ -39,7 +39,7 @@
 
     <div class="form-control">
         <input
-            hx-get="@Url.Page("Pocketbase", "SortedTreadmill")"
+            hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { partial_name = @Model.current_partial_name })"
             hx-target="#todos_table"
             asp-for="Query"
             hx-trigger="keyup changed delay:250ms"
@@ -47,7 +47,7 @@
             class="input input-bordered bg-transparent" required/>
     </div>
 
-    <table class="table w-screen">
+    <table class="table w-full border-0 border-red-500">
         <thead>
         <tr>
             <th>Done?</th>
@@ -61,6 +61,5 @@
         </tr>
         </thead>
         <partial name="_TodoistRows" model="@rows"/>
-        @* </tbody> *@
     </table>
 </div>

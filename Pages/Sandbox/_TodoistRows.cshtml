@@ -1,31 +1,28 @@
 @model List<Todo>
 @{
     var rows = @Model;
-    int p1_count = 999;
+    // int p1_count = ;
 }
 
 @foreach (var row in rows)
 {
+    int priority_count = rows.Count(todo => todo.priority == @row.priority);
+
     <tr x-data="{show_details: false}">
         <th>
             <label>
-                <input type="checkbox" class="checkbox"/>
+                <input
+                    hx-get="@Url.Page("Pocketbase", "CompleteTodo", new { id = @row.id, partial_name = "_TodoistTreadmill" })"
+                    type="checkbox" class="checkbox"/>
             </label>
         </th>
         <td>
-            <div class="flex items-center gap-3">
-                @* <div class="avatar"> *@
-                @*     <div class="bg-neutral text-neutral-content rounded-full w-12"> *@
-                @*         <span class="text-3xl">@row.content.ToUpperInvariant()[0]</span> *@
-                @*     </div> *@
-                @* </div> *@
-                <div>
-                    <div class="tooltip" data-tip="Visit">
-                        <a target="_blank" href="@row.uri">
-                            <div class="font-bold text-secondary truncate">@row.content.Trim()</div>
-                        </a>
-                    </div>
-                    @* <p class="text-sm opacity-50 text-primary">@row.id</p> *@
+            <div class="flex items-center gap-3 border-2 border-blue-500">
+
+                <div class="tooltip" data-tip="Visit">
+                    <a target="_blank" href="@row.uri">
+                        <div class="font-bold text-secondary h-32">@row.content.Trim()</div>
+                    </a>
                 </div>
             </div>
         </td>
@@ -33,9 +30,12 @@
             <div class="flex flex-col justify-center">
                 <a target="_" :href="my_github">
                     <button class="btn btn-neutral btn-sm">
-                        <span class="text-@row.priority_css ">P@(row.priority)</span>
-                        @* todo: make a sql view that counts the number of p1, 2, etc.  *@
-                        <div class="badge badge-secondary">+@p1_count</div>
+                        <div class="text-@row.priority_css flex flex-row items-center gap-2 ">
+                            <span>
+                                P@(row.priority)
+                            </span>
+                            <div class="badge badge-secondary">@(priority_count > 99 ? $"{priority_count}+" : priority_count)</div>
+                        </div>
                     </button>
                 </a>
                 @* <label class="text-@row.priority_css "> *@
@@ -49,6 +49,17 @@
                     }
                 </div>
             </div>
+        </td>
+
+        <td>
+
+            <button
+                :disabled="true"
+                hx-trigger="click"
+                hx-get="@Url.Page("Pocketbase", "Update")"
+                class="btn btn-secondary">
+                Edit
+            </button>
         </td>
 
         @* <td> *@
