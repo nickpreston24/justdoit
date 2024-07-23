@@ -14,7 +14,9 @@
             {
                 <input type="checkbox" checked class="checkbox checkbox-primary"/>
             }
-            else if (todo.Status == TodoStatus.Pending)
+            else if (todo.Status == TodoStatus.Pending
+                     || todo.Status == TodoStatus.Postponed
+                     || todo.Status == TodoStatus.WIP)
             {
                 <input type="checkbox" class="checkbox checkbox-primary"/>
             }

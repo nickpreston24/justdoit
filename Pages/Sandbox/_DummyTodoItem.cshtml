@@ -1,0 +1,11 @@
+@* ATTN!  This only exists to render a sample search bar called HydroSearch *@
+@model HydroExperiments
+
+@{
+    var fake_todos = @Model.FakeTodos;
+}
+
+@foreach (var todo in fake_todos)
+{
+    <hydro-li>@todo.content</hydro-li>
+}

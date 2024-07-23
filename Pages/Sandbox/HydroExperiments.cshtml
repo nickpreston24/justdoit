@@ -2,12 +2,14 @@
 @using justdoit.Pages.Components
 @model justdoit.Pages.Sandbox.HydroExperiments
 
-<div>
-
-    @* <hydro name="HydroSearch" query="bologna"/> *@
+<section class="grid-cols-2 grid">
 
     <bento-card>
-        blah
         <hydro name="Counter"></hydro>
     </bento-card>
-</div>
+
+    <bento-card id="hydro_search">
+        <hydro name="HydroSearch"
+               parameters="@(new { PartialName = "_DummyTodoItem", HxTarget = "#hydro_search" })"/>
+    </bento-card>
+</section>

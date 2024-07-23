@@ -11,7 +11,21 @@
             <label class="label">
                 <span class="label-text text-primary text-lg">Add a Todo</span>
             </label>
-            <input asp-for="Content" type="text" placeholder="Buy Milk" class="input input-bordered bg-transparent" required/>
+
+            <input
+                hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { debug = true })"
+                hx-target="#todos_treadmill"
+                asp-for="Query"
+                hx-swap="innerHTML"
+                hx-trigger="keyup changed delay:250ms"
+                type="text"
+                placeholder="Search"
+                class="input input-bordered bg-transparent text-accent" required/>
+
+            @* <input asp-for="Content"  *@
+            @*        type="text"  *@
+            @*        placeholder="Buy Milk"  *@
+            @*        class="input input-bordered bg-transparent" required/> *@
         </div>
 
         <div class="control" x-data="{show:false}">
@@ -21,8 +35,6 @@
                 </span>
                 Submit
             </button>
-
-           
 
             @Html.AntiForgeryToken()
         </div>

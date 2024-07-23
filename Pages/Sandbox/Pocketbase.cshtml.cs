@@ -14,8 +14,8 @@ namespace justdoit.Pages.Sandbox;
 
 public class Pocketbase : PageModel
 {
-    [BindProperty] public string Content { get; set; } = string.Empty;
-    [BindProperty] public string Query { get; set; } = string.Empty;
+    [BindProperty(SupportsGet = true)] public string Content { get; set; } = string.Empty;
+    [BindProperty(SupportsGet = true)] public string Query { get; set; } = string.Empty;
     private ITodosRepository db;
 
     private static List<Todo> todos = new();
@@ -27,17 +27,21 @@ public class Pocketbase : PageModel
         this.db = db;
     }
 
-
-    public async Task<IActionResult> OnGetSortedTreadmill(int days_from_now = 7, string partial_name = "")
+    public async Task<IActionResult> OnGetSortedTreadmill(int days_from_now = 7, string query = "", bool debug = false)
     {
-        Console.WriteLine(nameof(OnGetSortedTreadmill));
-        if (partial_name.IsEmpty()) throw new ArgumentNullException(nameof(partial_name));
+        if (debug) Console.WriteLine($"{nameof(days_from_now)} {days_from_now}");
+        if (debug) Console.WriteLine($"{nameof(Query)}: {Query}");
+        if (debug) Console.WriteLine($"{nameof(query)}: {query}");
+        if (debug) Console.WriteLine($"{nameof(Content)}: {Content}");
 
-        todos = await db.GetAll();
-
-
+        todos = (await db.GetAll())
+            // filter using substring:
+            .If(Query.NotEmpty()
+                , items => items
+                    .Where(offer => offer.ToString().Contains(Query, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
         // todo: finish reseting the todos by the age of dueness.
-        return Partial(partial_name, this);
+        return Partial(current_partial_name, this);
     }
 
 
@@ -75,7 +79,7 @@ public class Pocketbase : PageModel
                     {
                     })).Dump("new schedule!");
 
-        return Partial("_TodoTreadmill", this);
+        return Partial(current_partial_name, this);
     }
 
     public record AgeFromDueDate(DateTime due, int task_age_in_days);
@@ -112,8 +116,8 @@ where id = @id";
 
         // var updated_todo = todos.SingleOrDefault(t => t.id == id);
 
-        return partial_name.NotEmpty()
-            ? Partial("_TodoTreadmill", this)
+        return current_partial_name.NotEmpty()
+            ? Partial(current_partial_name, this)
             : Content($"<span class='ml-4 alert h-8 alert-success'>Todo {id} marked done.</span>");
     }
 
@@ -121,7 +125,9 @@ where id = @id";
     {
         int rows = await db.Delete(id);
         Console.WriteLine($"{rows} affected.");
-        return Content($"<span class='ml-4 alert h-8 alert-success'>Todo {id} deleted!</span>");
+        return current_partial_name.NotEmpty()
+            ? Partial(current_partial_name, this)
+            : Content($"<span class='ml-4 alert h-8 alert-success'>Todo {id} deleted!</span>");
     }
 
     public async Task<IActionResult> OnPostAddTask()
@@ -141,7 +147,8 @@ where id = @id";
 
             await db.Create(todo);
 
-            return Content($"<p>{Content}...</p>");
+            // return Content($"<p>{Content}...</p>");
+            return Partial(current_partial_name, this);
         }
         catch (Exception exception)
         {
@@ -158,7 +165,7 @@ where id = @id";
         {
             todos = await GetTodosFromMySQL();
 
-            return Partial("_TodoTreadmill", this);
+            return Partial(current_partial_name, this);
         }
         catch (Exception exception)
         {
@@ -228,9 +235,9 @@ where id = @id";
             });
             Console.WriteLine("rows changed" + count);
 
-            // return Partial("_TodoTreadmill", this);
+            return Partial(current_partial_name, this);
 
-            return Content($"changed {count} rows.");
+            // return Content($"changed {count} rows.");
         }
         catch (Exception e)
         {
@@ -261,7 +268,7 @@ where id = @id";
     //     try
     //     {
     //         GetTodosFromPocketbase();
-    //         return Partial("_TodoTreadmill", this);
+    //          return Partial(current_partial_name, this);
     //     }
     //     catch (Exception exception)
     //     {
