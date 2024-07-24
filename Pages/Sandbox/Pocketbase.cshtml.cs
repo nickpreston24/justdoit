@@ -34,10 +34,7 @@ public class Pocketbase : PageModel
         if (debug) Console.WriteLine($"{nameof(query)}: {query}");
 
         todos = (await db.GetAll())
-            // filter using substring:
-            .If(Query.NotEmpty()
-                , items => items
-                    .Where(offer => offer.ToString().Contains(Query, StringComparison.OrdinalIgnoreCase)))
+            // ApplyFilters()
             .ToList();
         // todo: finish reseting the todos by the age of dueness.
         return Partial(current_partial_name, this);
