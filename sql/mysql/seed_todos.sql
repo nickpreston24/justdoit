@@ -87,3 +87,9 @@ where content like '%test%';
 /*
 delete from todos where content like '%zzz%'
  */
+ 
+ /** SCHEDULE VIEW ATTEMPT1 */
+
+select due, created_at, last_modified, status, priority
+from todos
+

@@ -92,9 +92,11 @@ public class TodosRepository : ITodosRepository
         string insert_query =
             @$"insert into todos (content, priority, status, due) values (@content, @priority, '{TodoStatus.Pending.Name}', @due)";
 
-        var extracted_priority = todo.content
+        var extracted_priority = todo
+            .Dump("my todo added")
+            .content
             .Extract<Priority>(TodoPriorityRegex.Basic.CompiledRegex)
-            // .Dump("priori incantum")
+            .Dump("priori incantum")
             .SingleOrDefault();
 
         extracted_priority.Dump(nameof(extracted_priority));

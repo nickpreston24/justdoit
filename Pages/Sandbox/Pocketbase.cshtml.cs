@@ -14,7 +14,7 @@ namespace justdoit.Pages.Sandbox;
 
 public class Pocketbase : PageModel
 {
-    [BindProperty(SupportsGet = true)] public string Content { get; set; } = string.Empty;
+    // [BindProperty(SupportsGet = true)] public string Content { get; set; } = string.Empty;
     [BindProperty(SupportsGet = true)] public string Query { get; set; } = string.Empty;
     private ITodosRepository db;
 
@@ -32,7 +32,6 @@ public class Pocketbase : PageModel
         if (debug) Console.WriteLine($"{nameof(days_from_now)} {days_from_now}");
         if (debug) Console.WriteLine($"{nameof(Query)}: {Query}");
         if (debug) Console.WriteLine($"{nameof(query)}: {query}");
-        if (debug) Console.WriteLine($"{nameof(Content)}: {Content}");
 
         todos = (await db.GetAll())
             // filter using substring:
@@ -135,10 +134,9 @@ where id = @id";
         try
         {
             Console.WriteLine(nameof(OnPostAddTask));
-            Console.WriteLine("task:>>\n" + Content);
             var todo = new Todo()
             {
-                content = Content,
+                content = Query,
                 status = "pending",
                 due = DateTime.Now
             };
