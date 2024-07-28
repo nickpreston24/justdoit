@@ -11,8 +11,8 @@
     var pending = Model.Todos
         .Where(x => x.Status
             .ToMaybe()
-            .IfSome(x => x
-                .Equals(TodoStatus.Pending)))
+            .IfSome(x => !x
+                .Equals(TodoStatus.Done)))
         .ToArray();
 }
 

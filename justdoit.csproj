@@ -22,6 +22,7 @@
         <PackageReference Include="justdoit.pb" Version="1.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.2.0" />
         <PackageReference Include="MySQl.Data" Version="8.4.0" />
+        <PackageReference Include="NSpecifications" Version="1.2.0" />
         <PackageReference Include="PocketBaseClient" Version="0.6.1" />
     </ItemGroup>
 

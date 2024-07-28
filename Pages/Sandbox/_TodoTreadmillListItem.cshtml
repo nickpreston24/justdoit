@@ -2,7 +2,10 @@
 @using Htmx.TagHelpers
 @model justdoit.Models.Todo
 @{
+    var now = DateTime.Now;
     var todo = Model;
+    var days_due = now.Subtract(todo.due).Days;
+    var days_due_friendly = Math.Abs(days_due) > 99 ? "99+" : Math.Abs(days_due).ToString();
 }
 
 <li class="flex gap-2">
@@ -34,7 +37,10 @@
 
     </div>
 
-    <span class="badge badge-accent">@todo.Status</span>
+    <span class="badge badge-accent flex flex-row gap-2">
+        @todo.Status
+        <b>@days_due_friendly</b>
+    </span>
     <span class="badge badge-info">P@(todo.priority)</span>
 
     <h1 class="text-md text-primary">

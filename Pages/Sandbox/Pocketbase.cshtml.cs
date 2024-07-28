@@ -34,7 +34,8 @@ public class Pocketbase : PageModel
         if (debug) Console.WriteLine($"{nameof(Query)}: {Query}");
         if (debug) Console.WriteLine($"{nameof(query)}: {query}");
 
-        todos = (await db.GetAll()).ApplyFilters()
+        todos = (await db.GetAll())
+            .ApplyFilters()
             .ToList();
         // todos.Dump(nameof(OnGetSortedTreadmill));
         // todo: finish reseting the todos by the age of dueness.
