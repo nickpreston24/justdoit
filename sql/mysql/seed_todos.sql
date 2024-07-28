@@ -1,22 +1,41 @@
-drop table if exists todos;
+# drop table if exists todos;
 create table if not exists todos
 (
-    id            INT NOT NULL AUTO_INCREMENT,
-    content       text,
-    status        varchar(10),
-    priority      int,
+    id             INT  NOT NULL AUTO_INCREMENT,
+    content        text,
+    comments       text,
+    description    text,
+    status         varchar(10),
+    priority       int,
 
-    due           datetime,
-    created_at    datetime     default now(),
-    created_by    varchar(150) default null,
-    last_modified datetime     default null,
+    due            datetime,
+    start          datetime,
+    end            datetime,
+
+    created_at     datetime      default now(),
+    created_by     varchar(150)  default null,
+    last_modified  datetime      default null,
+    is_sample_data bool not null default false,
 
     # PK's
     PRIMARY KEY (id)
 );
-
+# 
 # alter table todos
 #     ADD COLUMN related_todos json not null default '{}';
+
+alter table todos
+    ADD COLUMN is_sample_data bool not null default false; # true if the row is fake or sample data, e.g. 'testzzz'
+
+alter table todos
+    ADD COLUMN comments text;
+
+alter table todos
+    ADD COLUMN description text;
+
+alter table todos
+    ADD COLUMN start datetime,
+    add column end   datetime;
 
 select id,
        content,
@@ -47,11 +66,11 @@ CREATE PROCEDURE updatetodo(
 )
 BEGIN
 
-    INSERT INTO todos (id, content, due, priority, status)
-    VALUES (1, 'testxyzzz', now(), 3, 'Pending'),
-           (2, 'testxyzzz', now(), 4, 'Pending'),
-           (3, 'testxyzzz', now(), 2, 'Pending'),
-           (8, 'testxyzzz', now(), 1, 'Pending')
+    INSERT INTO todos (id, content, due, priority, status, is_sample_data)
+    VALUES (1, 'testxyzzz', now(), 3, 'Pending', true),
+           (2, 'testxyzzz', now(), 4, 'Pending', true),
+           (3, 'testxyzzz', now(), 2, 'Pending', true),
+           (8, 'testxyzzz', now(), 1, 'Pending', true)
     ON DUPLICATE KEY UPDATE content = VALUES(content),
                             priority=VALUES(priority),
                             status=VALUES(status);
@@ -103,7 +122,8 @@ select datediff(last_modified, created_at) as days_since_last_modification,
        created_at,
        last_modified,
        status,
-       priority
+       priority,
+       id
 from todos
 # order by days_until_due desc, days_old desc, days_since_last_modification desc
 ;
@@ -125,8 +145,41 @@ Select
      , days_old
      , days_since_last_modification
      , days_until_due
+     , id
 from TimeElapsed as te;
 
 select *
 from Schedule;
 
+
+### Bumps only
+
+
+CREATE or replace VIEW Bumps AS
+select id, content, due
+from todos
+where content REGEXP '@bump:\s*'
+   or comments REGEXP '@bump:\s*';
+
+Select *
+from Bumps;
+
+### wip - trying to figure out a smart way to sort.
+select te.days_until_due, todos.priority
+from todos
+         join TimeElapsed te on te.id
+         join Schedule S on te.id = S.id
+order by te.days_until_due;
+
+
+## filter sample todos...
+update todos
+set is_sample_data = 1
+where content like '%zzz%';
+
+select *
+from todos
+where todos.is_sample_data = 1;
+
+
+# order by due desc, priority desc

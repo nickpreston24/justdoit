@@ -30,8 +30,4 @@
     <!--        <ProjectReference Include="..\generated_pb_code\justdoit.pb\justdoit.pb.csproj" />-->
     <!--    </ItemGroup>-->
 
-    <ItemGroup>
-        <Folder Include="Models" />
-    </ItemGroup>
-
 </Project>

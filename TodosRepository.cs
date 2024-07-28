@@ -3,6 +3,7 @@ using CodeMechanic.RegularExpressions;
 using CodeMechanic.Types;
 using Dapper;
 using justdoit;
+using justdoit.Models;
 using justdoit.Pages;
 using justdoit.Pages.Sandbox;
 using MySql.Data.MySqlClient;

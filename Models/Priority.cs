@@ -1,4 +1,4 @@
-namespace justdoit.Pages.Sandbox;
+namespace justdoit.Models;
 
 public record Priority
 {

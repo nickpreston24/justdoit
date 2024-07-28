@@ -1,4 +1,6 @@
-namespace justdoit.Pages.Sandbox;
+namespace justdoit.Models;
+
+
 
 public class Schedule
 {

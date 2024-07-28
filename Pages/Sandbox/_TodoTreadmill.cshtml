@@ -1,17 +1,20 @@
 @using CodeMechanic.Types
 @using Htmx.TagHelpers
+@using justdoit.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Pocketbase
 @{
-    var completed = Model.Todos.Where(x => x.Status.Equals(TodoStatus.Done));
-    var pending = Model.Todos
-        .Where(x => x.Status.ToMaybe().IfSome(x => x.Equals(TodoStatus.Pending)))
-        .ToMaybe()
-        .IfNone(new List<Todo>());
-}
+    var completed = Model.Todos
+        .Where(x => x.Status.Equals(TodoStatus.Done))
+        .ToArray();
 
-@* hx-target="#todos_treadmill" *@
-@* hx-trigger="load,once" *@
+    var pending = Model.Todos
+        .Where(x => x.Status
+            .ToMaybe()
+            .IfSome(x => x
+                .Equals(TodoStatus.Pending)))
+        .ToArray();
+}
 
 <div id="todos_treadmill"
      hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { days = 7 })"
@@ -20,14 +23,14 @@
      class="grid grid-cols-1 gap-4">
 
     <ul class="bg-green">
-        @foreach (var todo in pending)
+        @foreach (var todo in pending ?? Enumerable.Empty<Todo>())
         {
             <partial name="_TodoTreadmillListItem" model="todo"></partial>
         }
     </ul>
 
     <ul class="bg-blue opacity-50">
-        @foreach (var todo in completed)
+        @foreach (var todo in completed ?? Enumerable.Empty<Todo>())
         {
             <s>
                 <partial name="_TodoTreadmillListItem" model="todo"></partial>

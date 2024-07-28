@@ -1,13 +1,15 @@
 using CodeMechanic.RegularExpressions;
 using pocketbase_csharp_sdk.Helper.Convert;
 
-namespace justdoit.Pages.Sandbox;
+namespace justdoit.Models;
 
 public record Todo
 {
+    public bool is_recurring { set; get; } = false;
     public int id { get; set; } = -1;
     public string uri { get; set; } = string.Empty; // link to an individual record.
     public string content { get; set; } = string.Empty;
+    public string description { set; get; }
     public string created_by { get; set; } = string.Empty;
     public string status { get; set; } = string.Empty;
     public TodoStatus Status => status;
