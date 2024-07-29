@@ -48,14 +48,6 @@ select id,
 from todos
 order by priority asc, due desc;
 
-select count(id)
-from todos;
-
-# 
-# update todos
-# set status = 'done'
-# where id = 13
-
 ## nuke
 ### delete from todos where id > 0
 
@@ -171,15 +163,30 @@ from todos
          join Schedule S on te.id = S.id
 order by te.days_until_due;
 
-
 ## filter sample todos...
 update todos
 set is_sample_data = 1
 where content like '%zzz%';
 
-select *
+select due, content, id
 from todos
 where todos.is_sample_data = 1;
 
-
+# select count(*)
+# from todos
 # order by due desc, priority desc
+
+
+# textzzz Seeding:
+
+INSERT INTO todos (content, due, priority, status, is_sample_data)
+VALUES ('testxyzzz', now(), 3, 'Pending', true),
+       ('testxyzzz', now(), 4, 'Unknown', true),
+       ('testxyzzz', now(), 2, 'Pending', true),
+       ('testxyzzz', now(), 1, 'WIP', true),
+       ('testxyzzz', now(), 3, 'WIP', true),
+       ('testxyzzz', now(), 4, 'Pending', true),
+       ('testxyzzz', now(), 2, 'Done', true),
+       ('testxyzzz', now(), 1, 'Pending', true),
+       ('testxyzzz', now(), 3, 'Done', true),
+       ('testxyzzz', now(), 4, 'Pending', true)

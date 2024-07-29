@@ -40,8 +40,7 @@ public class TodosRepository : ITodosRepository
 
     public async Task<int> Create(params Todo[] model)
     {
-        await InsertRow(model.First());
-        return 1;
+        return await InsertRow(model.First());
     }
 
     public Task Update(int id, Todo model)
@@ -88,31 +87,39 @@ public class TodosRepository : ITodosRepository
 
     private async Task<int> InsertRow(Todo todo)
     {
-        using var connection = SqlConnections.CreateConnection();
+        try
+        {
+            using var connection = SqlConnections.CreateConnection();
 
-        string insert_query =
-            @$"insert into todos (content, priority, status, due) values (@content, @priority, '{TodoStatus.Pending.Name}', @due)";
+            string insert_query =
+                @$"insert into todos (content, priority, status, due) values (@content, @priority, '{TodoStatus.Pending.Name}', @due)";
 
-        var extracted_priority = todo
-            .Dump("my todo added")
-            .content
-            .Extract<Priority>(TodoPriorityRegex.Basic.CompiledRegex)
-            .Dump("priori incantum")
-            .SingleOrDefault();
+            var extracted_priority = todo
+                // .Dump("my todo added")
+                .content
+                .Extract<Priority>(TodoPriorityRegex.Basic.CompiledRegex)
+                // .Dump("priori incantum")
+                .SingleOrDefault();
 
-        extracted_priority.Dump(nameof(extracted_priority));
+            // extracted_priority.Dump(nameof(extracted_priority));
 
-        var results = await Dapper.SqlMapper
-            .ExecuteAsync(connection, insert_query,
-                new
-                {
-                    content = todo.content,
-                    priority = extracted_priority?.Value ?? 4,
-                    status = todo.status,
-                    due = todo.due
-                });
+            var results = await Dapper.SqlMapper
+                .ExecuteAsync(connection, insert_query,
+                    new
+                    {
+                        content = todo.content,
+                        priority = extracted_priority?.Value ?? 4,
+                        status = todo.status,
+                        due = todo.due
+                    });
 
-        Console.WriteLine($"logged {results} log records.");
-        return results;
+            return results;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+
+            throw;
+        }
     }
 }

@@ -8,7 +8,7 @@
     var days_due_friendly = Math.Abs(days_due) > 99 ? "99+" : Math.Abs(days_due).ToString();
 }
 
-<li class="flex gap-2">
+<div class="flex gap-2">
 
     <div
         hx-get="@Url.Page("Pocketbase", "CompleteTodo", new { id = @todo.id })"
@@ -66,4 +66,4 @@
     @*     </ul> *@
     @* </div> *@
 
-</li>
+</div>

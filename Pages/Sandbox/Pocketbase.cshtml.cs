@@ -30,12 +30,13 @@ public class Pocketbase : PageModel
 
     public async Task<IActionResult> OnGetSortedTreadmill(int days_from_now = 7, string query = "", bool debug = false)
     {
+        Console.WriteLine(nameof(OnGetSortedTreadmill));
         if (debug) Console.WriteLine($"{nameof(days_from_now)} {days_from_now}");
         if (debug) Console.WriteLine($"{nameof(Query)}: {Query}");
         if (debug) Console.WriteLine($"{nameof(query)}: {query}");
 
         todos = (await db.GetAll())
-            .ApplyFilters()
+            .ApplyFilters(query)
             .ToList();
         // todos.Dump(nameof(OnGetSortedTreadmill));
         // todo: finish reseting the todos by the age of dueness.
@@ -142,8 +143,9 @@ where id = @id";
 
             // await SaveToPocketBase(todo);
 
-            await db.Create(todo);
+            int rows = await db.Create(todo);
 
+            Console.WriteLine($"Created {rows} rows.");
             // return Content($"<p>{Content}...</p>");
             return Partial(current_partial_name, this);
         }

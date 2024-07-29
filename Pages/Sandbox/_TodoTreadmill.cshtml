@@ -4,6 +4,8 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Pocketbase
 @{
+    string partial_name = "_TodoTreadMillCard";
+    // string partial_name = "_TodoTreadMillListItem";
     var completed = Model.Todos
         .Where(x => x.Status.Equals(TodoStatus.Done))
         .ToArray();
@@ -16,27 +18,22 @@
         .ToArray();
 }
 
+@* hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { days = 7 })" *@
+@* hx-indicator="#todos_loader" *@
 <div id="todos_treadmill"
-     hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { days = 7 })"
-     hx-indicator="#todos_loader"
+     class="grid grid-cols-2 gap-4">
 
-     class="grid grid-cols-1 gap-4">
+    @foreach (var todo in pending)
+    {
+        <partial name="@partial_name" model="todo"></partial>
+    }
 
-    <ul class="bg-green">
-        @foreach (var todo in pending ?? Enumerable.Empty<Todo>())
-        {
-            <partial name="_TodoTreadmillListItem" model="todo"></partial>
-        }
-    </ul>
-
-    <ul class="bg-blue opacity-50">
-        @foreach (var todo in completed ?? Enumerable.Empty<Todo>())
-        {
-            <s>
-                <partial name="_TodoTreadmillListItem" model="todo"></partial>
-            </s>
-        }
-    </ul>
+    @foreach (var todo in completed)
+    {
+        <s>
+            <partial name="@partial_name" model="todo"></partial>
+        </s>
+    }
 
     @if (pending.IsNullOrEmpty())
     {

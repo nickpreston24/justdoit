@@ -4,6 +4,7 @@
 
     <form hx-post="@Url.Page("Pocketbase", "AddTask")"
           hx-swap="outerHTML"
+          hx-target="#todos_treadmill"
           class="card-body w-96 form-horizontal needs-validation"
           _="on htmx:beforeSend set #submitButton.disabled to 'disabled'">
 
@@ -16,7 +17,6 @@
                 hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { debug = true })"
                 hx-target="#todos_treadmill"
                 asp-for="Query"
-                hx-swap="innerHTML"
                 hx-trigger="keyup changed delay:250ms"
                 type="text"
                 placeholder="Search"

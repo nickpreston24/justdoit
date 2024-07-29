@@ -6,7 +6,15 @@ namespace justdoit;
 
 public static class TodoBusinessLogic
 {
-    public static List<Todo> ApplyFilters(this List<Todo> items)
+    public record TodoFilters
+    {
+    }
+
+    public record TodoSorts
+    {
+    }
+
+    public static List<Todo> ApplyFilters(this List<Todo> items, string query)
     {
         bool sort_by_priority = true;
         SortDirection priority_direction = SortDirection.Descending;
@@ -25,6 +33,9 @@ public static class TodoBusinessLogic
                     ? todos.OrderByDescending(todo => todo.due)
                     : todos.OrderBy(todo => todo.due)
             )
+            .If(query.NotEmpty(), todos => todos
+                .Where(t => t.content
+                    .Contains(query, StringComparison.OrdinalIgnoreCase)))
             .ToList();
     }
 }

@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using CodeMechanic.RegularExpressions;
 using pocketbase_csharp_sdk.Helper.Convert;
 
@@ -28,6 +29,25 @@ public record Todo
 
     public DateTime created_at { get; set; } = DateTime.MinValue;
     public DateTime last_modified { get; set; } = DateTime.MinValue;
+
+    public string status_css
+    {
+        get
+        {
+            var options = new Dictionary<TodoStatus, string>()
+            {
+                [TodoStatus.Done] = "success",
+                [TodoStatus.WIP] = "warning",
+                [TodoStatus.Postponed] = "red-500",
+                [TodoStatus.Pending] = "info",
+                [TodoStatus.Unknown] = "red-500",
+            };
+
+            var found = options.TryGetValue(status, out var value);
+            // Console.WriteLine("value is " + value);
+            return found ? value : throw new Exception($"status '{status}' found");
+        }
+    }
 
     public string priority_css
     {

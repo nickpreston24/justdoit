@@ -1,0 +1,80 @@
+@using CodeMechanic.Types
+@using justdoit.Models
+@model justdoit.Models.Todo
+@{
+    var now = DateTime.Now;
+    var todo = Model;
+    var days_due = now.Subtract(todo.due).Days;
+    var days_due_friendly = Math.Abs(days_due) > 99 ? "99+" : Math.Abs(days_due).ToString();
+
+    var dropdown_css_options = new Dictionary<TodoStatus, string>()
+    {
+        [TodoStatus.Done] = "success",
+        [TodoStatus.WIP] = "warning",
+        [TodoStatus.Postponed] = "red-500",
+        [TodoStatus.Pending] = "info",
+        [TodoStatus.Unknown] = "slate-500",
+    };
+}
+
+<div class="card bg-base=100 shadow-lg w-96 lg:w-72">
+
+<div class="card-body">
+
+    @* <h1 class="card-title"> *@
+    @*     <span>card go here</span> *@
+    @* </h1> *@
+    <div class="flex flex-row justify-center gap-4">
+
+        @if (todo.Status == TodoStatus.Done)
+        {
+            <input type="checkbox"
+                   checked class="checkbox checkbox-primary"/>
+        }
+        else if (todo.Status != TodoStatus.Done)
+        {
+            <input
+                hx-get="@Url.Page("Pocketbase", "CompleteTodo", new { id = @todo.id })"
+                type="checkbox" class="checkbox checkbox-primary"/>
+        }
+        <p class="max-w-full text-wrap truncate">@todo.content</p>
+    </div>
+
+    <div class="flex flex-row">
+
+        <span class="text-@todo.status_css">@todo.due.ToFriendlyDateString()</span>
+        @* <span class="text-ghost">@todo_.projectname</span> *@
+    </div>
+</div>
+
+<div class="card-actions flex flex-row items-center gap-1">
+
+    <div class="dropdown dropdown-bottom">
+        <div tabindex="0" role="button" class="btn btn-md btn-@todo.status_css">@todo.Status</div>
+        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+            @foreach (var choice in TodoStatus.GetAll<TodoStatus>())
+            {
+                var found = dropdown_css_options.TryGetValue(choice, out var value);
+
+                string css = found ? value : throw new Exception($"status '{choice}' found");
+                <li class="text-@css">
+                    <a>@choice.Name</a>
+                </li>
+            }
+        </ul>
+    </div>
+
+</div>
+
+
+<style>
+    .flex-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .flex-group > * {
+        min-width: fit-content;
+        flex: 1;
+    }    
+</style>
