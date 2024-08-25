@@ -1,51 +1,91 @@
 @page
 @model justdoit.Pages.Sandbox.Index
 
-<section class="flex flex-col items-center m-4 gap-2">
+<section
+    id="todos_grid"
+    x-data="setup_todos()"
+    x-init="start_view_timers()"
+    class="flex flex-col items-center justify-center gap-2 border-0 m-8">
 
-    <h1 class="text-3xl">Experimental Stuff</h1>
-    <p>The following are things I play around with. Some of it may be integrated into this or other projects</p>
-    <ul>
+    <div class="grid lg:grid-cols-1 grid-cols-1 gap-2">
 
-        <hydro-li>
-            <a class="pl-2" href="/Sandbox/HydroExperiments">
-                <button class="btn btn-sm btn-primary">Hydro Components</button>
-            </a>
-        </hydro-li>
+        <div
+            x-show="views.todo_form.show"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 scale-90"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-90"
 
+            id="add_task_form">
 
-        <hydro-li disabled>
-            <a class="pl-2" href="/Sandbox/TabGrab">
-                <button class="btn btn-sm btn-primary">Tab Grabber</button>
-            </a>
-        </hydro-li>
-        <hydro-li>
-            <a class="pl-2" href="/Sandbox/Pocketbase">
-                <button class="btn btn-sm btn-primary">Pocketbase</button>
-            </a>
-        </hydro-li>
+            <partial name="_AddTaskForm" model="@Model"/>
 
-        <hydro-li>
-            <a class="pl-2" href="/Sandbox/Animations">
-                <button class="btn btn-sm btn-secondary">Animations</button>
-            </a>
-        </hydro-li>
-        @* https://ammoseek.com/ammo/224-valkyrie *@
-        <hydro-li>
-            <button hx-get
-                    hx-page="Index"
-                    hx-swap="outerHTML"
-                    hx-page-handler="Valkyrie"
-                    hx-indicator="#ammo_scraper"
-                    class="btn btn-sm btn-info">
-                AmmoSeek
-            </button>
-            <span id="ammo_scraper"
-                  class="htmx-indicator">
-                <label for="">loading...</label>
-                <img alt="bars" src="~/img/loaders/bars.svg"/>
+        </div>
+        <div
+
+            x-show="views.todos_table.show"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 scale-90"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-90"
+
+            hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { partial_name = @Model.current_partial_name })"
+            hx-trigger="load"
+            hx-indicator="#todos_loader"
+
+            class="">
+
+            <span id="todos_loader" class="htmx-indicator border-2">
+                <label>loading todos ...</label>
+                <img class="w-8" alt="bars" src="~/img/loaders/circle_bars.svg"/>
             </span>
-        </hydro-li>
-    </ul>
 
+            <partial name="_TodoTreadmill"/>
+        </div>
+    </div>
 </section>
+<script>
+function setup_todos(){
+    console.log('setup is running...');
+    return {
+        views: { 
+             todos_table: {show: false, toggle(){ this.show=!this.show }},
+             todo_form: {show: false, toggle(){ this.show=!this.show }},
+        },
+        start_view_timers() {
+            console.log('timers init...')
+             setTimeout(()=> this.views.todo_form.show = true , 250);
+             setTimeout(()=> this.views.todos_table.show = true , 1);
+         }
+    }
+}
+</script>
+
+
+@* <div x-show="views.pb.show" x-transition class="card w-96 rounded-xl shadow-lg"> *@
+@*     <div class="card-title"> *@
+@*         <h1 class="text-yellow-500 font-bold">From Pocketbase</h1> *@
+@*     </div> *@
+
+@* <div *@
+@*     hx-get *@
+@*     hx-page="Pocketbase" *@
+@*     hx-trigger="load" *@
+@*     hx-page-handler="PbTodos"> *@
+@* </div> *@
+
+@* </div> *@
+
+
+@* <div class="flex flex-row"> *@
+
+@* <button class="btn-ghost btn" x-on:click="views.pb.toggle()" x-text="!!views.pb.show ?'Show Pocketbase Todos': 'Hide Pocketbase Todos'"></button> *@
+
+@* <button class="btn-ghost btn"  *@
+@*         x-on:click="views.mysql.toggle()"  *@
+@*         x-text="!!views.mysql.show ?'Hide Todos': 'Show Todos'"></button> *@
+@* </div> *@
