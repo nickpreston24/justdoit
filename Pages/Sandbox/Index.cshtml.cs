@@ -1,15 +1,13 @@
-using System.Data.SqlClient;
-using System.Text;
 using CodeMechanic.Diagnostics;
-using CodeMechanic.RegularExpressions;
 using CodeMechanic.Types;
-using Dapper;
-using justdoit.Models;
 // using justdoit.pb;
 // using justdoit.pb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
+using Dapper;
+using justdoit.Models;
+using justdoit.Services;
 
 namespace justdoit.Pages.Sandbox;
 
@@ -28,6 +26,12 @@ public class Index : PageModel
         this.db = db;
     }
 
+    public ContentResult OnGetRandom()
+    {
+        Console.WriteLine(nameof(OnGetRandom) + " called");
+        return Content($"<span>{Number.Value}</span>", "text/html");
+    }
+
     public async Task<IActionResult> OnGetSortedTreadmill(int days_from_now = 7, string query = "", bool debug = false)
     {
         Console.WriteLine(nameof(OnGetSortedTreadmill));
@@ -36,6 +40,7 @@ public class Index : PageModel
         if (debug) Console.WriteLine($"{nameof(query)}: {query}");
 
         todos = (await db.GetAll())
+            .AutoSchedule()
             .ApplyFilters(query)
             .ToList();
         // todos.Dump(nameof(OnGetSortedTreadmill));

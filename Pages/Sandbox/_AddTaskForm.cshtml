@@ -14,7 +14,7 @@
             </label>
 
             <input
-                hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { debug = true })"
+                hx-get="@Url.Page("Index", "SortedTreadmill", new { debug = true })"
                 hx-target="#todos_treadmill"
                 asp-for="Query"
                 hx-trigger="keyup changed delay:250ms"

@@ -90,11 +90,12 @@ DELIMITER ;
 
 call updatetodo();
 
-
-
 select *
 from todos
-where content like '%test%';
+# where content like '%test%'
+order by created_at desc
+;
+
 /*
 delete from todos where content like '%zzz%'
  */
@@ -122,7 +123,6 @@ from todos
 
 Select *
 from TimeElapsed;
-
 
 CREATE or replace VIEW Schedule AS
 Select

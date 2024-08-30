@@ -26,8 +26,8 @@
 <header>
     <partial name="_Navbar"></partial>
 </header>
-<div class="container">
-    <main role="main" class="m-2">
+<div class="">
+    <main role="main" class="">
         @RenderBody()
     </main>
 </div>
@@ -37,4 +37,17 @@
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 <partial name="Components/_CodeMechanicFooter"/>
+
+<script>
+    document.body.addEventListener('htmx:confirm', function (evt) {
+        // do something here
+        // you can evt.preventDefault()
+        // or...
+        // evt.details.issueRequest() to continue.
+    });
+
+    function setup_layout(){
+        
+    }
+</script>
 </html>

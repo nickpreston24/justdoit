@@ -21,7 +21,7 @@
 @* hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { days = 7 })" *@
 @* hx-indicator="#todos_loader" *@
 <div id="todos_treadmill"
-     class="grid grid-cols-2 gap-4">
+     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 m-2 border-0 border-primary">
 
     @foreach (var todo in pending)
     {

@@ -5,9 +5,19 @@
     id="todos_grid"
     x-data="setup_todos()"
     x-init="start_view_timers()"
-    class="flex flex-col items-center justify-center gap-2 border-0 m-8">
+    class="flex flex-col gap-2 border-0 border-yellow-500">
 
-    <div class="grid lg:grid-cols-1 grid-cols-1 gap-2">
+    @* <div> *@
+
+    @* <partial name="_SSEExample"></partial> *@
+    @* <partial name="_SweetAlert"></partial> *@
+
+    @* </div> *@
+
+
+    @* Treadmill & form *@
+
+    <div class="flex flex-col">
 
         <div
             x-show="views.todo_form.show"
@@ -18,13 +28,15 @@
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-90"
 
-            id="add_task_form">
+            id="add_task_form"
+            class="border-accent border-0">
 
             <partial name="_AddTaskForm" model="@Model"/>
 
         </div>
         <div
 
+            class="border-0 border-secondary"
             x-show="views.todos_table.show"
             x-transition:enter="transition ease-out duration-300"
             x-transition:enter-start="opacity-0 scale-90"
@@ -33,13 +45,11 @@
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-90"
 
-            hx-get="@Url.Page("Pocketbase", "SortedTreadmill", new { partial_name = @Model.current_partial_name })"
+            hx-get="@Url.Page("Index", "SortedTreadmill", new { partial_name = @Model.current_partial_name })"
             hx-trigger="load"
-            hx-indicator="#todos_loader"
+            hx-indicator="#todos_loader">
 
-            class="">
-
-            <span id="todos_loader" class="htmx-indicator border-2">
+            <span id="todos_loader" class="htmx-indicator">
                 <label>loading todos ...</label>
                 <img class="w-8" alt="bars" src="~/img/loaders/circle_bars.svg"/>
             </span>
