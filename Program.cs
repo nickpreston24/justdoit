@@ -1,7 +1,8 @@
 using CodeMechanic.FileSystem;
 using Hydro.Configuration;
 using justdoit.Services;
-using Lib.AspNetCore.ServerSentEvents;
+
+// using Lib.AspNetCore.ServerSentEvents;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,8 +15,8 @@ builder.Services.AddHydro();
 
 // dependencies for server sent events
 // credit: https://www.jetbrains.com/guide/dotnet/tutorials/htmx-aspnetcore/server-sent-events/
-builder.Services.AddServerSentEvents();
-builder.Services.AddHostedService<ServerEventsWorker>();
+// builder.Services.AddServerSentEvents();
+// builder.Services.AddHostedService<ServerEventsWorker>();
 
 
 var app = builder.Build();
@@ -40,7 +41,7 @@ app.UseAuthorization();
 
 // the connection for server events
 // credit: https://www.jetbrains.com/guide/dotnet/tutorials/htmx-aspnetcore/server-sent-events/
-app.MapServerSentEvents("/rn-updates");
+// app.MapServerSentEvents("/rn-updates");
 
 app.MapRazorPages();
 
