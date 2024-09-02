@@ -37,6 +37,9 @@ alter table todos
     ADD COLUMN start datetime,
     add column end   datetime;
 
+ALTER TABLE todos
+    ADD FULLTEXT (content, description); #, comments, description, status, created_by, modified_by
+
 select id,
        content,
        created_at,
@@ -189,4 +192,7 @@ VALUES ('testxyzzz', now(), 3, 'Pending', true),
        ('testxyzzz', now(), 2, 'Done', true),
        ('testxyzzz', now(), 1, 'Pending', true),
        ('testxyzzz', now(), 3, 'Done', true),
-       ('testxyzzz', now(), 4, 'Pending', true)
+       ('testxyzzz', now(), 4, 'Pending', true);
+
+
+

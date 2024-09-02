@@ -1,0 +1,14 @@
+@using CodeMechanic.Diagnostics
+@model IEnumerable<justdoit.Models.Todo>
+@{
+    var todos = @Model;
+}
+
+<div>
+    <span>Todos:</span>
+    @foreach (var todo in todos)
+    {
+        <p>@todo.content</p>
+    }
+
+</div>

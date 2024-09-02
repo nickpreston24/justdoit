@@ -8,6 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <EmbeddedResource Include="**/*.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="CodeMechanic.Diagnostics" Version="1.0.3" />
         <PackageReference Include="CodeMechanic.Embeds" Version="1.0.0" />
         <PackageReference Include="CodeMechanic.FileSystem" Version="2.0.0" />

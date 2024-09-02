@@ -1,0 +1,18 @@
+@page
+@model justdoit.Pages.Sandbox.EmbeddedSQL
+
+<section class="text-primary">
+    <h1 class="text-accent">Hello!</h1>
+    <p class="text-secondary">
+        The following is a demonstration of how fast embedded sql works and why
+        querying SQL files from HTML is potentially ideal:
+    </p>
+    <div
+        hx-get
+        hx-trigger="load"
+        hx-page="EmbeddedSQL"
+        hx-page-handler="Moopsy"
+        hx-vars="{sproc_name: 'search_todos', search_term: 'moopsy'}">
+        <span>loading...</span>
+    </div>
+</section>
