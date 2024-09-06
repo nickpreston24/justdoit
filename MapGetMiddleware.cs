@@ -1,5 +1,3 @@
-using CodeMechanic.Diagnostics;
-using CodeMechanic.Types;
 using Microsoft.AspNetCore.Mvc;
 
 public static class MapGetMiddleware

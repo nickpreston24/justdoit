@@ -1,15 +1,9 @@
-using System.Collections;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
-using CodeMechanic.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Reflection;
-using System.Text;
-using System.Text.Json;
-using CodeMechanic.Diagnostics;
 using Dapper;
 using justdoit.Models;
 
@@ -61,6 +55,12 @@ public class EmbeddedSQL : PageModel
         Console.WriteLine($"took {clock.ElapsedMilliseconds} milliseconds");
         clock.Reset();
 
+        string title = "hi";
+        string name = "nick";
+        string message = "query success!";
+
+        await
+            $@"notify-send '{title}' '{message}' -a '{name}' -u normal -i face-smile".Bash(verbose: true);
         return Partial("_SampleTodoDataList", todos);
         // return Content("Hi");
     }

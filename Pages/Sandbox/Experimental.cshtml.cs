@@ -1,8 +1,4 @@
-using System.Net;
-using System.Text;
-using CodeMechanic.Diagnostics;
 using CodeMechanic.Scraper;
-using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
