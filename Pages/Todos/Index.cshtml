@@ -2,8 +2,27 @@
 @model justdoit.Pages.Todos.Index
 
 @{
+    string search_term = "moopsy hungers....";
 }
 
 <div>
     <h1>Todos (deployment fix)</h1>
+
+    <div
+        hx-get
+        hx-trigger="load"
+        hx-page="Index"
+        hx-page-handler="AllTodos"
+        hx-vars="{search_term: '@search_term'}">
+        <span>loading...</span>
+    </div>
+
+    <div
+        hx-get
+        hx-trigger="load"
+        hx-page="Index"
+        hx-page-handler="TimeElapsed"
+        hx-vars="{search_term: '@search_term'}">
+        <span>loading...</span>
+    </div>
 </div>

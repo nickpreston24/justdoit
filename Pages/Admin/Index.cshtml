@@ -1,0 +1,38 @@
+@page
+@model justdoit.Pages.Admin.Index
+
+@{
+    var range = Enumerable.Range(1, 100);
+}f
+<section x-data="setup_admin()" class="text-primary">
+    <h1>Admin</h1>
+    <p>
+        <b>Purpose:</b>
+
+        This page is for testing stored procdure insights inspired by dataedo, like which procs take longest, have the most rows, etc.
+    </p>
+
+    <button
+        hx-get hx-page-handler="Reset"
+        class="btn">
+        Reset
+    </button>
+
+    @foreach (var id in range)
+    {
+        <div
+            class="text-accent"
+            hx-get
+            hx-trigger="load"
+            hx-page="Index"
+            hx-page-handler="Sprocs"
+            hx-vars="{sproc_name: 'get_all_procs'}">
+            <span>loading...</span>
+        </div>
+    }
+
+</section>
+<script>
+    function setup_admin() {
+    }    
+</script>

@@ -1,0 +1,16 @@
+@model List<TimeElapsed>
+@{
+    var time = Model;
+}
+
+<div>
+    <p>lorem ipsum</p>
+    @foreach (var todo_time in time)
+    {
+        <div class="flex flex-row gap-2">
+            <span>id: @todo_time.id</span>
+            <span>due: @todo_time.due</span>
+            <span>days until due: @todo_time.days_until_due</span>
+        </div>
+    }
+</div>

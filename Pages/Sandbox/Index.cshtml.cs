@@ -1,7 +1,5 @@
 using CodeMechanic.Diagnostics;
 using CodeMechanic.Types;
-// using justdoit.pb;
-// using justdoit.pb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;

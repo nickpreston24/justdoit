@@ -70,7 +70,6 @@ BEGIN
                             priority=VALUES(priority),
                             status=VALUES(status);
 
-
     select id, content, due, priority, status
     from todos;
 
