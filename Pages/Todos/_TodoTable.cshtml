@@ -2,20 +2,23 @@
 
 @{
     var all_todos = Model;
-    int limit = 10;
+    int limit = 100;
 }
 
-<div class="flex flex-column items-center border-2">
+<setion class="flex flex-col items-center justify-center border-2">
     <p>lorem ipsum</p>
     <span>showing only @limit todos</span>
 
-    <div class="h-96 overflow-x-auto">
+    <div class="h-96 w-max-128 overflow-x-auto">
         <table class="table table-pin-rows">
             @foreach (var priority_group in all_todos.Take(limit).GroupBy(t => t.priority))
             {
                 <thead>
                 <tr>
-                    <th>@priority_group.Key</th>
+                    <th>
+                        @priority_group.Key
+
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -23,11 +26,15 @@
                 @foreach (var todo in @priority_group)
                 {
                     <tr>
-                        <td>@todo.content</td>
+                        <td>
+                            @todo.content
+                            <span class="badge badge-@todo.priority_css text-white">@todo.priority</span>
+
+                        </td>
                     </tr>
                 }
                 </tbody>
             }
         </table>
     </div>
-</div>
+</setion>
