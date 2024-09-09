@@ -1,23 +1,23 @@
-@model IEnumerable<justdoit.Models.Todo>
+@model List<justdoit.Models.Todo>
 
 @{
-    var all_todos = Model;
-    int limit = 100;
+    var all_todos = Model; //.Where(t => t.priority == 1);
+    // int limit = 100;
 }
 
 <setion class="flex flex-col items-center justify-center border-2">
     <p>lorem ipsum</p>
-    <span>showing only @limit todos</span>
+    @* <span>showing only @limit todos</span> *@
+    <span>Total todos : @all_todos.Count </span>
 
     <div class="h-96 w-max-128 overflow-x-auto">
-        <table class="table table-pin-rows">
-            @foreach (var priority_group in all_todos.Take(limit).GroupBy(t => t.priority))
+        <table class="table table-fixed table-pin-rows">
+            @foreach (var priority_group in all_todos.GroupBy(t => t.priority))
             {
                 <thead>
                 <tr>
                     <th>
-                        @priority_group.Key
-
+                        P@(@priority_group.Key)
                     </th>
                 </tr>
                 </thead>

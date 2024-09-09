@@ -178,7 +178,6 @@ where todos.is_sample_data = 1;
 # from todos
 # order by due desc, priority desc
 
-
 # textzzz Seeding:
 
 INSERT INTO todos (content, due, priority, status, is_sample_data)
@@ -193,5 +192,6 @@ VALUES ('testxyzzz', now(), 3, 'Pending', true),
        ('testxyzzz', now(), 3, 'Done', true),
        ('testxyzzz', now(), 4, 'Pending', true);
 
-
-
+select *
+from todos
+where priority is not null;

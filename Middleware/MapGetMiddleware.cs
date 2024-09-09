@@ -1,3 +1,4 @@
+using justdoit.Models;
 using Microsoft.AspNetCore.Mvc;
 
 public static class MapGetMiddleware

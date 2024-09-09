@@ -1,3 +1,5 @@
+namespace justdoit.Models;
+
 public record GanttRequest
 {
     public DateTime Start { get; set; }

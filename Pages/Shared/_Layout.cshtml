@@ -10,23 +10,16 @@
     <title>@ViewData["Title"] - justdoit</title>
 
     <script src="https://unpkg.com/htmx.org@2.0.0"></script>
-
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
-    @* <script src="//unpkg.com/alpinejs" defer></script> *@
-
-    @* <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> *@
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-
-    <link rel="stylesheet" href="~/css/site.css">
-    <script src="~/lib/animejs/lib/anime.min.js"></script>
-
+    @* <link rel="stylesheet" href="~/css/site.css"> *@
 </head>
 <body x-data="setup_layout()" :data-theme="selected_theme" class="bg-gradient-to-r from-cyan-900 to-pink-900">
 <header>
     <partial name="_Navbar"></partial>
 </header>
-<div class="flex m-4">
+<div class="flex flex-col items-center m-4">
     <main role="main" class="">
         @RenderBody()
     </main>
