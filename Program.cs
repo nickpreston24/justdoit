@@ -4,7 +4,7 @@ using Hydro.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddTransient<ITodosRepository, TodosRepository>();
+// builder.Services.AddTransient<ITodosRepository, TodosRepository>();
 
 builder.Services.AddRazorPages();
 builder.Services.AddHydro();

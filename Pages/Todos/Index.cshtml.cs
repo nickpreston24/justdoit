@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using CodeMechanic.Types;
 using Dapper;
 using justdoit.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -9,13 +10,13 @@ namespace justdoit.Pages.Todos;
 
 public class Index : PageModel
 {
-    private readonly ITodosRepository todo_repo;
+    // private readonly ITodosRepository todo_repo;
     private bool debug;
 
-    public Index(ITodosRepository todosRepository)
-    {
-        this.todo_repo = todosRepository;
-    }
+    // public Index(ITodosRepository todosRepository)
+    // {
+    //     this.todo_repo = todosRepository;
+    // }
 
     public void OnGet()
     {
@@ -28,7 +29,8 @@ public class Index : PageModel
         Stopwatch watch = Stopwatch.StartNew();
         watch.Stop();
         var elapsed = watch.Elapsed;
-        var all_todos = await todo_repo.GetAll();
+        // var all_todos = await todo_repo.GetAll();
+        var all_todos = new Todo().AsList();
         return Partial("_TodoTable", all_todos);
     }
 
