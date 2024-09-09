@@ -9,7 +9,13 @@ namespace justdoit.Pages.Todos;
 
 public class Index : PageModel
 {
+    private readonly ITodosRepository todo_repo;
     private bool debug;
+
+    public Index(ITodosRepository todosRepository)
+    {
+        this.todo_repo = todosRepository;
+    }
 
     public void OnGet()
     {
@@ -20,12 +26,9 @@ public class Index : PageModel
     {
         if (debug) Console.WriteLine($"{name}:{search_term}");
         Stopwatch watch = Stopwatch.StartNew();
-        using var connection = SqlConnections.CreateConnection();
-        var all_todos = (await connection.QueryAsync<Todo>(@"select id, content from todos")).ToList();
         watch.Stop();
         var elapsed = watch.Elapsed;
-        // return Content($"total {all_todos.Count} took {elapsed.Milliseconds} ms");
-
+        var all_todos = await todo_repo.GetAll();
         return Partial("_TodoTable", all_todos);
     }
 
