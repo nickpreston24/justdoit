@@ -5,9 +5,9 @@
     @*     $1$ <h1 class="text-3xl font-bold text-accent">Sign Up</h1> #1# *@
     @* </div> *@
 
+    @* asp-action="post" *@
     <form
         hx-indicator="#signup_indicator"
-        asp-action="post"
         hx-post="@Url.Page("Index", "Signup")"
         class="card-body">
         <div class="form-control">
