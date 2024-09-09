@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="hydro-config"/>
+    <script defer src="~/hydro/hydro.js" asp-append-version="true"></script>
+    <script defer src="~/hydro/alpine.js" asp-append-version="true"></script>
+
+    <title>@ViewData["Title"] - justdoit</title>
+
+    <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    @* <link rel="stylesheet" href="~/css/site.css"> *@
+</head>
+<body x-data="setup_layout()" :data-theme="selected_theme" class="bg-gradient-to-r from-cyan-900 to-pink-900">
+<header>
+    <partial name="_Navbar"></partial>
+</header>
+<div class="flex flex-col items-center m-4">
+    <main role="main" class="">
+        @RenderBody()
+    </main>
+</div>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+<partial name="Components/_CodeMechanicFooter"/>
+
+<script>
+    document.body.addEventListener('htmx:confirm', function (evt) {
+        // do something here
+        // you can evt.preventDefault()
+        // or...
+        // evt.details.issueRequest() to continue.
+    });
+
+    function setup_layout(){
+        
+    }
+</script>
+
+<script type="text/javascript">
+    var previous = localStorage.getItem('theme') ?? "light";
+    function setup_layout() {
+        console.log('setup_layout() initializing ...')
+        return {
+            my_github: 'https://github.com/nickpreston24?tab=repositories',
+            get selected_box_icon_color() { 
+                return 'yellow'  // todo: coordinate this with the current theme
+            },
+            get theme_fix() {
+                 console.log('selected_theme :>> ', this.selected_theme);
+                let found = this?.theme_fixes[this.selected_theme] ?? '';
+                return found;
+            },
+            get current_gradient() {
+                console.log('selected_theme :>> ', this.selected_theme);
+                let found = this?.gradients[this.selected_theme] ?? '';
+                return found;
+            },
+            theme_fixes: {  
+                // some themes, like cupcake's text are so light, there is not enough contrast, so a darker text is necessary.
+                cupcake: 'text-yellow-500',                
+            },
+            gradients: {
+                dark: "bg-gradient-to-l from-blue-500 to-violet-800",
+                light:"bg-gradient-to-r from-cyan-500 to-blue-500",
+                valentine: 'bg-gradient-to-r from-pink-500 to-rose-500',
+                lemonade: 'bg-gradient-to-r from-teal-400 to-yellow-200',
+                corporate: 'bg-gradient-to-r from-slate-100 to-blue-500',
+                cupcake: 'bg-gradient-to-r from-fuchsia-500 to-cyan-500',
+                pastel: 'bg-gradient-to-r from-violet-200 to-pink-200',
+                ocean: 'bg-gradient-to-r from-blue-300 to-green-700',
+                bumblebee: 'bg-gradient-to-r from-amber-200 to-yellow-400',
+                emerald: 'bg-gradient-to-r from-lime-300 to-green-500',
+                forest: 'bg-gradient-to-r from-emerald-500 to-emerald-900',
+                coffee: 'bg-gradient-to-r from-amber-900 to-orange-950'
+            },
+            
+            themes: [
+              "light",
+              "dark",
+              "cupcake",
+              "bumblebee",
+              "emerald",
+              "corporate",
+              "synthwave",
+              "retro",
+              "cyberpunk",
+              "valentine",
+              "halloween",
+              "garden",
+              "forest",
+              "aqua",
+              "lofi",
+              "pastel",
+              "fantasy",
+              "wireframe",
+              "black",
+              "luxury",
+              "dracula",
+              "cmyk",
+              "autumn",
+              "business",
+              "acid",
+              "lemonade",
+              "night",
+              "coffee",
+              "winter",
+              "dim",
+              "nord",
+              "sunset",    
+            ],
+            selected_theme: previous
+        }
+    }
+</script>
+</html>

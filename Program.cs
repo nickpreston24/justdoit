@@ -39,17 +39,13 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-
 // the connection for server events
 // credit: https://www.jetbrains.com/guide/dotnet/tutorials/htmx-aspnetcore/server-sent-events/
 // app.MapServerSentEvents("/rn-updates");
 
-app.MapRazorPages();
-
-app.ConfigureMiddleware();
-
-
 app.UseHydro(builder.Environment);
 
+app.MapRazorPages();
+app.ConfigureMiddleware();
 
 app.Run();
