@@ -8,7 +8,7 @@ using CodeMechanic.Diagnostics;
 namespace justdoit.Models;
 
 
-public record Todo
+public class Todo
 {
     
     public static Todo Create(string description)

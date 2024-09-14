@@ -15,7 +15,12 @@ create table if not exists todos
     created_at     datetime      default now(),
     created_by     varchar(150)  default null,
     last_modified  datetime      default null,
+
+    # flags
     is_sample_data bool not null default false,
+    is_deleted     bool          default false,
+    is_archived    bool          default false,
+    is_enabled     bool          default true,
 
     # PK's
     PRIMARY KEY (id)
@@ -36,6 +41,11 @@ alter table todos
 alter table todos
     ADD COLUMN start datetime,
     add column end   datetime;
+
+alter table todos
+    add column is_deleted  bool default false,
+    add column is_archived bool default false,
+    add column is_enabled  bool default true;
 
 ALTER TABLE todos
     ADD FULLTEXT (content, description); #, comments, description, status, created_by, modified_by
@@ -192,6 +202,14 @@ VALUES ('testxyzzz', now(), 3, 'Pending', true),
        ('testxyzzz', now(), 3, 'Done', true),
        ('testxyzzz', now(), 4, 'Pending', true);
 
-select *
+
+
+select id, content, status
 from todos
-where priority is not null;
+where id = -1
+;
+
+update todos
+set status = 'done'
+#     && last_modified = @last_modified
+where id = -1
