@@ -242,5 +242,11 @@ from todos
 where
 #         length(content) > 15 or
     content like 'test%'
-   or todos.is_sample_data = 1
+   or todos.is_sample_data = 1;
 #id  = 30
+
+
+select id, content, todos.is_enabled, todos.is_deleted
+from todos
+where is_enabled = 1
+   or is_deleted <> 1

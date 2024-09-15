@@ -38,7 +38,7 @@ public class Index : PageModel
     public string[] ViewNames { get; set; } = new[] { "_TimeElapsedTable" };
 
 
-    public async Task<IActionResult> OnGetAllTodosV0(string search_term, [CallerMemberName] string name = "")
+    public async Task<IActionResult> OnGetAllTodos(string search_term, [CallerMemberName] string name = "")
     {
         // Console.WriteLine(nameof(OnGetAllTodos));
 
@@ -51,17 +51,21 @@ public class Index : PageModel
 
         using var connection = SqlConnections.CreateConnection();
 
-        Func<Todo, bool> filters = todo =>
-            // !todo.is_archived
-            // || todo.is_enabled
-            // && 
-            !todo.status.ToLower().Equals("done");
+        // Func<Todo, bool> filters = todo =>
+        //     // !todo.is_archived
+        //     // || todo.is_enabled
+        //     // && 
+        //     !todo.status.ToLower().Equals("done");
 
         var all_todos = (
                 await connection.QueryAsync<Todo>(
-                    "select id, content from todos"
+                    @"
+                        select id, content, todos.is_enabled, todos.is_deleted
+                        from todos
+                        where is_enabled = 1
+                           or is_deleted <> 1"
                 ))
-            .Where(filters)
+            // .Where(filters)
             .ToList();
 
         // var all_todos = new Todo().AsList();
@@ -192,7 +196,7 @@ public class Index : PageModel
     }
 
 
-    public async Task<IActionResult> OnGetAllTodos(string search_term, [CallerMemberName] string name = "")
+    public async Task<IActionResult> OnGetAllTodosV1(string search_term, [CallerMemberName] string name = "")
     {
         if (debug) Console.WriteLine($"{name}:{search_term}");
         Stopwatch watch = Stopwatch.StartNew();
@@ -223,4 +227,33 @@ public class Index : PageModel
             throw;
         }
     }
+
+    // public async Task<IActionResult> OnGetAllTodosV2()
+    // {
+    //     var watch = Stopwatch.StartNew();
+    //     string query = @"
+    //                     select id, content, status, priority #, is_sample_data
+    //                     from todos
+    //                     where
+    //                         content like 'test%'
+    //                        or todos.is_sample_data = 1
+    //                     ";
+    //
+    //     using var connection = SqlConnections.CreateConnection();
+    //     // var todos = (await connection.QueryAsync(query)).ToArray();
+    //
+    //     // var todos = (await connection.QueryAsync("get_all_todos", CommandType.StoredProcedure)).ToArray();
+    //     var all_todos = (
+    //             await connection.QueryAsync<Todo>(
+    //                 "select id, content from todos"
+    //             ))
+    //         // .Where(filters)
+    //         .ToList();
+    //
+    //     watch.Stop();
+    //     var ms = watch.ElapsedMilliseconds;
+    //
+    //     // return Content($"done.  found {todos.Length} todos, taking {ms} milliseconds");
+    //     return Partial("_TodoTable", all_todos);
+    // }
 }
