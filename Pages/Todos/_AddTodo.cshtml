@@ -1,0 +1,34 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Index
+
+<div x-data="{submitted:false}" class="card w-full max-w-sm shrink-0 shadow-2xl">
+
+    <form
+        asp-action="post"
+        hx-indicator="#signup_indicator"
+        hx-post="@Url.Page("Index", "AddTodo")"
+        class="card-body">
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text text-accent">Describe your new task:</span>
+            </label>
+            <input asp-for="Content"
+                   type="text"
+                   placeholder="Buy Milk"
+                   class="input input-bordered bg-transparent"/>
+        </div>
+
+        <span x-show="submitted" id="signup_indicator" class="htmx-indicator">
+            <label>Saving ...</label>
+            <img class="w-8" alt="bars" src="~/img/loaders/circle_bars.svg"/>
+        </span>
+        <div data-tip="Submit this todo!" class="form-control mt-6 tooltip tooltip-bottom">
+            <button
+                x-on:click="submitted=true"
+                class="btn btn-primary">
+                <box-icon name='paper-plane'></box-icon>
+                Send it!
+            </button>
+        </div>
+    </form>
+</div>

@@ -11,7 +11,7 @@ builder.Services.AddHydro();
 
 var app = builder.Build();
 // Load and inject .env files & values
-DotEnv.Load(debug: true);
+DotEnv.Load(debug: false);
 
 // ConfigureMiddleware the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

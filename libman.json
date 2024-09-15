@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "htmx@2.0.2",
+      "destination": "wwwroot/lib/htmx"
+    },
+    {
+      "library": "alpinejs@3.14.1",
+      "destination": "wwwroot/lib/alpinejs"
+    },
+    {
+      "library": "tailwindcss@2.2.19",
+      "destination": "wwwroot/lib/tailwindcss"
+    },
+    {
+      "library": "daisyui@4.12.10",
+      "destination": "wwwroot/lib/daisyui"
+    },
+    {
+      "library": "animejs@3.2.2",
+      "destination": "wwwroot/lib/animejs"
+    }
+  ]
+}

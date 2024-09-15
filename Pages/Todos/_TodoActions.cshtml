@@ -1,0 +1,39 @@
+@model Index
+
+
+<div class="flex flex-row items-center justify-center gap-2">
+
+    <div x-show="todo_actions.delete.show">
+        <div data-tip="Soft Delete" class="tooltip">
+            <button class="btn btn-warning"
+                    hx-post=""
+                    hx-page="Index"
+                    hx-page-handler="RemoveTodo"
+                    name="input"
+                    value="DELETE"
+                    confirm-with-sweet-alert='true'>
+                <box-icon class="text-accent" name='trash' type='solid'></box-icon>
+            </button>
+        </div>
+    </div>
+
+    <div x-show="todo_actions.bump.show" data-tip="Bump" class="tooltip">
+        <button
+            class="btn btn-accent">
+            <box-icon name='up-arrow-alt'></box-icon>
+            @* Bump *@
+        </button>
+    </div>
+    <div data-tip="Reschedule" class="tooltip">
+        <button
+            class="btn btn-accent">
+            <box-icon type='solid' name='calendar-event'></box-icon>
+            @* Reschedule *@
+        </button>
+    </div>
+
+    <partial name="_TodoFilters"></partial>
+
+    <partial name="_TodoModal"></partial>
+
+</div>

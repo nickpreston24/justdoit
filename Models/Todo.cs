@@ -3,7 +3,6 @@ using CodeMechanic.Types;
 
 namespace justdoit.Models;
 
-
 public class Todo
 {
     
@@ -104,10 +103,9 @@ public record TodoLabel
     public string name { get; set; } = string.Empty;
 }
 
-
 public static class TodoExtensions
 {
-   //...
+    //...
 }
 
 public class Due
@@ -126,5 +124,4 @@ public class Due
     public string friendly_date => datetime.ToFriendlyDateString();
     public string humanized_age => datetime.HumanizeAge();
     public string humanized => datetime.Humanize().ToMaybe().IfNone("Unknown");
-
 }

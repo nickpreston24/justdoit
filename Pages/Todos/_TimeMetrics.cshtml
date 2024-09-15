@@ -1,0 +1,29 @@
+@model Index
+
+@{
+    string[] view_names = Model.ViewNames;
+}
+
+<div class='grid grid-cols-3 grid-rows-3 gap-2'>
+
+    @if (view_names.Length > 0)
+    {
+        @foreach (string view_name in view_names)
+        {
+            <h2 class="text-secondary">@view_name View:</h2>
+            <button
+                hx-get
+                hx-trigger="load"
+                hx-page="Index"
+                hx-page-handler="RenderView"
+                hx-vars="{view_name: '@view_name'}">
+                @* <span>loading...</span> *@
+                <span>Render @view_name</span>
+            </button>
+        }
+    }
+    else
+    {
+        <div>No views.</div>
+    }
+</div>

@@ -1,0 +1,39 @@
+@model List<justdoit.Models.Todo>
+
+@{
+    var all_todos = Model; //.Where(t => t.priority == 1);
+    // int limit = 100;
+}
+
+<setion class="flex flex-col items-center justify-center border-2">
+    <p>lorem ipsum</p>
+    @* <span>showing only @limit todos</span> *@
+    <span>Total todos : @all_todos.Count </span>
+
+    <div class="h-96 w-max-128 overflow-x-auto">
+        <table class="table table-fixed table-pin-rows">
+            @foreach (var priority_group in all_todos.GroupBy(t => t.priority))
+            {
+                <thead>
+                <tr>
+                    <th>
+                        P@(@priority_group.Key)
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                @foreach (var todo in @priority_group)
+                {
+                    <tr>
+                        <td>
+                            @todo.content
+                            <span class="badge badge-@todo.priority_css text-white">@todo.priority</span>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            }
+        </table>
+    </div>
+</setion>

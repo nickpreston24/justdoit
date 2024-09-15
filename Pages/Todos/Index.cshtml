@@ -5,24 +5,81 @@
     string search_term = "moopsy hungers....";
 }
 
-<div>
-    <h1>Todos (deployment fix)</h1>
+
+<section x-data="setup_todo_action_buttons()"
+         class="flex flex-col gap-4">
+
+    @* <div id="options_panel" class="flex flex-row gap-2 items-center"> *@
+    @* *@
+    @*     <partial name="_TodoActions"></partial> *@
+    @* *@
+    @* </div> *@
 
     <div
         hx-get
         hx-trigger="load"
+        hx-indicator="#table_loader"
         hx-page="Index"
-        hx-page-handler="AllTodos"
-        hx-vars="{search_term: '@search_term'}">
-        <span>loading...</span>
+        hx-page-handler="AllTodos">
+        <span
+            id="table_loader"
+            class="hx-indicator">
+            loading...
+            <img class="w-8" src="~/img/loaders/my_awesome_spinner.svg" alt="">
+        </span>
+
     </div>
 
-    <div
-        hx-get
-        hx-trigger="load"
-        hx-page="Index"
-        hx-page-handler="TimeElapsed"
-        hx-vars="{search_term: '@search_term'}">
-        <span>loading...</span>
+    @* Experimental *@
+
+    <div x-show="views.metrics.show">
+        @* <partial name="_TimeMetrics"></partial> *@
     </div>
-</div>
+
+    @* <partial name="_ToastSample"></partial> *@
+</section>
+
+<script>
+function setup_todo_action_buttons() {
+    return {
+        views: {
+            metrics: { show: false }
+        },
+        
+        todo_actions: {
+            bump: { show: true },
+            reschedule: { show: true },
+            delete: { show: false }
+        },
+        
+        boxicon: {
+            color: 'grey'
+        }
+       
+    }
+}
+</script>
+
+
+@* *@
+@* <div> *@
+@*     <h1>Todos (deployment fix)</h1> *@
+@* *@
+@*     <div *@
+@*         hx-get *@
+@*         hx-trigger="load" *@
+@*         hx-page="Index" *@
+@*         hx-page-handler="AllTodos" *@
+@*         hx-vars="{search_term: '@search_term'}"> *@
+@*         <span>loading...</span> *@
+@*     </div> *@
+@* *@
+@*     <div *@
+@*         hx-get *@
+@*         hx-trigger="load" *@
+@*         hx-page="Index" *@
+@*         hx-page-handler="TimeElapsed" *@
+@*         hx-vars="{search_term: '@search_term'}"> *@
+@*         <span>loading...</span> *@
+@*     </div> *@
+@* </div> *@
