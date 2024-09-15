@@ -1,5 +1,3 @@
-using CodeMechanic.Types;
-
 namespace justdoit.Models;
 
 public class SortDirection : Enumeration

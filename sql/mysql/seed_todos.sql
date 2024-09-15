@@ -17,10 +17,10 @@ create table if not exists todos
     last_modified  datetime      default null,
 
     # flags
-    is_sample_data bool not null default false,
-    is_deleted     bool          default false,
-    is_archived    bool          default false,
-    is_enabled     bool          default true,
+    is_sample_data bool not null default false, # stuff marked with 'zzz' will be treated as sample data.
+    is_deleted     bool          default false, # hidden from all queries, but soft deleted.
+    is_archived    bool          default false, # hidden from all queries with the intent of holding onto it indefinitely.
+    is_enabled     bool          default true,  # when ticked, is still visible (depending on feature), but readonly.
 
     # PK's
     PRIMARY KEY (id)
@@ -48,7 +48,14 @@ alter table todos
     add column is_enabled  bool default true;
 
 ALTER TABLE todos
-    ADD FULLTEXT (content, description); #, comments, description, status, created_by, modified_by
+    ADD FULLTEXT (content, description);
+#, comments, description, status, created_by, modified_by
+
+# alter table todos
+CREATE INDEX content
+    ON todos (content(500), description);
+# DROP INDEX content ON todos;
+
 
 select id,
        content,
@@ -204,12 +211,36 @@ VALUES ('testxyzzz', now(), 3, 'Pending', true),
 
 
 
-select id, content, status
+select id, content, status, todos.is_sample_data, todos.is_deleted, todos.is_archived, todos.is_enabled
 from todos
-where id = -1
+where !is_sample_data
+          && !is_deleted
+          && !is_archived
+          || is_enabled
 ;
 
-update todos
-set status = 'done'
-#     && last_modified = @last_modified
-where id = -1
+# 
+# update todos
+# set status = 'done'
+# #     && last_modified = @last_modified
+# where id = -1
+
+
+drop procedure if exists get_all_todos;
+DELIMITER ^_^
+CREATE PROCEDURE get_all_todos()
+BEGIN
+    select id, content, status, priority from todos;
+end ^_^
+DELIMITER ;
+
+call get_all_todos();
+
+
+select id, content, status, priority, is_sample_data
+from todos
+where
+#         length(content) > 15 or
+    content like 'test%'
+   or todos.is_sample_data = 1
+#id  = 30
