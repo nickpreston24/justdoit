@@ -21,6 +21,10 @@
     {
       "library": "animejs@3.2.2",
       "destination": "wwwroot/lib/animejs"
+    },
+    {
+      "library": "boxicons@2.1.4",
+      "destination": "wwwroot/lib/boxicons"
     }
   ]
 }
