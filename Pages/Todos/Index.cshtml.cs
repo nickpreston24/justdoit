@@ -40,35 +40,18 @@ public class Index : PageModel
 
     public async Task<IActionResult> OnGetAllTodos(string search_term, [CallerMemberName] string name = "")
     {
-        // Console.WriteLine(nameof(OnGetAllTodos));
-
-        // string json = await GetMyInternalAPISampleTodos();
-        // Console.WriteLine("sample api todos :>> " + json);
-
-        // if (debug)
         Console.WriteLine($"{name}:{search_term}");
         Stopwatch watch = Stopwatch.StartNew();
 
         using var connection = SqlConnections.CreateConnection();
 
-        // Func<Todo, bool> filters = todo =>
-        //     // !todo.is_archived
-        //     // || todo.is_enabled
-        //     // && 
-        //     !todo.status.ToLower().Equals("done");
-
         var all_todos = (
                 await connection.QueryAsync<Todo>(
-                    @"
-                        select id, content, todos.is_enabled, todos.is_deleted
-                        from todos
-                        where is_enabled = 1
-                           or is_deleted <> 1"
+                    @"                       
+                        select id, content, status, priority, due
+                        from AvailableTodos;"
                 ))
-            // .Where(filters)
             .ToList();
-
-        // var all_todos = new Todo().AsList();
 
         watch.Stop();
         var elapsed = watch.Elapsed;

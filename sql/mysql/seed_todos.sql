@@ -246,7 +246,14 @@ where
 #id  = 30
 
 
-select id, content, todos.is_enabled, todos.is_deleted
+# get non-done tasks, and anything enabled but not deleted
+CREATE or replace VIEW AvailableTodos AS
+select id, content, status, priority, due
 from todos
-where is_enabled = 1
-   or is_deleted <> 1
+where status <> 'done'
+  and (
+            is_enabled = 1
+        or is_deleted <> 1);
+
+select id, content, status
+from AvailableTodos;
