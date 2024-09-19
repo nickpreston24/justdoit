@@ -33,6 +33,9 @@ alter table todos
     ADD COLUMN is_sample_data bool not null default false; # true if the row is fake or sample data, e.g. 'testzzz'
 
 alter table todos
+    add column is_recurring bool not null default false;
+
+alter table todos
     ADD COLUMN comments text;
 
 alter table todos
