@@ -1,7 +1,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Index
 
-<div x-data="{submitted:false}" class="card w-full max-w-sm shrink-0 shadow-2xl">
+<div x-data="{submitted:false}" class="card w-full max-w-sm shrink-0 shadow-2xl text-xl">
 
     <form
         asp-action="post"
@@ -10,7 +10,7 @@
         class="card-body">
         <div class="form-control">
             <label class="label">
-                <span class="label-text text-accent">Describe your new task:</span>
+                <span class="label-text text-accent text-2xl">Describe your new task:</span>
             </label>
             <input asp-for="Content"
                    type="text"

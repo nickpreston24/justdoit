@@ -13,10 +13,12 @@
     @*     <partial name="_TodoActions"></partial> *@
     @* *@
     @* </div> *@
-    
+
+
+    <partial name="_AddTodo"></partial>
     <div
         hx-get
-        hx-trigger="load"
+        hx-trigger="load,once"
         hx-indicator="#table_loader"
         hx-page="Index"
         hx-page-handler="AllTodos">

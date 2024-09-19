@@ -38,10 +38,29 @@ public class Index : PageModel
     public string[] ViewNames { get; set; } = new[] { "_TimeElapsedTable" };
 
 
+    public async Task<IActionResult> OnGetArchive(int id = -2)
+    {
+        Console.WriteLine(id);
+
+        string query = @"
+update todos
+set is_archived = 1
+where id = @id;
+";
+
+        using var connection = SqlConnections.CreateConnection();
+        int rows = await connection.ExecuteAsync(query, new { id = id });
+        return Content($"Archived {rows} row!");
+    }
+
+
     public async Task<IActionResult> OnGetAllTodos(string search_term, [CallerMemberName] string name = "")
     {
-        Console.WriteLine($"{name}:{search_term}");
-        Stopwatch watch = Stopwatch.StartNew();
+        // Console.WriteLine(nameof(OnGetAllTodos));
+        if (search_term.NotEmpty())
+            Console.WriteLine($"{name}:{search_term}");
+
+        // Stopwatch watch = Stopwatch.StartNew();
 
         using var connection = SqlConnections.CreateConnection();
 
@@ -53,8 +72,8 @@ public class Index : PageModel
                 ))
             .ToList();
 
-        watch.Stop();
-        var elapsed = watch.Elapsed;
+        // watch.Stop();
+        // var elapsed = watch.Elapsed;
         return Partial("_TodoTable", all_todos);
     }
 
@@ -115,7 +134,7 @@ public class Index : PageModel
 
     public async Task<IActionResult> OnPostAddTodo(string content = "")
     {
-        string query = @"insert into todos (content) values (@content) ";
+        string query = @"insert into todos (content, status) values (@content, 'pending') ";
 
         Todo.Dump("adding new todo");
         Console.WriteLine("content = " + content);
@@ -137,9 +156,10 @@ public class Index : PageModel
         return Content($"removed {rows} rows.");
     }
 
-    public async Task<IActionResult> OnGetBumpTodo(int id = 0, string days = "7d")
+    public async Task<IActionResult> OnGetBump(int id = -999, string days = "-7")
     {
-        return default;
+        Console.WriteLine(id);
+        return Content($"bumped {days} days");
     }
 
     public async Task<IActionResult> OnGetMarkDone(int id = 0, bool value = false)
@@ -179,21 +199,23 @@ public class Index : PageModel
     }
 
 
-    public async Task<IActionResult> OnGetAllTodosV1(string search_term, [CallerMemberName] string name = "")
-    {
-        if (debug) Console.WriteLine($"{name}:{search_term}");
-        Stopwatch watch = Stopwatch.StartNew();
-        watch.Stop();
-        var elapsed = watch.Elapsed;
-        // var all_todos = await todo_repo.GetAll();
-        var all_todos = new Todo().AsList();
-        return Partial("_TodoTable", all_todos);
-    }
+    // public async Task<IActionResult> OnGetAllTodosV1(string search_term, [CallerMemberName] string name = "")
+    // {
+    //     Console.WriteLine(nameof(OnGetAllTodosV1));
+    //     if (debug) Console.WriteLine($"{name}:{search_term}");
+    //     Stopwatch watch = Stopwatch.StartNew();
+    //     watch.Stop();
+    //     var elapsed = watch.Elapsed;
+    //     // var all_todos = await todo_repo.GetAll();
+    //     var all_todos = new Todo().AsList();
+    //     return Partial("_TodoTable", all_todos);
+    // }
 
     public async Task<IActionResult> OnGetTimeElapsed(string search_term, [CallerMemberName] string name = "")
     {
         try
         {
+            Console.WriteLine(nameof(OnGetTimeElapsed));
             if (debug) Console.WriteLine($"{name}:{search_term}");
             Stopwatch watch = Stopwatch.StartNew();
             using var connection = SqlConnections.CreateConnection();

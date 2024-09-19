@@ -5,7 +5,7 @@
     var table_type = "pinned";
 }
 
-<setion class="flex flex-col items-center justify-center border-0">
+<setion class="flex flex-col items-center justify-center border-0 text-2xl">
 
     <span> @all_todos.Count tasks</span>
 
@@ -31,6 +31,7 @@
                     @foreach (var todo in @priority_group)
                     {
                         <tr x-data="{show:true}"
+                            class="text-xl"
 
                             x-show="show"
                             x-transition:enter="transition ease-out duration-300"
@@ -46,7 +47,6 @@
                                 <label class="w-10">
                                     <input
                                         hx-get
-                                        hx-page="Index"
                                         hx-page-handler="MarkDone"
                                         hx-vars="{id:'@todo.id'}"
                                         x-on:click="show=false"
@@ -83,6 +83,10 @@
 
                                     <div x-show="todo_actions.bump.show" data-tip="Bump" class="tooltip">
                                         <button
+                                            hx-get
+                                            hx-page="Index"
+                                            hx-page-handler="Bump"
+                                            hx-vars="{id:'@todo.id', days:'7'}"
                                             class="btn btn-xs btn-ghost  hover:btn-accent">
                                             <box-icon
                                                 class="pb-0"
@@ -106,6 +110,10 @@
 
                                     <div data-tip="Archive" class="tooltip">
                                         <button
+                                            hx-get
+                                            hx-vars="{id: '@todo.id'}"
+                                            hx-page-handler="Archive"
+                                            hx-on::after-request="show=false"
                                             class="pb-1"
                                             size="sm"
                                             class="btn btn-xs btn-ghost hover:btn-accent">

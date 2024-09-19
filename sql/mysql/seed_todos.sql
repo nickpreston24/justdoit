@@ -251,12 +251,38 @@ where
 
 # get non-done tasks, and anything enabled but not deleted
 CREATE or replace VIEW AvailableTodos AS
-select id, content, status, priority, due
+select id,
+       content,
+       status,
+       priority,
+       due,
+       is_archived,
+       is_deleted,
+       is_enabled
 from todos
 where status <> 'done'
-  and (
-            is_enabled = 1
-        or is_deleted <> 1);
+#    or status <> null
+  and is_archived = 0
+  and is_enabled = 1
+  and is_deleted = 0;
 
-select id, content, status
+select id, content, status, is_archived, is_deleted, is_enabled
 from AvailableTodos;
+
+# sample task archiving:
+update todos
+set is_archived = 1
+where id = -1;
+
+## tests only
+select id,
+       status,
+       created_at,
+       is_archived,
+       content,
+       is_enabled,
+       is_deleted,
+       is_sample_data
+from todos
+where content like '%zzz%'
+order by created_at desc
