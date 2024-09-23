@@ -156,9 +156,15 @@ where id = @id;
         return Content($"removed {rows} rows.");
     }
 
-    public async Task<IActionResult> OnGetBump(int id = -999, string days = "-7")
+    public async Task<IActionResult> OnGetBump(int id = -999, int days = 7)
     {
-        Console.WriteLine(id);
+        var now = DateTime.Now;
+        if (id < 0) throw new ArgumentOutOfRangeException(nameof(id));
+        // Console.WriteLine(id);
+        var bumped_due_date = now.AddDays(days);
+        string query = @"update todos set due = @due where id = @id";
+        using var connection = SqlConnections.CreateConnection();
+        int rows = await connection.ExecuteAsync(query, new { id = id });
         return Content($"bumped {days} days");
     }
 
