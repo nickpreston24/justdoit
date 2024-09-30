@@ -10,6 +10,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddHydro();
 
 var app = builder.Build();
+
 // Load and inject .env files & values
 DotEnv.Load(debug: false);
 
@@ -31,6 +32,7 @@ app.UseAuthorization();
 app.UseHydro(builder.Environment);
 
 app.MapRazorPages();
+
 // app.ConfigureMiddleware();
 
 app.Run();

@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using CodeMechanic.Types;
 using CodeMechanic.Diagnostics;
+using CodeMechanic.Types;
 using Dapper;
 using justdoit.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -30,19 +30,24 @@ public class Index : PageModel
     }
 
     private readonly IHttpClientFactory _httpClientFactory;
-    [BindProperty(SupportsGet = true)] public Todo Todo { get; set; } = new Todo() { };
 
-    [BindProperty(SupportsGet = true)] public string Email { get; set; } = string.Empty;
-    [BindProperty(SupportsGet = true)] public string Content { get; set; } = string.Empty;
+    [BindProperty(SupportsGet = true)]
+    public Todo Todo { get; set; } = new Todo() { };
+
+    [BindProperty(SupportsGet = true)]
+    public string Email { get; set; } = string.Empty;
+
+    [BindProperty(SupportsGet = true)]
+    public string Content { get; set; } = string.Empty;
 
     public string[] ViewNames { get; set; } = new[] { "_TimeElapsedTable" };
-
 
     public async Task<IActionResult> OnGetArchive(int id = -2)
     {
         Console.WriteLine(id);
 
-        string query = @"
+        string query =
+            @"
 update todos
 set is_archived = 1
 where id = @id;
@@ -53,8 +58,10 @@ where id = @id;
         return Content($"Archived {rows} row!");
     }
 
-
-    public async Task<IActionResult> OnGetAllTodos(string search_term, [CallerMemberName] string name = "")
+    public async Task<IActionResult> OnGetAllTodos(
+        string search_term,
+        [CallerMemberName] string name = ""
+    )
     {
         // Console.WriteLine(nameof(OnGetAllTodos));
         if (search_term.NotEmpty())
@@ -65,12 +72,12 @@ where id = @id;
         using var connection = SqlConnections.CreateConnection();
 
         var all_todos = (
-                await connection.QueryAsync<Todo>(
-                    @"                       
+            await connection.QueryAsync<Todo>(
+                @"                       
                         select id, content, status, priority, due
                         from AvailableTodos;"
-                ))
-            .ToList();
+            )
+        ).ToList();
 
         // watch.Stop();
         // var elapsed = watch.Elapsed;
@@ -88,7 +95,9 @@ where id = @id;
         {
             // var client = _httpClientFactory.CreateClient();
             var client = new HttpClient();
-            var response = await client.GetAsync("https://justdoitapi-production.up.railway.app/todos");
+            var response = await client.GetAsync(
+                "https://justdoitapi-production.up.railway.app/todos"
+            );
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
@@ -99,7 +108,6 @@ where id = @id;
         }
     }
 
-
     /// <summary>
     /// Renders a Mysql view requested from the frontend
     /// </summary>
@@ -108,10 +116,10 @@ where id = @id;
     /// <param name="debug"></param>
     /// <returns></returns>
     public async Task<IActionResult> OnGetRenderView(
-        string view_name
-        , Type result_type
-        , bool debug = false
-        , [CallerMemberName] string name = ""
+        string view_name,
+        Type result_type,
+        bool debug = false,
+        [CallerMemberName] string name = ""
     )
     {
         Console.WriteLine(name);
@@ -119,7 +127,9 @@ where id = @id;
         {
             Stopwatch watch = Stopwatch.StartNew();
             using var connection = SqlConnections.CreateConnection();
-            var view_results = (await connection.QueryAsync(@"select id from TimeElapsed")).ToList();
+            var view_results = (
+                await connection.QueryAsync(@"select id from TimeElapsed")
+            ).ToList();
             watch.Stop();
             var elapsed = watch.Elapsed;
 
@@ -141,10 +151,7 @@ where id = @id;
 
         int rows = 0;
         using var connection = SqlConnections.CreateConnection();
-        rows = await connection.ExecuteAsync(query, new Todo
-        {
-            content = Todo.content
-        });
+        rows = await connection.ExecuteAsync(query, new Todo { content = Todo.content });
 
         return Content($"added {rows} rows.");
     }
@@ -159,7 +166,8 @@ where id = @id;
     public async Task<IActionResult> OnGetBump(int id = -999, int days = 7)
     {
         var now = DateTime.Now;
-        if (id < 0) throw new ArgumentOutOfRangeException(nameof(id));
+        if (id < 0)
+            throw new ArgumentOutOfRangeException(nameof(id));
         // Console.WriteLine(id);
         var bumped_due_date = now.AddDays(days);
         string query = @"update todos set due = @due where id = @id";
@@ -184,16 +192,14 @@ where id = @id;
             , last_modified = @last_modified
             where id = @id";
 
-        int affected = await connection.ExecuteAsync(query, new
-        {
-            last_modified = last_modified,
-            id = id
-        });
+        int affected = await connection.ExecuteAsync(
+            query,
+            new { last_modified = last_modified, id = id }
+        );
         string message = $"{affected} row affected.";
 
         Console.WriteLine(message);
         return Content(message);
-
 
         // string html = @"""
         //                 <input
@@ -203,7 +209,6 @@ where id = @id;
         //                     type='checkbox' checked class='checkbox'/>
         //             """;
     }
-
 
     // public async Task<IActionResult> OnGetAllTodosV1(string search_term, [CallerMemberName] string name = "")
     // {
@@ -217,15 +222,21 @@ where id = @id;
     //     return Partial("_TodoTable", all_todos);
     // }
 
-    public async Task<IActionResult> OnGetTimeElapsed(string search_term, [CallerMemberName] string name = "")
+    public async Task<IActionResult> OnGetTimeElapsed(
+        string search_term,
+        [CallerMemberName] string name = ""
+    )
     {
         try
         {
             Console.WriteLine(nameof(OnGetTimeElapsed));
-            if (debug) Console.WriteLine($"{name}:{search_term}");
+            if (debug)
+                Console.WriteLine($"{name}:{search_term}");
             Stopwatch watch = Stopwatch.StartNew();
             using var connection = SqlConnections.CreateConnection();
-            var time = (await connection.QueryAsync<TimeElapsed>(@"select id from TimeElapsed")).ToList();
+            var time = (
+                await connection.QueryAsync<TimeElapsed>(@"select id from TimeElapsed")
+            ).ToList();
             watch.Stop();
             var elapsed = watch.Elapsed;
             // return Content($"(mysql view call) total {time.Count} took {elapsed.Milliseconds} ms");

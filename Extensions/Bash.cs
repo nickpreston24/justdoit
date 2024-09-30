@@ -14,9 +14,9 @@ public static class BashExtensions
     /// <param name="writeline">Overload to whatever output function you like for verbose mode</param>
     /// <returns></returns>
     public static async Task<string> Bash(
-        this string command
-        , bool verbose = false
-        , Action<string> writeline = null
+        this string command,
+        bool verbose = false,
+        Action<string> writeline = null
     )
     {
         if (writeline == null)
@@ -34,7 +34,8 @@ public static class BashExtensions
         psi.UseShellExecute = false;
         psi.CreateNoWindow = true;
 
-        if (verbose) writeline($"Running command `{command}`");
+        if (verbose)
+            writeline($"Running command `{command}`");
         using var process = Process.Start(psi);
 
         ArgumentNullException.ThrowIfNull(process);
@@ -43,18 +44,18 @@ public static class BashExtensions
         await process.WaitForExitAsync();
         Console.WriteLine("hello from bash (process done)");
 
-        if (verbose) writeline("Done!");
+        if (verbose)
+            writeline("Done!");
 
         var output = process.StandardOutput.ReadToEnd();
 
-        if (verbose) writeline(output);
+        if (verbose)
+            writeline(output);
 
         return output;
     }
 
-    private static Task<int> BashJackMa(
-        this string cmd
-    )
+    private static Task<int> BashJackMa(this string cmd)
     {
         var source = new TaskCompletionSource<int>();
         var escapedArgs = cmd.Replace("\"", "\\\"");
@@ -67,9 +68,9 @@ public static class BashExtensions
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
-                CreateNoWindow = true
+                CreateNoWindow = true,
             },
-            EnableRaisingEvents = true
+            EnableRaisingEvents = true,
         };
         process.Exited += (sender, args) =>
         {
@@ -81,7 +82,9 @@ public static class BashExtensions
             }
             else
             {
-                source.SetException(new Exception($"Command `{cmd}` failed with exit code `{process.ExitCode}`"));
+                source.SetException(
+                    new Exception($"Command `{cmd}` failed with exit code `{process.ExitCode}`")
+                );
             }
 
             process.Dispose();

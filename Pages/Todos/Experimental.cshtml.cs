@@ -6,9 +6,7 @@ namespace justdoit.Pages.Sandbox;
 
 public class Experimental : PageModel
 {
-    public void OnGet()
-    {
-    }
+    public void OnGet() { }
 
     public async Task<IActionResult> OnGetValkyrie()
     {
@@ -18,8 +16,10 @@ public class Experimental : PageModel
 
         try
         {
-            var response = await new HtmlScraperService()
-                .ScrapeHtmlTable<AmmoseekRow>(url, ms_delay: 2500);
+            var response = await new HtmlScraperService().ScrapeHtmlTable<AmmoseekRow>(
+                url,
+                ms_delay: 2500
+            );
             // var response = await CallUrl(url);
             // Console.WriteLine("content :>> \n" + response);
             // response.Dump("spongebob episodes");

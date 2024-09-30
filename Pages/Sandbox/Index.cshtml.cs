@@ -1,18 +1,19 @@
 using CodeMechanic.Diagnostics;
 using CodeMechanic.Types;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using MySql.Data.MySqlClient;
 using Dapper;
 using justdoit.Models;
 using justdoit.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using MySql.Data.MySqlClient;
 
 namespace justdoit.Pages.Sandbox;
 
 public class Index : PageModel
 {
     // [BindProperty(SupportsGet = true)] public string Content { get; set; } = string.Empty;
-    [BindProperty(SupportsGet = true)] public string Query { get; set; } = string.Empty;
+    [BindProperty(SupportsGet = true)]
+    public string Query { get; set; } = string.Empty;
     private ITodosRepository db;
 
     private static List<Todo> todos = new();
@@ -30,25 +31,29 @@ public class Index : PageModel
         return Content($"<span>{Number.Value}</span>", "text/html");
     }
 
-    public async Task<IActionResult> OnGetSortedTreadmill(int days_from_now = 7, string query = "", bool debug = false)
+    public async Task<IActionResult> OnGetSortedTreadmill(
+        int days_from_now = 7,
+        string query = "",
+        bool debug = false
+    )
     {
         Console.WriteLine(nameof(OnGetSortedTreadmill));
-        if (debug) Console.WriteLine($"{nameof(days_from_now)} {days_from_now}");
-        if (debug) Console.WriteLine($"{nameof(Query)}: {Query}");
-        if (debug) Console.WriteLine($"{nameof(query)}: {query}");
+        if (debug)
+            Console.WriteLine($"{nameof(days_from_now)} {days_from_now}");
+        if (debug)
+            Console.WriteLine($"{nameof(Query)}: {Query}");
+        if (debug)
+            Console.WriteLine($"{nameof(query)}: {query}");
 
-        todos = (await db.GetAll())
-            .AutoSchedule()
-            .ApplyFilters(query)
-            .ToList();
+        todos = (await db.GetAll()).AutoSchedule().ApplyFilters(query).ToList();
         // todos.Dump(nameof(OnGetSortedTreadmill));
         // todo: finish reseting the todos by the age of dueness.
         return Partial(current_partial_name, this);
     }
 
-
     [Obsolete(
-        "This was just a test.  I really want the scheduling to be must smarter and the sql to be easily updateable")]
+        "This was just a test.  I really want the scheduling to be must smarter and the sql to be easily updateable"
+    )]
     public async Task<IActionResult> OnGetSortTreadmill(int days_from_now = 7)
     {
         var start_time = DateTime.Now;
@@ -58,34 +63,32 @@ public class Index : PageModel
         todos = await db.GetAll();
 
         /** var results = persons.GroupBy(
-    p => p.PersonId, 
+    p => p.PersonId,
     p => p.car,
     (key, g) => new { PersonId = key, Cars = g.ToList() });
     */
         var my_schedule = todos
             // .Dump("original todos")
-            .GroupBy(x => x.due.DayOfWeek, t => t, (key, t) => new Schedule()
-            {
-                dayOfWeek = key,
-                Todos = t.ToList()
-            })
+            .GroupBy(
+                x => x.due.DayOfWeek,
+                t => t,
+                (key, t) => new Schedule() { dayOfWeek = key, Todos = t.ToList() }
+            )
             .ToList();
 
         var now = DateTime.Now;
         // my_schedule.Select(x => x.dayOfWeek).Dump("new schedule!");
         my_schedule
-            .Select(x => x.Todos
-                .Where(x => x.due != DateTime.MinValue)
-                .Select(t =>
-                    new AgeFromDueDate(t.due, now.Subtract(t.due).Days)
-                    {
-                    })).Dump("new schedule!");
+            .Select(x =>
+                x.Todos.Where(x => x.due != DateTime.MinValue)
+                    .Select(t => new AgeFromDueDate(t.due, now.Subtract(t.due).Days) { })
+            )
+            .Dump("new schedule!");
 
         return Partial(current_partial_name, this);
     }
 
     public record AgeFromDueDate(DateTime due, int task_age_in_days);
-
 
     public async Task<IActionResult> OnGetCompleteTodo(int id = -1, string partial_name = "")
     {
@@ -101,14 +104,13 @@ public class Index : PageModel
 
         if (current.status.Dump("status").Equals(TodoStatus.Done.Name))
             status = TodoStatus.Pending.Name;
-
         else if (current.status.Equals(TodoStatus.Pending.Name))
             status = TodoStatus.Done.Name;
 
-
         status.Dump("new status");
 
-        string query = @"
+        string query =
+            @"
 update todos
 set status = @status
 where id = @id";
@@ -141,7 +143,7 @@ where id = @id";
             {
                 content = Query,
                 status = "pending",
-                due = DateTime.Now
+                due = DateTime.Now,
             };
 
             // await SaveToPocketBase(todo);
@@ -158,7 +160,6 @@ where id = @id";
             return Partial("_Alert", exception);
         }
     }
-
 
     public async Task<IActionResult> OnGetTodos(string content, string contentType)
     {
@@ -183,7 +184,8 @@ where id = @id";
 
         using var connection = new MySqlConnection(connectionString);
 
-        string query = @"
+        string query =
+            @"
             select id, content, created_at, due, status, priority
             from todos;
             # order by priority desc;
@@ -193,7 +195,6 @@ where id = @id";
         // results.Dump(nameof(results));
         return results;
     }
-
 
     /* EXPERIMENTAL */
     public async Task<IActionResult> OnGetUpdate()
@@ -209,10 +210,11 @@ where id = @id";
                 content = "testXyZ",
                 priority = 4,
                 due = DateTime.Now,
-                status = "Pending"
+                status = "Pending",
             };
 
-            string update_query = @"INSERT INTO todos (id, content, due, priority, status)
+            string update_query =
+                @"INSERT INTO todos (id, content, due, priority, status)
         VALUES (@id, @content, @due, @priority, @status)
         ON DUPLICATE KEY UPDATE content = VALUES(content),
                                 priority=VALUES(priority),
@@ -222,19 +224,25 @@ where id = @id";
 
             using var connection = new MySqlConnection(connectionString);
 
-            var count = await connection.ExecuteAsync(update_query, new List<object>()
-            {
-                new
+            var count = await connection.ExecuteAsync(
+                update_query,
+                new List<object>()
                 {
-                    id = updates.id, content = updates.content, due = updates.due, priority = updates.priority,
-                    status = updates.status
-                },
-                // new
-                // {
-                //     id = updates.id, content = updates.content, due = updates.due, priority = updates.priority,
-                //     status = updates.status
-                // }
-            });
+                    new
+                    {
+                        id = updates.id,
+                        content = updates.content,
+                        due = updates.due,
+                        priority = updates.priority,
+                        status = updates.status,
+                    },
+                    // new
+                    // {
+                    //     id = updates.id, content = updates.content, due = updates.due, priority = updates.priority,
+                    //     status = updates.status
+                    // }
+                }
+            );
             Console.WriteLine("rows changed" + count);
 
             return Partial(current_partial_name, this);
@@ -247,7 +255,6 @@ where id = @id";
             return Partial("_Alert", e);
         }
     }
-
 
     // private static void GetTodosFromPocketbase()
     // {

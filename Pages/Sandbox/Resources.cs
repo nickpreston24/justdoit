@@ -8,8 +8,7 @@ public static class Resources
 {
     private static string[] resources;
 
-    public static Assembly ThisAssembly
-        => typeof(Resources).Assembly;
+    public static Assembly ThisAssembly => typeof(Resources).Assembly;
 
     public static void ListResourcesInAssembly(Assembly? assembly)
     {
@@ -38,12 +37,12 @@ public static class Resources
 
         public static string GetSqlFile(string filename, bool debug = false)
         {
-            if (filename.IsEmpty()) throw new ArgumentNullException(nameof(filename));
+            if (filename.IsEmpty())
+                throw new ArgumentNullException(nameof(filename));
             string filepath = resources.FirstOrDefault(name => name.ToLower().Contains(filename));
-            if (debug) Console.WriteLine("file path: \n" + filepath);
-            using var stream = Assembly
-                .GetExecutingAssembly()
-                .GetManifestResourceStream(filepath)!;
+            if (debug)
+                Console.WriteLine("file path: \n" + filepath);
+            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(filepath)!;
             using var streamReader = new StreamReader(stream, Encoding.UTF8);
             return streamReader.ReadToEnd();
         }
@@ -56,8 +55,10 @@ public static class Resources
                 // var ass_name = info.Name;
                 // if (debug) Console.WriteLine("ass name:>> " + ass_name);
                 string filename = $"{sproc_name}.sql";
-                string filepath = resources.FirstOrDefault(name => name.ToLower().Contains(filename));
-                // if (debug) 
+                string filepath = resources.FirstOrDefault(name =>
+                    name.ToLower().Contains(filename)
+                );
+                // if (debug)
                 Console.WriteLine("file path: \n" + filepath);
                 using var stream = Assembly
                     .GetExecutingAssembly()

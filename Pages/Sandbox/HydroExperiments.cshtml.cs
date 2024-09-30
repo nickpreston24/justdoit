@@ -8,15 +8,12 @@ public class HydroExperiments : PageModel
 {
     private static List<Todo> fake_todos = new();
     public List<Todo> FakeTodos => fake_todos;
-    public void OnGet()
-    {
-    }
+
+    public void OnGet() { }
 
     public void OnGetSave(string content = "")
     {
-        fake_todos.Add(
-            new Todo() { content = content }
-        );
+        fake_todos.Add(new Todo() { content = content });
     }
 
     public void OnGetSearch(string query = "")

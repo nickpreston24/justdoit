@@ -5,14 +5,12 @@ namespace justdoit.Models;
 
 public class Todo
 {
-    
     public static Todo Create(string description)
     {
-        Priority extracted_priority = description
-            .Extract<Priority>(TodoPriorityRegex.Basic.CompiledRegex)
-            .SingleOrDefault()
+        Priority extracted_priority =
+            description.Extract<Priority>(TodoPriorityRegex.Basic.CompiledRegex).SingleOrDefault()
             ?? "4";
-        
+
         // todo:
         var now = DateTime.Now;
         // Due extracted_due_date = description
@@ -24,16 +22,15 @@ public class Todo
 
         // extracted_status.Dump("status");
 
-             // due = extracted_due_date
-         return new Todo()
-         {
-             content = description,
-             priority = extracted_priority.Value,
-	//		status = TodoStatus.Pending
-         };
-
+        // due = extracted_due_date
+        return new Todo()
+        {
+            content = description,
+            priority = extracted_priority.Value,
+            //		status = TodoStatus.Pending
+        };
     }
-    
+
     public bool is_recurring { set; get; } = false;
     public int id { get; set; } = -1;
     public string uri { get; set; } = string.Empty; // link to an individual record.
@@ -43,10 +40,8 @@ public class Todo
     public string status { get; set; } = string.Empty;
     public TodoStatus Status => status;
 
-    public string[] labels => content
-        .Extract<TodoLabel>(@"(?<name>@\w+)")
-        .Select(label => label.name)
-        .ToArray(); // https://regex101.com/r/UPGuX2/1
+    public string[] labels =>
+        content.Extract<TodoLabel>(@"(?<name>@\w+)").Select(label => label.name).ToArray(); // https://regex101.com/r/UPGuX2/1
 
     public int priority { get; set; } = 4;
 

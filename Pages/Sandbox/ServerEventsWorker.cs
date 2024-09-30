@@ -33,10 +33,7 @@ public class ServerEventsWorker : BackgroundService
                         {
                             Id = "number",
                             Type = "number",
-                            Data = new List<string>
-                            {
-                                Number.Value.ToString()
-                            }
+                            Data = new List<string> { Number.Value.ToString() },
                         },
                         stoppingToken
                     );

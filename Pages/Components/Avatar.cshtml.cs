@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Razor.TagHelpers;
 using Hydro;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 [HtmlTargetElement("avatar")]
 public class Avatar : HydroView

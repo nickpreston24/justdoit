@@ -4,8 +4,5 @@ namespace justdoit.Pages.Sandbox;
 
 public class Animations : PageModel
 {
-    public void OnGet()
-    {
-        
-    }
+    public void OnGet() { }
 }

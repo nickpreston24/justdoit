@@ -12,7 +12,6 @@ public static class EnumerationExtensions
         return member.Member.Name;
     }
 
-    
     // WARNING: Incomplete, do not use
     public static string Switch<T>(
         this T current,
@@ -20,19 +19,22 @@ public static class EnumerationExtensions
         Dictionary<Expression<Func<T, object>>, string> cases
     )
     {
-        var pattern_strings = cases
-            .Aggregate(new List<string>(), (current, kvp) =>
+        var pattern_strings = cases.Aggregate(
+            new List<string>(),
+            (current, kvp) =>
             {
                 var property_name = MemberExtensions.GetMemberName(kvp.Key).Dump("propertyname");
                 var raw_pattern = kvp.Value;
 
-                string pattern_segment = string.IsNullOrWhiteSpace(raw_pattern) || !raw_pattern.Contains("?<")
-                    ? $@"(?<{property_name}>{raw_pattern})"
-                    : raw_pattern;
+                string pattern_segment =
+                    string.IsNullOrWhiteSpace(raw_pattern) || !raw_pattern.Contains("?<")
+                        ? $@"(?<{property_name}>{raw_pattern})"
+                        : raw_pattern;
 
                 current.Add(pattern_segment);
                 return current;
-            });
+            }
+        );
         return "test";
     }
     //     where T : Enumeration

@@ -1,9 +1,9 @@
 using System.Data;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Dapper;
 using justdoit.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace justdoit.Pages.Sandbox;
 
@@ -11,9 +11,10 @@ public class EmbeddedSQL : PageModel
 {
     public static List<Todo> todos = new();
 
-    [BindProperty] public Stopwatch clock { get; set; } = new Stopwatch();
+    [BindProperty]
+    public Stopwatch clock { get; set; } = new Stopwatch();
 
-    // [BindProperty] 
+    // [BindProperty]
     // public List<Todo> Todos => todos;
 
     public async Task<IActionResult> OnGetMoopsy(string sproc_name, string search_term)
@@ -57,8 +58,9 @@ public class EmbeddedSQL : PageModel
         string name = "nick";
         string message = "query success!";
 
-        await
-            $@"notify-send '{title}' '{message}' -a '{name}' -u normal -i face-smile".Bash(verbose: true);
+        await $@"notify-send '{title}' '{message}' -a '{name}' -u normal -i face-smile".Bash(
+            verbose: true
+        );
         return Partial("_SampleTodoDataList", todos);
         // return Content("Hi");
     }

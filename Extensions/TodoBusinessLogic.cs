@@ -6,14 +6,9 @@ namespace justdoit;
 
 public static class TodoBusinessLogic
 {
-    public record TodoFilters
-    {
-    }
+    public record TodoFilters { }
 
-    public record TodoSorts
-    {
-    }
-
+    public record TodoSorts { }
 
     public static IEnumerable<T> ForEachMutate<T>(this IEnumerable<T> source, Action<T> action)
     {
@@ -55,19 +50,25 @@ public static class TodoBusinessLogic
         SortDirection due_direction = SortDirection.Descending;
 
         var sorted_todos = items
-            .If(sort_by_priority, todos =>
-                Equals(due_direction, SortDirection.Descending)
-                    ? todos.OrderByDescending(todo => todo.priority)
-                    : todos.OrderBy(todo => todo.priority)
+            .If(
+                sort_by_priority,
+                todos =>
+                    Equals(due_direction, SortDirection.Descending)
+                        ? todos.OrderByDescending(todo => todo.priority)
+                        : todos.OrderBy(todo => todo.priority)
             )
-            .If(sort_by_due, todos =>
-                Equals(due_direction, SortDirection.Descending)
-                    ? todos.OrderByDescending(todo => todo.due)
-                    : todos.OrderBy(todo => todo.due)
+            .If(
+                sort_by_due,
+                todos =>
+                    Equals(due_direction, SortDirection.Descending)
+                        ? todos.OrderByDescending(todo => todo.due)
+                        : todos.OrderBy(todo => todo.due)
             )
-            .If(query.NotEmpty(), todos => todos
-                .Where(t => t.content
-                    .Contains(query, StringComparison.OrdinalIgnoreCase)))
+            .If(
+                query.NotEmpty(),
+                todos =>
+                    todos.Where(t => t.content.Contains(query, StringComparison.OrdinalIgnoreCase))
+            )
             .ToList();
 
         return sorted_todos;

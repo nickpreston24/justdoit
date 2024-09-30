@@ -16,7 +16,8 @@ public class Index : PageModel
     public async Task<IActionResult> OnGetSprocs(string sproc_name = "", bool debug = false)
     {
         total_calls++;
-        if (debug) Console.WriteLine(sproc_name);
+        if (debug)
+            Console.WriteLine(sproc_name);
         string filename = sproc_name + ".sql";
         return Content($"{sproc_name} {total_calls}");
     }

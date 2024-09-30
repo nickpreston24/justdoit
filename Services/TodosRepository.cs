@@ -12,7 +12,8 @@ public class TodosRepository : ITodosRepository
 
         using var connection = new MySqlConnection(connectionString);
 
-        string select_query = @"
+        string select_query =
+            @"
             select id, content, due, status, priority
             from todos;
         ";
@@ -49,7 +50,8 @@ public class TodosRepository : ITodosRepository
         Console.WriteLine(id);
         using var connection = SqlConnections.CreateConnection();
 
-        string query = @"
+        string query =
+            @"
             delete from todos where id = @id
         ";
 
@@ -59,7 +61,8 @@ public class TodosRepository : ITodosRepository
 
     public async Task<int> GetRowCount()
     {
-        string query = @"
+        string query =
+            @"
                         select count(id)
                         from todos;";
 
@@ -92,22 +95,23 @@ public class TodosRepository : ITodosRepository
 
             var extracted_priority = todo
                 // .Dump("my todo added")
-                .content
-                .Extract<Priority>(TodoPriorityRegex.Basic.CompiledRegex)
+                .content.Extract<Priority>(TodoPriorityRegex.Basic.CompiledRegex)
                 // .Dump("priori incantum")
                 .SingleOrDefault();
 
             // extracted_priority.Dump(nameof(extracted_priority));
 
-            var results = await Dapper.SqlMapper
-                .ExecuteAsync(connection, insert_query,
-                    new
-                    {
-                        content = todo.content,
-                        priority = extracted_priority?.Value ?? 4,
-                        status = todo.status,
-                        due = todo.due
-                    });
+            var results = await Dapper.SqlMapper.ExecuteAsync(
+                connection,
+                insert_query,
+                new
+                {
+                    content = todo.content,
+                    priority = extracted_priority?.Value ?? 4,
+                    status = todo.status,
+                    due = todo.due,
+                }
+            );
 
             return results;
         }
@@ -119,7 +123,6 @@ public class TodosRepository : ITodosRepository
         }
     }
 }
-
 
 public interface ITodosRepository
 {

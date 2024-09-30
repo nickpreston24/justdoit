@@ -4,8 +4,5 @@ namespace justdoit.Pages;
 
 public class PinesToast : PageModel
 {
-    public void OnGet()
-    {
-        
-    }
+    public void OnGet() { }
 }

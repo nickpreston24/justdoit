@@ -5,7 +5,7 @@ public static class HtmlResultExtensions
 {
     /// <summary>
     /// Usage:
-    /// 
+    ///
     /// app.MapGet("/html", () => Results.Extensions.Html(@$"<!doctype html>
     /// <html>
     ///     <head><title>miniHTML</title></head>
@@ -27,8 +27,6 @@ public static class HtmlResultExtensions
         return new HtmlResult(html);
     }
 }
-
-
 
 public class HtmlResult : IResult
 {
