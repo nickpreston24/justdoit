@@ -145,6 +145,9 @@ where id = @id;
     public async Task<IActionResult> OnPostAddTodo(string content = "")
     {
         string query = @"insert into todos (content, status) values (@content, 'pending') ";
+        // var priority = new Priority(content);
+        // var priority = content.Extract<Priority>(TodoPriorityRegex.Basic.Pattern).SingleOrDefault();
+        // priority.Dump("priority");
 
         Todo.Dump("adding new todo");
         Console.WriteLine("content = " + content);

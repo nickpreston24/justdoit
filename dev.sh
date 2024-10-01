@@ -1,1 +1,2 @@
-sudo dotnet watch run --urls http://127.1.1.0:8080
+dotnet watch run --no-build --non-interactive | grep --invert-match warning --line-buffered
+#dotnet watch run 
