@@ -22,7 +22,7 @@ create table if not exists todos
     is_archived    bool          default false, # hidden from all queries with the intent of holding onto it indefinitely.
     is_enabled     bool          default true,  # when ticked, is still visible (depending on feature), but readonly.
 
-    # PK's
+    # primary keys: 
     PRIMARY KEY (id)
 );
 # 

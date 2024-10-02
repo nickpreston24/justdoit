@@ -24,7 +24,11 @@
         <PackageReference Include="CodeMechanic.Reflection" Version="1.0.4" />
         <PackageReference Include="CodeMechanic.Scraper" Version="1.0.0" />
         <PackageReference Include="CodeMechanic.Types" Version="1.0.10" />
-        <PackageReference Include="Dapper" Version="2.1.35"/>
+        <PackageReference Include="CSharpier.MSBuild" Version="0.29.2">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Dapper" Version="2.1.35" />
         <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
         <PackageReference Include="Htmx" Version="1.8.0" />
         <PackageReference Include="Htmx.TagHelpers" Version="1.8.0" />
