@@ -1,7 +1,11 @@
 using CodeMechanic.FileSystem;
 using Hydro.Configuration;
+using justdoit;
 
 Console.WriteLine("hello from justdoit!");
+await new BashVariableService().EchoVar("$FOO");
+
+return;
 
 var builder = WebApplication.CreateBuilder(args);
 
