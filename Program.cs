@@ -1,6 +1,8 @@
 using CodeMechanic.FileSystem;
 using Hydro.Configuration;
 
+Console.WriteLine("hello from justdoit!");
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
