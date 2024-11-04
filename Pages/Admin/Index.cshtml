@@ -1,8 +1,10 @@
 @page
+@using CodeMechanic.Types
 @model justdoit.Pages.Admin.Index
 
 @{
     var range = Enumerable.Range(1, 100);
+    var tabs = new PinesTab[] { new PinesTab("foo", "bar"), new PinesTab("fizz", "buzz") };
 }
 
 <section x-data="" class="text-primary">
@@ -12,7 +14,7 @@
         This page is for testing stored procdure insights inspired by dataedo, like which procs take longest, have the most rows, etc.
     </p>
 
-    <hydro-tabs></hydro-tabs>
+    <hydro-tabs tabs="@tabs"></hydro-tabs>
 
     @* <partial name="_ProcSelect"/> *@
     @* <partial name="_ProcsTable"/> *@
