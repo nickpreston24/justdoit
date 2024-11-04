@@ -43,9 +43,9 @@ internal class Program
         var builder = Host.CreateApplicationBuilder(args);
         builder.Services.AddScheduler();
 
-        builder.Services.AddSingleton<ArgsMap>(arguments);
+        builder.Services.AddSingleton(arguments);
         builder.Services.AddSingleton<PushbulletService>();
-        builder.Services.AddTransient<ITodosRepository>();
+        builder.Services.AddSingleton<ITodosRepository>();
 
         builder.Services.AddTransient<SendNotifications>();
 
