@@ -1,3 +1,4 @@
+using CodeMechanic.Types;
 using Coravel.Invocable;
 using Shargs;
 
@@ -25,14 +26,11 @@ public class SendNotifications : IInvocable
     {
         try
         {
-            // var all_todos = await todos_repo.GetAll();
-            // var random_todo = all_todos.TakeFirstRandom();
-            var random_todo = new Todo();
-
+            var all_todos = await todos_repo.GetAll();
+            var random_todo = all_todos.TakeFirstRandom();
             string message =
-                // @"This is justdoit. Go to <a href='https://justdoit.up.railway.app/todos'></a> to get started."
-                // ;
-                random_todo.content + $" \n Find it here: https://justdoit.up.railway.app/todos";
+                random_todo.content
+                + $" \n Find it here: https://justdoit.up.railway.app/todos/{random_todo.id}";
             string title = "justdoit";
             pushbullet.Send(title, message);
             Console.WriteLine($"Sent todo {random_todo.id} to your phone!");
@@ -44,7 +42,6 @@ public class SendNotifications : IInvocable
         }
     }
 }
-
 
 // string personal_dir = Directory
 //     .GetCurrentDirectory()

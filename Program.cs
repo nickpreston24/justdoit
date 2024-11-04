@@ -2,7 +2,9 @@ using CodeMechanic.FileSystem;
 using Coravel;
 using Hydro.Configuration;
 using justdoit;
+using Serilog;
 using Shargs;
+using Log = Serilog.Log;
 
 internal class Program
 {
@@ -35,7 +37,7 @@ internal class Program
     static void RunAsDaemon(string[] args)
     {
         var arguments = new ArgsMap(args);
-        bool debug = arguments.HasFlag("--debu)g");
+        bool debug = arguments.HasFlag("--debug");
 
         Console.WriteLine("setting up Coravel...");
         Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -45,7 +47,7 @@ internal class Program
 
         builder.Services.AddSingleton(arguments);
         builder.Services.AddSingleton<PushbulletService>();
-        builder.Services.AddSingleton<ITodosRepository>();
+        builder.Services.AddSingleton<ITodosRepository>(new TodosRepository());
 
         builder.Services.AddTransient<SendNotifications>();
 
@@ -55,7 +57,7 @@ internal class Program
         {
             if (debug)
                 scheduler.Schedule(() => Console.WriteLine("It's alive! 🧟")).EveryFifteenSeconds();
-            scheduler.Schedule<SendNotifications>().EveryFifteenSeconds();
+            scheduler.Schedule<SendNotifications>().EveryMinute().Once();
         });
 
         host.Run();
@@ -64,37 +66,58 @@ internal class Program
 
     static void RunAsWebsite(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
-
-        // Add services to the container.
-        // builder.Services.AddTransient<ITodosRepository, TodosRepository>();
-
-        builder.Services.AddRazorPages();
-        builder.Services.AddHydro();
-
-        var app = builder.Build();
-
-        // ConfigureMiddleware the HTTP request pipeline.
-        if (!app.Environment.IsDevelopment())
+        try
         {
-            app.UseExceptionHandler("/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts();
+            Log.Information("starting server.");
+
+            var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
+            // builder.Services.AddTransient<ITodosRepository, TodosRepository>();
+
+            builder.Services.AddRazorPages();
+            builder.Services.AddHydro();
+
+            builder.Host.UseSerilog(
+                (context, loggerConfiguration) =>
+                {
+                    loggerConfiguration.WriteTo.Console();
+                    loggerConfiguration.ReadFrom.Configuration(context.Configuration);
+                }
+            );
+
+            var app = builder.Build();
+
+            // ConfigureMiddleware the HTTP request pipeline.
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseHydro(builder.Environment);
+
+            app.MapRazorPages();
+
+            // app.ConfigureMiddleware();
+
+            app.Run();
         }
-
-        app.UseHttpsRedirection();
-        app.UseStaticFiles();
-
-        app.UseRouting();
-
-        app.UseAuthorization();
-
-        app.UseHydro(builder.Environment);
-
-        app.MapRazorPages();
-
-        // app.ConfigureMiddleware();
-
-        app.Run();
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "server terminated unexpectedly");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
     }
 }

@@ -5,6 +5,8 @@ using MySql.Data.MySqlClient;
 
 public class TodosRepository : ITodosRepository
 {
+    public TodosRepository() { }
+
     public async Task<List<Todo>> GetAll()
     {
         var connectionString = SqlConnections.GetMySQLConnectionString();
