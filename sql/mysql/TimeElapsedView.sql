@@ -14,6 +14,8 @@ select datediff(last_modified, created_at) as days_since_last_modification,
        priority,
        id
 from todos
+
+
 # order by days_until_due desc, days_old desc, days_since_last_modification desc
 ;
 

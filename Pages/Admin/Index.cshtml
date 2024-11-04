@@ -9,27 +9,23 @@
     <h1>Admin</h1>
     <p>
         <b>Purpose:</b>
-
         This page is for testing stored procdure insights inspired by dataedo, like which procs take longest, have the most rows, etc.
     </p>
 
-    <button
-        hx-get hx-page-handler="Reset"
-        class="btn">
-        Reset
-    </button>
+    <hydro-tabs></hydro-tabs>
 
-    @foreach (var id in range)
-    {
-        <div
-            class="text-accent"
-            hx-get
-            hx-trigger="load"
-            hx-page="Index"
-            hx-page-handler="Sprocs"
-            hx-vars="{sproc_name: 'get_all_procs'}">
-            <span>loading...</span>
-        </div>
-    }
+    @* <partial name="_ProcSelect"/> *@
+    @* <partial name="_ProcsTable"/> *@
+
+    @* *@
+    @* <div *@
+    @*     class="text-accent" *@
+    @*     hx-get *@
+    @*     hx-trigger="load" *@
+    @*     hx-page="Index" *@
+    @*     hx-page-handler="Sprocs" *@
+    @*     hx-vars="{sproc_name: 'get_all_procs'}"> *@
+    @*     <span>loading...</span> *@
+    @* </div> *@
 
 </section>

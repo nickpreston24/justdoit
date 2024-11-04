@@ -13,12 +13,18 @@ public class Index : PageModel
         // todo: load sprocs using CodeMechanic.MySql sproc repository...
     }
 
-    public async Task<IActionResult> OnGetSprocs(string sproc_name = "", bool debug = false)
+    public async Task<IActionResult> OnGetSprocs(bool debug = false)
     {
-        total_calls++;
-        if (debug)
-            Console.WriteLine(sproc_name);
-        string filename = sproc_name + ".sql";
-        return Content($"{sproc_name} {total_calls}");
+        return Content("foo");
+    }
+
+    public async Task<IActionResult> OnGetViews(bool debug = false)
+    {
+        return Content("foo");
+    }
+
+    public async Task<IActionResult> OnGetRunSproc(string sprocname, bool debug = false)
+    {
+        return Content($"{sprocname}");
     }
 }
