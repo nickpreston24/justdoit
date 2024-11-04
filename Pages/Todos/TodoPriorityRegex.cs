@@ -3,7 +3,7 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace justdoit.Models;
+namespace justdoit;
 
 public class TodoPriorityRegex : RegexEnumBase
 {

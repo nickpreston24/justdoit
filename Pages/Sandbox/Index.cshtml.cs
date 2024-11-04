@@ -1,7 +1,6 @@
 using CodeMechanic.Diagnostics;
 using CodeMechanic.Types;
 using Dapper;
-using justdoit.Models;
 using justdoit.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

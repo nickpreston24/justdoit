@@ -1,4 +1,3 @@
-using CodeMechanic.Diagnostics;
 using CodeMechanic.FileSystem;
 using Coravel;
 using Hydro.Configuration;
@@ -46,6 +45,7 @@ internal class Program
 
         builder.Services.AddSingleton<ArgsMap>(arguments);
         builder.Services.AddSingleton<PushbulletService>();
+        builder.Services.AddTransient<ITodosRepository>();
 
         builder.Services.AddTransient<SendNotifications>();
 

@@ -1,7 +1,6 @@
 using System.Data;
 using System.Diagnostics;
 using Dapper;
-using justdoit.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

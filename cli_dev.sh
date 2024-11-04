@@ -1,1 +1,1 @@
-dotnet watch run --project . cli
+dotnet watch run --project . cli --debug

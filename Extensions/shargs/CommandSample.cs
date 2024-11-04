@@ -1,5 +1,3 @@
-using CodeMechanic.Types;
-
 namespace Shargs;
 
 public class CommandSample : Enumeration

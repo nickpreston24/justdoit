@@ -1,0 +1,23 @@
+@page
+@model justdoit.Pages.Admin.LongRunningInvocable
+
+@{
+}
+
+<div class="min-h-screen">
+
+    <p>
+        The following is an example from Coravel for triggering long-
+        running calculations in the background without messing up my HTML.
+        Found here: <a href="https://docs.coravel.net/Invocables/"/>
+    </p>
+
+    <button
+        hx-get
+        hx-page="LongRunningInvocable"
+        hx-page-handler="LongRunningCalculation">
+        Run Sample
+    </button>
+    <span id="calc_results">...</span>
+
+</div>

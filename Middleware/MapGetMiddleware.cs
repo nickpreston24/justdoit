@@ -1,5 +1,6 @@
-using justdoit.Models;
 using Microsoft.AspNetCore.Mvc;
+
+namespace justdoit;
 
 public static class MapGetMiddleware
 {

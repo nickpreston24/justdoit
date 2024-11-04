@@ -1,7 +1,6 @@
 using CodeMechanic.RegularExpressions;
 using Dapper;
 using justdoit;
-using justdoit.Models;
 using MySql.Data.MySqlClient;
 
 public class TodosRepository : ITodosRepository
@@ -14,8 +13,8 @@ public class TodosRepository : ITodosRepository
 
         string select_query =
             @"
-            select id, content, due, status, priority
-            from todos;
+            select id, content, status, priority, due
+                        from AvailableTodos;
         ";
 
         using var grabby_connection = new MySqlConnection(connectionString);

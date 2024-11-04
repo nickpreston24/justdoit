@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 using CodeMechanic.Diagnostics;
 using CodeMechanic.Reflection;
 
-namespace justdoit.Models;
+namespace justdoit;
 
 public static class EnumerationExtensions
 {

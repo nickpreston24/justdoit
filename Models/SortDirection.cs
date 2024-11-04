@@ -1,4 +1,4 @@
-namespace justdoit.Models;
+namespace justdoit;
 
 public class SortDirection : Enumeration
 {

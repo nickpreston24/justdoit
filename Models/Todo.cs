@@ -1,7 +1,7 @@
 using CodeMechanic.RegularExpressions;
 using CodeMechanic.Types;
 
-namespace justdoit.Models;
+namespace justdoit;
 
 public class Todo
 {

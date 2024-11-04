@@ -1,4 +1,4 @@
-namespace justdoit.Models;
+namespace justdoit;
 
 public record GanttRequest
 {

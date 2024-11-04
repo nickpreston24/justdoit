@@ -1,6 +1,6 @@
 using CodeMechanic.Types;
 
-namespace justdoit.Models;
+namespace justdoit;
 
 public class TodoStatus : Enumeration
 {
