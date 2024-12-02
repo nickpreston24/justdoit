@@ -15,16 +15,18 @@ internal class Program
 
         Console.WriteLine("hello from justdoit!");
         var arguments = new ArgsMap(args);
-        bool is_cli_mode = arguments.HasCommand("cli");
+        bool is_cli_mode = arguments.HasFlag("--random");
         bool is_web_mode = !is_cli_mode;
 
         if (is_cli_mode)
         {
+            Console.WriteLine("running in cli mode");
             RunAsDaemon(args);
         }
 
         if (is_web_mode)
         {
+            Console.WriteLine("running in web mode");
             RunAsWebsite(args);
         }
 
@@ -57,7 +59,7 @@ internal class Program
         {
             if (debug)
                 scheduler.Schedule(() => Console.WriteLine("It's alive! 🧟")).EveryFifteenSeconds();
-            scheduler.Schedule<SendNotifications>().EveryMinute().Once();
+            scheduler.Schedule<SendNotifications>().EveryFifteenMinutes();
         });
 
         host.Run();
