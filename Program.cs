@@ -8,7 +8,7 @@ using Log = Serilog.Log;
 
 internal class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         // Load and inject .env files & values
         DotEnv.Load(debug: false);
@@ -57,9 +57,9 @@ internal class Program
 
         host.Services.UseScheduler(scheduler =>
         {
-            if (debug)
-                scheduler.Schedule(() => Console.WriteLine("It's alive! 🧟")).EveryFifteenSeconds();
-            scheduler.Schedule<SendNotifications>().EveryFifteenMinutes();
+            // if (debug)
+            //     scheduler.Schedule(() => Console.WriteLine("It's alive! 🧟")).EveryFifteenSeconds();
+            // scheduler.Schedule<SendNotifications>().EveryFifteenMinutes();
         });
 
         host.Run();

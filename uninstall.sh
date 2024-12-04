@@ -1,1 +1,2 @@
-dotnet tool uninstall justdoit
+dotnet tool uninstall -g justdoit
+

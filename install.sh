@@ -1,10 +1,3 @@
-
-dotnet clean
-rm -rf bin/
-rm -rf obj/
-dotnet build 
-
+dotnet build
 dotnet pack
-dotnet tool install --add-source ./nupkg justdoit --global
-
-
+dotnet tool install --add-source ./nupkg justdoit --global | grep --invert-match warning --line-buffered
