@@ -41,22 +41,32 @@ internal class Program
         var arguments = new ArgsMap(args);
         bool debug = arguments.HasFlag("--debug");
 
-        Console.WriteLine("setting up Coravel...");
+        if (debug) Console.WriteLine("setting up Coravel...");
         Console.OutputEncoding = System.Text.Encoding.UTF8;
 
         var builder = Host.CreateApplicationBuilder(args);
+        if (debug) Console.WriteLine("Adding Coravel Sheduler...");
+
         builder.Services.AddScheduler();
+
+        if (debug) Console.WriteLine("Adding singletons...");
 
         builder.Services.AddSingleton(arguments);
         builder.Services.AddSingleton<PushbulletService>();
         builder.Services.AddSingleton<ITodosRepository>(new TodosRepository());
 
+        if (debug) Console.WriteLine("Adding transients...");
+
         builder.Services.AddTransient<SendNotifications>();
+
+        if (debug) Console.WriteLine("Building host...");
 
         var host = builder.Build();
 
         host.Services.UseScheduler(scheduler =>
         {
+            if (debug) Console.WriteLine("Hello from UseScheduler!");
+
             // if (debug)
             //     scheduler.Schedule(() => Console.WriteLine("It's alive! 🧟")).EveryFifteenSeconds();
             // scheduler.Schedule<SendNotifications>().EveryFifteenMinutes();
