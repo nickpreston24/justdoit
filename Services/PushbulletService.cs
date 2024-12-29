@@ -1,8 +1,8 @@
 using CodeMechanic.FileSystem;
+using CodeMechanic.Shargs;
 using PushbulletSharp;
 using PushbulletSharp.Models.Requests;
 using PushbulletSharp.Models.Responses;
-using Shargs;
 
 public class PushbulletService
 {

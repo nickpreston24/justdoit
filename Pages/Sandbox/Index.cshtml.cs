@@ -13,13 +13,13 @@ public class Index : PageModel
     // [BindProperty(SupportsGet = true)] public string Content { get; set; } = string.Empty;
     [BindProperty(SupportsGet = true)]
     public string Query { get; set; } = string.Empty;
-    private ITodosRepository db;
+    private TodosService db;
 
     private static List<Todo> todos = new();
     public string current_partial_name = "_TodoTreadmill";
     public List<Todo> Todos => todos;
 
-    public Index(ITodosRepository db)
+    public Index(TodosService db)
     {
         this.db = db;
     }
@@ -137,7 +137,7 @@ where id = @id";
     {
         try
         {
-            Console.WriteLine(nameof(OnPostAddTask));
+            // Console.WriteLine(nameof(OnPostAddTask));
             var todo = new Todo()
             {
                 content = Query,
@@ -145,12 +145,8 @@ where id = @id";
                 due = DateTime.Now,
             };
 
-            // await SaveToPocketBase(todo);
-
             int rows = await db.Create(todo);
-
             Console.WriteLine($"Created {rows} rows.");
-            // return Content($"<p>{Content}...</p>");
             return Partial(current_partial_name, this);
         }
         catch (Exception exception)

@@ -1,6 +1,6 @@
-using CodeMechanic.Types;
+using CodeMechanic.Shargs;
 using Coravel.Invocable;
-using Shargs;
+using ILogger = Serilog.ILogger;
 
 namespace justdoit;
 
@@ -8,32 +8,28 @@ public class SendNotifications : IInvocable
 {
     private readonly PushbulletService pushbullet;
     private readonly ArgsMap arguments;
-    private readonly ITodosRepository todos_repo;
+    private readonly TodosService todos_service;
+    private readonly ILogger logger;
 
     public SendNotifications(
         ArgsMap arguments,
         PushbulletService pushbulletService,
-        ITodosRepository todos_repo
+        TodosService todos_service,
+        ILogger logger
     )
     {
         Console.WriteLine("cotr.");
         this.pushbullet = pushbulletService;
         this.arguments = arguments;
-        this.todos_repo = todos_repo;
+        this.todos_service = todos_service;
+        this.logger = logger;
     }
 
     public async Task Invoke()
     {
         try
         {
-            var all_todos = await todos_repo.GetAll();
-            var random_todo = all_todos.TakeFirstRandom();
-            string message =
-                random_todo.content
-                + $" \n Find it here: https://justdoit.up.railway.app/todos/{random_todo.id}";
-            string title = "justdoit";
-            pushbullet.Send(title, message);
-            Console.WriteLine($"Sent todo {random_todo.id} to your phone!");
+            var random_todo = todos_service.SendRandom();
         }
         catch (Exception e)
         {
@@ -57,4 +53,4 @@ public class SendNotifications : IInvocable
 //     FileSearchLinePattern = TpotPattern.Link.Pattern,
 // }.GetMatchingFiles();
 //
-// tpot_links.Take(5).Dump("links found");
+// tpot_links.SendRandom(5).Dump("links found");

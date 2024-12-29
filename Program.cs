@@ -1,10 +1,12 @@
+using System.Text;
 using CodeMechanic.FileSystem;
+using CodeMechanic.Shargs;
 using Coravel;
 using Hydro.Configuration;
 using justdoit;
 using Serilog;
-using Shargs;
-using Log = Serilog.Log;
+using Serilog.Core;
+using ILogger = Serilog.ILogger;
 
 internal class Program
 {
@@ -13,59 +15,94 @@ internal class Program
         // Load and inject .env files & values
         DotEnv.Load(debug: false);
 
-        Console.WriteLine("hello from justdoit!");
-        var arguments = new ArgsMap(args);
-        bool is_cli_mode = arguments.HasFlag("--random");
-        bool is_web_mode = !is_cli_mode;
+        var logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.Console()
+            .WriteTo.File(
+                "./logs/justdoit.log",
+                rollingInterval: RollingInterval.Day,
+                rollOnFileSizeLimit: true
+            )
+            .CreateLogger();
 
-        if (is_cli_mode)
-        {
-            Console.WriteLine("running in cli mode");
-            RunAsDaemon(args);
-        }
-
-        if (is_web_mode)
-        {
-            Console.WriteLine("running in web mode");
-            RunAsWebsite(args);
-        }
-
-        // arguments.Dump(nameof(arguments));
-        // args.Dump(nameof(args));
-        // Console.WriteLine($"is cli mode? {is_cli_mode}");
-    }
-
-    // NOTE: EXPERIMENTAL
-    static void RunAsDaemon(string[] args)
-    {
         var arguments = new ArgsMap(args);
         bool debug = arguments.HasFlag("--debug");
 
-        if (debug) Console.WriteLine("setting up Coravel...");
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        // bool get_random_todo = arguments.HasFlag("--random") && arguments.HasCommand("todo");
+
+        (bool run_as_web, bool run_as_cli) = arguments.GetRunModes();
+
+        if (debug)
+            Console.WriteLine($"{nameof(run_as_web)}: {run_as_web}");
+
+        if (debug)
+            Console.WriteLine($"{nameof(run_as_cli)}: {run_as_cli}");
+
+        bool is_daemon_mode = false;
+
+        if (run_as_cli)
+        {
+            await RunAsCli(arguments, logger);
+        }
+
+        if (run_as_web)
+        {
+            RunAsWebsite(args, logger);
+        }
+
+        if (is_daemon_mode)
+        {
+            RunAsDaemon(args, logger);
+        }
+    }
+
+    static async Task RunAsCli(IArgsMap arguments, Logger logger)
+    {
+        var services = CreateServices(arguments, logger);
+        Application app = services.GetRequiredService<Application>();
+        await app.Run();
+    }
+
+    // NOTE: EXPERIMENTAL
+    static void RunAsDaemon(string[] args, ILogger logger)
+    {
+        logger.Information("running in daemon mode");
+
+        var arguments = new ArgsMap(args);
+        bool debug = arguments.HasFlag("--debug");
+
+        if (debug)
+            Console.WriteLine("setting up Coravel...");
+        Console.OutputEncoding = Encoding.UTF8;
 
         var builder = Host.CreateApplicationBuilder(args);
-        if (debug) Console.WriteLine("Adding Coravel Sheduler...");
+        if (debug)
+            Console.WriteLine("Adding Coravel Sheduler...");
 
         builder.Services.AddScheduler();
 
-        if (debug) Console.WriteLine("Adding singletons...");
+        if (debug)
+            Console.WriteLine("Adding singletons...");
 
         builder.Services.AddSingleton(arguments);
+        builder.Services.AddSingleton<ILogger>(logger);
         builder.Services.AddSingleton<PushbulletService>();
-        builder.Services.AddSingleton<ITodosRepository>(new TodosRepository());
+        builder.Services.AddSingleton<TodosService>();
 
-        if (debug) Console.WriteLine("Adding transients...");
+        if (debug)
+            Console.WriteLine("Adding transients...");
 
         builder.Services.AddTransient<SendNotifications>();
 
-        if (debug) Console.WriteLine("Building host...");
+        if (debug)
+            Console.WriteLine("Building host...");
 
         var host = builder.Build();
 
         host.Services.UseScheduler(scheduler =>
         {
-            if (debug) Console.WriteLine("Hello from UseScheduler!");
+            if (debug)
+                Console.WriteLine("Hello from UseScheduler!");
 
             // if (debug)
             //     scheduler.Schedule(() => Console.WriteLine("It's alive! 🧟")).EveryFifteenSeconds();
@@ -76,17 +113,15 @@ internal class Program
         Console.WriteLine("DONE setting up Coravel...");
     }
 
-    static void RunAsWebsite(string[] args)
+    static void RunAsWebsite(string[] args, Logger logger)
     {
         try
         {
-            Log.Information("starting server.");
+            logger.Information("justdoit in web mode.");
 
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            // builder.Services.AddTransient<ITodosRepository, TodosRepository>();
-
             builder.Services.AddRazorPages();
             builder.Services.AddHydro();
 
@@ -119,17 +154,49 @@ internal class Program
 
             app.MapRazorPages();
 
-            // app.ConfigureMiddleware();
-
             app.Run();
         }
         catch (Exception ex)
         {
-            Log.Fatal(ex, "server terminated unexpectedly");
+            logger.Fatal(ex, "server terminated unexpectedly");
         }
         finally
         {
-            Log.CloseAndFlush();
+            logger.Dispose();
         }
+    }
+
+    private static ServiceProvider CreateServices(IArgsMap arguments, Logger logger)
+    {
+        var serviceProvider = new ServiceCollection()
+            .AddSingleton(arguments)
+            .AddSingleton<ILogger>(logger)
+            .AddSingleton<Application>()
+            .AddSingleton<TodosService>()
+            .AddScoped<BashrcService>()
+            .AddSingleton<PushbulletService>()
+            .BuildServiceProvider();
+
+        return serviceProvider;
+    }
+}
+
+public class Application
+{
+    private readonly ILogger logger;
+    private readonly TodosService todos_service;
+    private readonly BashrcService bashrc_service;
+
+    public Application(ILogger logger, TodosService todos, BashrcService bashrcService)
+    {
+        this.logger = logger;
+        this.todos_service = todos;
+        this.bashrc_service = bashrcService;
+    }
+
+    public async Task Run()
+    {
+        await todos_service.Run();
+        await bashrc_service.Run();
     }
 }

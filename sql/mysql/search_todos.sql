@@ -63,7 +63,7 @@ BEGIN
     FROM todos
     WHERE MATCH(content, description) AGAINST(
             search_term IN NATURAL LANGUAGE MODE
-        );
+                                      );
 
 END ^_^
 
