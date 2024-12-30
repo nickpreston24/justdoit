@@ -2,19 +2,20 @@
 @model justdoit.Pages.Todos.Index
 
 @{
-    string search_term = "buy milk ";
+    // string search_term = "buy milk ";
 }
 
 <section x-data="setup_todo_action_buttons()"
-    class="flex flex-col gap-4">
+         class="flex flex-col gap-4">
 
-    @* <div id="options_panel" class="flex flex-row gap-2 items-center"> *@
-    @* *@
-    @*     <partial name="_TodoActions"></partial> *@
-    @* *@
-    @* </div> *@
+    <modal>
+        <div class="flex flex-col gap-2 items-center justify-center">
+            <div id="@nameof(HxTodoForm)">
+                <hx-todo-form/>
+            </div>
+        </div>
+    </modal>
 
-    <partial name="_AddTodo"></partial>
     <div
         hx-get
         hx-trigger="load,once"
@@ -40,23 +41,23 @@
 </section>
 
 <script>
-function setup_todo_action_buttons() {
-    return {
-        views: {
-            metrics: { show: false }
-        },
-        
-        todo_actions: {
-            bump: { show: true },
-            reschedule: { show: true },
-            delete: { show: false }
-        },
-        
-        boxicon: {
-            color: 'grey'
+    function setup_todo_action_buttons() {
+        return {
+            views: {
+                metrics: {show: false}
+            },
+
+            todo_actions: {
+                bump: {show: true},
+                reschedule: {show: true},
+                delete: {show: false}
+            },
+
+            boxicon: {
+                color: 'grey'
+            }
         }
     }
-}
 </script>
 
 
@@ -82,3 +83,11 @@ function setup_todo_action_buttons() {
 @*         <span>loading...</span> *@
 @*     </div> *@
 @* </div> *@
+
+@* <div id="options_panel" class="flex flex-row gap-2 items-center"> *@
+@* *@
+@*     <partial name="_TodoActions"></partial> *@
+@* *@
+@* </div> *@
+
+@* <partial name="_AddTodo"></partial> *@

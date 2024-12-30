@@ -1,8 +1,10 @@
+.bashrc #local copy
 nupkg/
 publish/
 .forklift
 .cached/
 .logs/
+*.log
 obj/
 bin/
 .idea/

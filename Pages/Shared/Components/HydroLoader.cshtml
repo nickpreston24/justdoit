@@ -1,0 +1,9 @@
+@using CodeMechanic.Types
+@model HydroLoader
+
+<div id="@Model.id" class="htmx-indicator">
+    <span>
+        @((Model.Slot().Value ?? string.Empty).IsEmpty() ? "loading ... " : @Model.Slot())
+    </span>
+    <img alt="loader" class="max-w-10" src="~/img/loaders/circle_bars.svg"/>
+</div>

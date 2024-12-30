@@ -22,8 +22,6 @@
 <div class="card">
 
     <div class="card-body border-0">
-
-
         <p class="max-w-full text-wrap truncate">@todo.content</p>
 
         <div class="flex flex-row">
@@ -60,7 +58,11 @@
                     {
                         var found = dropdown_css_options.TryGetValue(choice, out var value);
 
-                        string css = found ? value : throw new Exception($"status '{choice}' found");
+                        string css = (found
+                                         ? value
+                                         : throw new Exception($"status '{choice}' found"))
+                                     ?? string.Empty;
+
                         <li class="text-@css">
                             <a>@choice.Name</a>
                         </li>
@@ -78,6 +80,7 @@
         flex-wrap: wrap;
         gap: 1rem;
     }
+
     .flex-group > * {
         min-width: fit-content;
         flex: 1;

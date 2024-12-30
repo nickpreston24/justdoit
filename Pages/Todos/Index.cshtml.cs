@@ -59,6 +59,7 @@ where id = @id;
 
     public async Task<IActionResult> OnGetAllTodos(
         string search_term,
+        string view = "_TodoTable",
         [CallerMemberName] string name = ""
     )
     {
@@ -80,7 +81,7 @@ where id = @id;
 
         // watch.Stop();
         // var elapsed = watch.Elapsed;
-        return Partial("_TodoTable", all_todos);
+        return Partial(view, all_todos);
     }
 
     /// <summary>
@@ -141,14 +142,11 @@ where id = @id;
         }
     }
 
-    public async Task<IActionResult> OnPostAddTodo(string content = "")
+    public async Task<IActionResult> OnPostAddTodo(string content, string view = "HxTodoForm")
     {
         string query = @"insert into todos (content, status) values (@content, 'pending') ";
-        // var priority = new Priority(content);
-        // var priority = content.Extract<Priority>(TodoPriorityRegex.Basic.Pattern).SingleOrDefault();
-        // priority.Dump("priority");
 
-        Todo.Dump("adding new todo");
+        // Todo.Dump("adding new todo");
         Console.WriteLine("content = " + content);
 
         int rows = 0;

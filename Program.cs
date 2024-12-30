@@ -19,7 +19,7 @@ internal class Program
             .MinimumLevel.Information()
             .WriteTo.Console()
             .WriteTo.File(
-                "./logs/justdoit.log",
+                "/logs/justdoit.log",
                 rollingInterval: RollingInterval.Day,
                 rollOnFileSizeLimit: true
             )
@@ -28,7 +28,7 @@ internal class Program
         var arguments = new ArgsMap(args);
         bool debug = arguments.HasFlag("--debug");
 
-        // bool get_random_todo = arguments.HasFlag("--random") && arguments.HasCommand("todo");
+        bool get_random_todo = arguments.HasFlag("--random") && arguments.HasCommand("todo");
 
         (bool run_as_web, bool run_as_cli) = arguments.GetRunModes();
 
@@ -181,6 +181,8 @@ internal class Program
     }
 }
 
+internal class Person { }
+
 public class Application
 {
     private readonly ILogger logger;
@@ -200,3 +202,12 @@ public class Application
         await bashrc_service.Run();
     }
 }
+
+// string person_pattern =
+//     "https://regex101.com/r/Nzdp9E/1"; // https://regex101.com/r/Nzdp9E/1
+// var person_regex = new Regex(person_pattern,
+//     RegexOptions.Compiled | RegexOptions.IgnoreCase);
+// string text =
+//     "id=1234,firstname=nick,lastname=preston,dateofbirth=08-07-1989,gender=m,language=eng";
+// var people = text.Extract<Person>(person_pattern);
+// people.Dump(nameof(people)); // json

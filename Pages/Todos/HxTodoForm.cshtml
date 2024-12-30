@@ -1,0 +1,32 @@
+@model HxTodoForm
+
+@{
+}
+
+<div>
+    <form hx-post
+          hx-page="Index"
+          hx-page-handler="AddTodo"
+          hx-swap="innerHTML"
+          hx-loader="#submit_todo"
+          hx-target="#@nameof(HxTodoForm)"
+    >
+
+        <div class="mb-3">
+            <label asp-for="Content"></label>
+            <input type="text"
+                   class="form-control"
+                   asp-for="Content"
+            >
+            <div class="invalid-feedback">
+                <span asp-validation-for="Content"></span>
+            </div>
+        </div>
+
+        <div class="control">
+            <button class="btn btn-primary">Submit</button>
+            <loader id="submit_todo">Submitting Todo ...</loader>
+            @Html.AntiForgeryToken()
+        </div>
+    </form>
+</div>

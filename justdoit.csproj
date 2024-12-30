@@ -36,7 +36,7 @@
         <PackageReference Include="Dapper" Version="2.1.35" />
         <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
         <PackageReference Include="Htmx" Version="1.8.0" />
-        <PackageReference Include="Htmx.TagHelpers" Version="1.8.0" />
+        <PackageReference Include="Htmx.TagHelpers" Version="1.8.1" />
         <PackageReference Include="Hydro" Version="0.14.2" />
         <PackageReference Include="Lib.AspNetCore.ServerSentEvents" Version="9.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.2.0" />

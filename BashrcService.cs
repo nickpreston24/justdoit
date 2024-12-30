@@ -55,7 +55,7 @@ public class BashrcService : QueuedService
     private async Task CopyEnvToBashrc()
     {
         string cwd = Directory.GetCurrentDirectory();
-        Console.WriteLine($"{nameof(cwd)}", cwd);
+        // Console.WriteLine($"{nameof(cwd)}", cwd);
 
         // get .env values:
         var dot_env_values = DotEnv.Load();
@@ -69,26 +69,23 @@ public class BashrcService : QueuedService
                 {
                     // e.g: `Foo="Bar"; export Foo`
                     // return variable.Left;
-                    return
-                        $"{variable.Left}=\"{variable.Right}\"; export {variable.Left}";
+                    return $"{variable.Left}=\"{variable.Right}\"; export {variable.Left}";
                 },
                 delimiter: "\n"
             )
             .ToString();
 
-        Console.WriteLine($"{nameof(added_text)} \n" + added_text);
+        // Console.WriteLine($"{nameof(added_text)} \n" + added_text);
 
         // grab existing values from .bashrc
 
-        string bashrc_filepath =
-            (await "ls ~/.bashrc".Bash(verbose: false)).Trim();
-        Console.WriteLine($"{nameof(bashrc_filepath)} " + bashrc_filepath);
+        string bashrc_filepath = (await "ls ~/.bashrc".Bash(verbose: false)).Trim();
+        // Console.WriteLine($"{nameof(bashrc_filepath)} " + bashrc_filepath);
 
         string copy_output = await $"cp {bashrc_filepath} {cwd}".Bash();
         string current_dir_bashrc_path = Path.Combine(cwd, ".bashrc");
         bool local_copy_of_bashrc_exists = File.Exists(current_dir_bashrc_path);
-        Console.WriteLine($"{nameof(local_copy_of_bashrc_exists)} " +
-                          local_copy_of_bashrc_exists);
+        // Console.WriteLine($"{nameof(local_copy_of_bashrc_exists)} " + local_copy_of_bashrc_exists);
 
         string bashrc_text = File.ReadAllText(current_dir_bashrc_path);
         // Console.WriteLine($"{nameof(bashrc_text)}" + bashrc_text);
@@ -101,14 +98,14 @@ public class BashrcService : QueuedService
             BashrcFilePatterns.Exports.CompiledRegex
         );
 
-        existing_exports.Dump(nameof(existing_exports));
-        added_exports.Dump(nameof(added_exports));
+        // if(debug) existing_exports.Dump(nameof(existing_exports));
+        // if(debug) added_exports.Dump(nameof(added_exports));
 
         // Diff existing with new:
 
         var diffed = added_exports.Except(existing_exports);
 
-        diffed.Dump(nameof(diffed));
+        // if(debug) diffed.Dump(nameof(diffed));
 
         // concat & save:
 
@@ -118,48 +115,40 @@ public class BashrcService : QueuedService
                 variable =>
                 {
                     // e.g: `Foo="Bar"; export Foo`
-                    return
-                        $"{variable.env_varname}=\"{variable.value}\"; export {variable.export_varname}";
+                    return $"{variable.env_varname}=\"{variable.value}\"; export {variable.export_varname}";
                 },
                 delimiter: "\n"
             )
             .ToString();
 
-        string updates_output =
-            await $"echo '{updated_text}' >> .bashrc".Bash(verbose: true);
+        string updates_output = await $"echo '{updated_text}' >> .bashrc".Bash(verbose: true);
+        Console.WriteLine("Done updating current working dir copy of .bashrc");
     }
 
-    private async Task CopyBashrcToEnv()
-    {
-    }
+    private async Task CopyBashrcToEnv() { }
 
     public class BashrcOperation : Enumeration
     {
-        public static BashrcOperation Upload =
-            new BashrcOperation(1, nameof(Upload));
+        public static BashrcOperation Upload = new BashrcOperation(1, nameof(Upload));
 
-        public static BashrcOperation Download =
-            new BashrcOperation(2, nameof(Download));
+        public static BashrcOperation Download = new BashrcOperation(2, nameof(Download));
 
         // etc.
         public BashrcOperation(int id, string name)
-            : base(id, name)
-        {
-        }
+            : base(id, name) { }
 
         public static implicit operator BashrcOperation(string name)
         {
             return GetAll<BashrcOperation>()
-                       .SingleOrDefault(
-                           (Func<BashrcOperation, bool>)(
-                               enumeration =>
-                                   enumeration.Name.Equals(name,
-                                       StringComparison.OrdinalIgnoreCase)
-                           )
-                       )
-                   ?? throw new Exception(
-                       $"Could not find {nameof(BashrcOperation)} with name '{name}'"
-                   );
+                    .SingleOrDefault(
+                        (Func<BashrcOperation, bool>)(
+                            enumeration =>
+                                enumeration.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
+                        )
+                    )
+                ?? throw new Exception(
+                    $"Could not find {nameof(BashrcOperation)} with name '{name}'"
+                );
         }
     }
 
@@ -171,8 +160,7 @@ public class BashrcService : QueuedService
 
         public override bool Equals(object? obj)
         {
-            return this.ToString()
-                .Equals(obj.ToString(), StringComparison.Ordinal);
+            return this.ToString().Equals(obj.ToString(), StringComparison.Ordinal);
         }
 
         public override string ToString()
@@ -194,24 +182,20 @@ public class BashrcService : QueuedService
             "https://regex101.com/r/7vmhVi/2"
         );
 
-        protected BashrcFilePatterns(int id, string name, string pattern,
-            string uri = "")
-            : base(id, name, pattern, uri)
-        {
-        }
+        protected BashrcFilePatterns(int id, string name, string pattern, string uri = "")
+            : base(id, name, pattern, uri) { }
 
         public static implicit operator BashrcFilePatterns(string name)
         {
             return GetAll<BashrcFilePatterns>()
-                       .SingleOrDefault<BashrcFilePatterns>(
-                           (Func<BashrcFilePatterns, bool>)(
-                               e => e.Name.Equals(name,
-                                   StringComparison.OrdinalIgnoreCase)
-                           )
-                       )
-                   ?? throw new Exception(
-                       $"Could not find {nameof(BashrcFilePatterns)} with name '{name}'"
-                   );
+                    .SingleOrDefault<BashrcFilePatterns>(
+                        (Func<BashrcFilePatterns, bool>)(
+                            e => e.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
+                        )
+                    )
+                ?? throw new Exception(
+                    $"Could not find {nameof(BashrcFilePatterns)} with name '{name}'"
+                );
         }
     }
 }

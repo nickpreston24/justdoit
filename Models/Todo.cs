@@ -1,39 +1,14 @@
 using CodeMechanic.RegularExpressions;
-using CodeMechanic.Types;
 
 namespace justdoit;
 
 public class Todo
 {
-    public static Todo Create(string description)
-    {
-        Priority extracted_priority =
-            description.Extract<Priority>(TodoPriorityRegex.Basic.CompiledRegex).SingleOrDefault()
-            ?? "4";
-
-        // todo:
-        var now = DateTime.Now;
-        // Due extracted_due_date = description
-        //                              .Extract<Due>(TodoPriorityRegex.Basic.CompiledRegex)
-        //                              .SingleOrDefault()
-        //                          ?? now;
-
-        // var extracted_status = description.Extract<TodoStatus>(@"(?<status>(pending))").SingleOrDefault() ?? "pending";
-
-        // extracted_status.Dump("status");
-
-        // due = extracted_due_date
-        return new Todo()
-        {
-            content = description,
-            priority = extracted_priority.Value,
-            //		status = TodoStatus.Pending
-        };
-    }
-
     public bool is_recurring { set; get; } = false;
     public int id { get; set; } = -1;
+
     public string uri { get; set; } = string.Empty; // link to an individual record.
+
     public string content { get; set; } = string.Empty;
     public string description { set; get; }
     public string created_by { get; set; } = string.Empty;
@@ -46,6 +21,7 @@ public class Todo
     public int priority { get; set; } = 4;
 
     public DateTime due { get; set; } = DateTime.MinValue; // = Start.Add(Duration);
+
     public TimeSpan duration { get; set; } = TimeSpan.FromMinutes(15);
     public DateTime start { get; set; }
     public DateTime end { get; set; }
@@ -91,32 +67,4 @@ public class Todo
             }
         }
     }
-}
-
-public record TodoLabel
-{
-    public string name { get; set; } = string.Empty;
-}
-
-public static class TodoExtensions
-{
-    //...
-}
-
-public class Due
-{
-    public string date { get; set; } = string.Empty;
-    public string due_string { get; set; }
-
-    // [JsonProperty("string")] public string @string { get; set; }
-
-    // public string friendly {get;set;} = "Feb 12";
-    public string lang { get; set; } = "en";
-    public string is_recurring { get; set; } = "false";
-
-    public DateTime datetime => date.ToDateTime(fallback: DateTime.MinValue).Value;
-
-    public string friendly_date => datetime.ToFriendlyDateString();
-    public string humanized_age => datetime.HumanizeAge();
-    public string humanized => datetime.Humanize().ToMaybe().IfNone("Unknown");
 }
